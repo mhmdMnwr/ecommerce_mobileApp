@@ -11,6 +11,7 @@ class ProductModel {
   final String image;
   final int? units;
   final String? state;
+  final Map<String, dynamic>? brand;
 
   const ProductModel({
     required this.id,
@@ -19,6 +20,7 @@ class ProductModel {
     required this.image,
     this.units,
     this.state,
+    this.brand,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>

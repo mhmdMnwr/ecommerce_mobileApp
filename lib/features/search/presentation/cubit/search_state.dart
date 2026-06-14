@@ -5,6 +5,7 @@ import '../../../home/data/models/product_model.dart';
 class SearchFilters {
   final String? categoryId;
   final String? categoryName;
+  final String? brandTitle;
   final double? minPrice;
   final double? maxPrice;
   final String? sort;
@@ -12,6 +13,7 @@ class SearchFilters {
   const SearchFilters({
     this.categoryId,
     this.categoryName,
+    this.brandTitle,
     this.minPrice,
     this.maxPrice,
     this.sort,
@@ -20,16 +22,19 @@ class SearchFilters {
   SearchFilters copyWith({
     String? categoryId,
     String? categoryName,
+    String? brandTitle,
     double? minPrice,
     double? maxPrice,
     String? sort,
     bool clearCategory = false,
+    bool clearBrand = false,
     bool clearPrice = false,
   }) {
     return SearchFilters(
       categoryId: clearCategory ? null : (categoryId ?? this.categoryId),
       categoryName:
           clearCategory ? null : (categoryName ?? this.categoryName),
+      brandTitle: clearBrand ? null : (brandTitle ?? this.brandTitle),
       minPrice: clearPrice ? null : (minPrice ?? this.minPrice),
       maxPrice: clearPrice ? null : (maxPrice ?? this.maxPrice),
       sort: sort ?? this.sort,
@@ -37,7 +42,7 @@ class SearchFilters {
   }
 
   bool get hasActiveFilters =>
-      categoryId != null || minPrice != null || maxPrice != null;
+      categoryId != null || brandTitle != null || minPrice != null || maxPrice != null;
 }
 
 /// All possible search states.

@@ -28,93 +28,99 @@ class HeaderWithCategories extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        // ── Blue curved background ──────────────────
-        Container(
-          margin: EdgeInsets.only(bottom: categories.isNotEmpty ? halfRow : 0),
-          width: double.infinity,
-          padding: EdgeInsets.only(
-            top: topPad + 16.h,
-            left: 24.w,
-            right: 24.w,
-            bottom: halfRow + 16.h, // reserve space for the top half of cards
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(28.r),
-              bottomRight: Radius.circular(28.r),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.storeName,
-                style: TextStyle(
-                  color: AppColors.background,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
+        // ── Background sizing container ──
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(
+                top: topPad + 16.h,
+                left: 24.w,
+                right: 24.w,
+                bottom: halfRow + 16.h, // Space for the top half of the category cards
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(28.r),
+                  bottomRight: Radius.circular(28.r),
                 ),
               ),
-              SizedBox(height: 16.h),
-              BlocBuilder<AuthCubit, AuthState>(
-                builder: (context, state) {
-                  final user = state is AuthAuthenticated ? state.user : null;
-                  return Row(
-                    children: [
-                      Container(
-                        width: 50.r,
-                        height: 50.r,
-                        decoration: const BoxDecoration(
-                          color: AppColors.background,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Image.asset(
-                            IconsHelper.user,
-                            width: 26.r,
-                            height: 26.r,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 14.w),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.storeName,
+                    style: TextStyle(
+                      color: AppColors.background,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      final user = state is AuthAuthenticated ? state.user : null;
+                      return Row(
                         children: [
-                          Text(
-                            l10n.welcomeBack,
-                            style: TextStyle(
-                              color: AppColors.background.withAlpha(200),
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
+                          Container(
+                            width: 50.r,
+                            height: 50.r,
+                            decoration: const BoxDecoration(
+                              color: AppColors.background,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Image.asset(
+                                IconsHelper.user,
+                                width: 26.r,
+                                height: 26.r,
+                                color: AppColors.primary,
+                              ),
                             ),
                           ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            user?.username ?? l10n.guest,
-                            style: TextStyle(
-                              color: AppColors.background,
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          SizedBox(width: 14.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.welcomeBack,
+                                style: TextStyle(
+                                  color: AppColors.background.withAlpha(200),
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                user?.username ?? l10n.guest,
+                                style: TextStyle(
+                                  color: AppColors.background,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
-                      ),
-                    ],
-                  );
-                },
+                      );
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            // Transparent spacer so the stack spans exactly to the bottom of the category row
+            if (categories.isNotEmpty) SizedBox(height: halfRow),
+          ],
         ),
 
-        // ── Categories row — bisected by the bottom edge of the blue header ──
+        // ── Categories row ──
         if (categories.isNotEmpty)
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0, // sit exactly in the bottom margin area
+            bottom: 0, 
             child: SizedBox(
               height: kCategoryRowH.h,
               child: ListView.separated(

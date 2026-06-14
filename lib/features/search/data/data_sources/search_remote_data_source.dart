@@ -14,6 +14,7 @@ class SearchRemoteDataSource {
   Future<SearchResult> searchProducts({
     String? query,
     String? categoryId,
+    String? brandTitle,
     double? minPrice,
     double? maxPrice,
     String? sort,
@@ -28,6 +29,7 @@ class SearchRemoteDataSource {
 
       if (query != null && query.isNotEmpty) params['title'] = query;
       if (categoryId != null) params['categoryId'] = categoryId;
+      if (brandTitle != null) params['brand'] = brandTitle;
       if (minPrice != null) params['minPrice'] = minPrice;
       if (maxPrice != null) params['maxPrice'] = maxPrice;
       if (sort != null) params['sort'] = sort;

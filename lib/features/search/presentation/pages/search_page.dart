@@ -8,12 +8,15 @@ import '../cubit/search_cubit.dart';
 import '../cubit/search_state.dart';
 import '../widgets/search_bar_widgets.dart';
 import '../widgets/search_filters_sheet.dart';
-import '../widgets/search_result_card.dart';
+import '../widgets/search_results_list.dart';
 import '../widgets/search_states.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  final SearchFilters? initialFilters;
+  final String? pageTitle;
+
+  const SearchPage({super.key, this.initialFilters, this.pageTitle});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -22,12 +25,14 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final _searchCtrl = TextEditingController();
   final _scrollCtrl = ScrollController();
-  SearchFilters _filters = const SearchFilters();
+  late SearchFilters _filters;
 
   @override
   void initState() {
     super.initState();
+    _filters = widget.initialFilters ?? const SearchFilters(sort: 'title');
     context.read<SearchCubit>().loadCategories();
+    _runSearch();
     _scrollCtrl.addListener(_onScroll);
   }
 
@@ -99,6 +104,13 @@ class _SearchPageState extends State<SearchPage> {
         return Padding(
           padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 8.h),
           child: Row(children: [
+            if (Navigator.canPop(context)) ...[
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+              SizedBox(width: 8.w),
+            ],
             Expanded(
               child: SearchTextField(
                 controller: _searchCtrl,
@@ -126,6 +138,15 @@ class _SearchPageState extends State<SearchPage> {
         label: _filters.categoryName!,
         onRemove: () => setState(() {
           _filters = _filters.copyWith(clearCategory: true);
+          _runSearch();
+        }),
+      ));
+    }
+    if (_filters.brandTitle != null) {
+      chips.add(ActiveFilterChip(
+        label: _filters.brandTitle!,
+        onRemove: () => setState(() {
+          _filters = _filters.copyWith(clearBrand: true);
           _runSearch();
         }),
       ));
@@ -181,36 +202,15 @@ class _SearchPageState extends State<SearchPage> {
         if (state is SearchLoaded) {
           return state.products.isEmpty
               ? const SearchNoResults()
-              : _resultsGrid(state, l10n);
+              : SearchResultsList(
+                  state: state,
+                  currency: l10n.currency,
+                  scrollCtrl: _scrollCtrl,
+                );
         }
         return const SizedBox.shrink();
       },
     );
   }
 
-  Widget _resultsGrid(SearchLoaded state, AppLocalizations l10n) {
-    return GridView.builder(
-      controller: _scrollCtrl,
-      padding: EdgeInsets.all(20.r),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 14.h,
-        crossAxisSpacing: 14.w,
-        childAspectRatio: 0.72,
-      ),
-      itemCount: state.products.length + (state.hasMore ? 1 : 0),
-      itemBuilder: (context, i) {
-        if (i >= state.products.length) {
-          return const Center(
-            child: CircularProgressIndicator(
-                color: AppColors.primary, strokeWidth: 2),
-          );
-        }
-        return SearchResultCard(
-          product: state.products[i],
-          currency: l10n.currency,
-        );
-      },
-    );
-  }
 }

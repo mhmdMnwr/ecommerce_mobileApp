@@ -75,5 +75,19 @@
   "popular": "Populaire",
   "viewMore": "Voir plus",
   "failedToLoadData": "Échec du chargement des données.",
-  "currency": "DA"
+  "currency": "DA",
+  "brands": "Marques",
+  "boxes": "Boîtes",
+  "units": "Unités",
+  "addToCart": "Ajouter au panier",
+  "boxContainsUnits": "1 Boîte = {count} unité(s)",
+  "reset": "Réinitialiser",
+  "priceRange": "Gamme de prix",
+  "min": "Min",
+  "max": "Max",
+  "apply": "Appliquer",
+  "retry": "Réessayer",
+  "noResults": "Aucun résultat trouvé",
+  "newestProducts": "Nouveaux produits",
+  "bestSelling": "Meilleures ventes"
 }

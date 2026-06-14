@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../home/data/models/category_model.dart';
 import '../cubit/search_state.dart';
+import 'search_filters_widgets.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 /// Bottom sheet that lets the user pick category, price range.
@@ -59,12 +60,13 @@ class _SearchFiltersSheetState extends State<SearchFiltersSheet> {
       categoryName: _categoryName,
       minPrice: minP,
       maxPrice: maxP,
+      sort: widget.currentFilters.sort,
     ));
     Navigator.pop(context);
   }
 
   void _clear() {
-    widget.onApply(const SearchFilters());
+    widget.onApply(SearchFilters(sort: widget.currentFilters.sort));
     Navigator.pop(context);
   }
 
@@ -93,11 +95,11 @@ class _SearchFiltersSheetState extends State<SearchFiltersSheet> {
             _categoryChips(),
             SizedBox(height: 20.h),
           ],
-          _label('${l10n.currency} — Price Range'),
+          _label('${l10n.currency} — ${l10n.priceRange}'),
           SizedBox(height: 8.h),
-          _priceRow(),
+          _priceRow(l10n),
           SizedBox(height: 24.h),
-          _applyButton(),
+          SearchApplyButton(onPressed: _apply),
         ],
       ),
     );
@@ -127,7 +129,7 @@ class _SearchFiltersSheetState extends State<SearchFiltersSheet> {
                 color: AppColors.textPrimary)),
         GestureDetector(
           onTap: _clear,
-          child: Text('Reset',
+          child: Text(l10n.reset,
               style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
@@ -170,66 +172,19 @@ class _SearchFiltersSheetState extends State<SearchFiltersSheet> {
     );
   }
 
-  Widget _priceRow() {
+  Widget _priceRow(AppLocalizations l10n) {
     return Row(
       children: [
-        Expanded(child: _priceField(_minCtrl, 'Min')),
+        Expanded(child: SearchPriceField(controller: _minCtrl, hint: l10n.min)),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text('—',
               style:
                   TextStyle(fontSize: 18.sp, color: AppColors.textSecondary)),
         ),
-        Expanded(child: _priceField(_maxCtrl, 'Max')),
+        Expanded(child: SearchPriceField(controller: _maxCtrl, hint: l10n.max)),
       ],
     );
   }
 
-  Widget _priceField(TextEditingController ctrl, String hint) {
-    return TextField(
-      controller: ctrl,
-      keyboardType: TextInputType.number,
-      style: TextStyle(fontSize: 14.sp, color: AppColors.textPrimary),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textHint),
-        filled: true,
-        fillColor: AppColors.surface,
-        contentPadding:
-            EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: AppColors.fieldBorder),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: AppColors.fieldBorder),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
-        ),
-      ),
-    );
-  }
-
-  Widget _applyButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 48.h,
-      child: ElevatedButton(
-        onPressed: _apply,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.background,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          textStyle:
-              TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
-        ),
-        child: const Text('Apply'),
-      ),
-    );
-  }
 }

@@ -555,6 +555,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'DA'**
   String get currency;
+
+  /// No description provided for @brands.
+  ///
+  /// In en, this message translates to:
+  /// **'Brands'**
+  String get brands;
+
+  /// No description provided for @boxes.
+  ///
+  /// In en, this message translates to:
+  /// **'Boxes'**
+  String get boxes;
+
+  /// No description provided for @units.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get units;
+
+  /// No description provided for @addToCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to cart'**
+  String get addToCart;
+
+  /// No description provided for @boxContainsUnits.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Box = {count} unit'**
+  String boxContainsUnits(int count);
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @priceRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Price Range'**
+  String get priceRange;
+
+  /// No description provided for @min.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get min;
+
+  /// No description provided for @max.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get max;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResults;
+
+  /// No description provided for @newestProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest Products'**
+  String get newestProducts;
+
+  /// No description provided for @bestSelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Selling'**
+  String get bestSelling;
 }
 
 class _AppLocalizationsDelegate

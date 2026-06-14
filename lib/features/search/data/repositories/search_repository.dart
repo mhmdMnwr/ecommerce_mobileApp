@@ -8,6 +8,7 @@ class SearchRepository {
   Future<SearchResult> searchProducts({
     String? query,
     String? categoryId,
+    String? brandTitle,
     double? minPrice,
     double? maxPrice,
     String? sort,
@@ -17,6 +18,7 @@ class SearchRepository {
       _remote.searchProducts(
         query: query,
         categoryId: categoryId,
+        brandTitle: brandTitle,
         minPrice: minPrice,
         maxPrice: maxPrice,
         sort: sort,

@@ -243,4 +243,48 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get currency => 'DA';
+
+  @override
+  String get brands => 'Marques';
+
+  @override
+  String get boxes => 'Boîtes';
+
+  @override
+  String get units => 'Unités';
+
+  @override
+  String get addToCart => 'Ajouter au panier';
+
+  @override
+  String boxContainsUnits(int count) {
+    return '1 Boîte = $count unité(s)';
+  }
+
+  @override
+  String get reset => 'Réinitialiser';
+
+  @override
+  String get priceRange => 'Gamme de prix';
+
+  @override
+  String get min => 'Min';
+
+  @override
+  String get max => 'Max';
+
+  @override
+  String get apply => 'Appliquer';
+
+  @override
+  String get retry => 'Réessayer';
+
+  @override
+  String get noResults => 'Aucun résultat trouvé';
+
+  @override
+  String get newestProducts => 'Nouveaux produits';
+
+  @override
+  String get bestSelling => 'Meilleures ventes';
 }

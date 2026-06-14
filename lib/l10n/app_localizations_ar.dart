@@ -238,4 +238,48 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get currency => 'دج';
+
+  @override
+  String get brands => 'الماركات';
+
+  @override
+  String get boxes => 'العلب';
+
+  @override
+  String get units => 'الوحدات';
+
+  @override
+  String get addToCart => 'أضف إلى السلة';
+
+  @override
+  String boxContainsUnits(int count) {
+    return 'العلبة = $count وحدة';
+  }
+
+  @override
+  String get reset => 'إعادة ضبط';
+
+  @override
+  String get priceRange => 'نطاق السعر';
+
+  @override
+  String get min => 'الأدنى';
+
+  @override
+  String get max => 'الأقصى';
+
+  @override
+  String get apply => 'تطبيق';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get noResults => 'لم يتم العثور على نتائج';
+
+  @override
+  String get newestProducts => 'أحدث المنتجات';
+
+  @override
+  String get bestSelling => 'الأكثر مبيعاً';
 }

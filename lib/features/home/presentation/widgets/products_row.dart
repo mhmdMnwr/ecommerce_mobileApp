@@ -56,30 +56,39 @@ class SectionHeader extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: 20.sp,
               fontWeight: FontWeight.w800,
               color: AppColors.textPrimary,
+              letterSpacing: -0.3,
             ),
           ),
           GestureDetector(
             onTap: onViewMore,
-            child: Row(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.viewMore,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w600,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withAlpha(10),
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.viewMore,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 11.r,
                     color: AppColors.primary,
                   ),
-                ),
-                SizedBox(width: 4.w),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 13.r,
-                  color: AppColors.primary,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

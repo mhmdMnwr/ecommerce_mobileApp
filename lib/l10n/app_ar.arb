@@ -75,5 +75,19 @@
   "popular": "الأكثر مبيعاً",
   "viewMore": "عرض المزيد",
   "failedToLoadData": "فشل تحميل البيانات.",
-  "currency": "دج"
+  "currency": "دج",
+  "brands": "الماركات",
+  "boxes": "العلب",
+  "units": "الوحدات",
+  "addToCart": "أضف إلى السلة",
+  "boxContainsUnits": "العلبة = {count} وحدة",
+  "reset": "إعادة ضبط",
+  "priceRange": "نطاق السعر",
+  "min": "الأدنى",
+  "max": "الأقصى",
+  "apply": "تطبيق",
+  "retry": "إعادة المحاولة",
+  "noResults": "لم يتم العثور على نتائج",
+  "newestProducts": "أحدث المنتجات",
+  "bestSelling": "الأكثر مبيعاً"
 }

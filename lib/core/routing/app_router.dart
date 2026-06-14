@@ -11,6 +11,12 @@ import '../../features/search/presentation/pages/search_page.dart';
 import '../di/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/product/presentation/pages/product_page.dart';
+import '../../features/home/data/models/product_model.dart';
+import '../../features/search/presentation/cubit/search_state.dart';
+import '../../features/categories/presentation/cubit/categories_cubit.dart';
+import '../../features/categories/presentation/pages/categories_page.dart';
+import '../../features/categories/presentation/pages/categories_grid_page.dart';
 import 'app_shell.dart';
 
 /// Application route paths — centralised to avoid magic strings.
@@ -23,6 +29,7 @@ abstract class AppRoutes {
   static const String categories = '/categories';
   static const String profile = '/profile';
   static const String profileInfo = '/profile/info';
+  static const String product = '/product';
 }
 
 /// Placeholder page for tabs that are not yet implemented.
@@ -68,6 +75,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.register,
       builder: (context, state) => const RegisterPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.product,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final product = state.extra as ProductModel;
+        return ProductPage(product: product);
+      },
     ),
 
     // ── Main app shell with bottom nav ──────────
@@ -117,8 +132,37 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.categories,
-              builder: (context, state) =>
-                  const _ComingSoonPage(title: 'Categories'),
+              builder: (context, state) => const CategoriesPage(),
+              routes: [
+                GoRoute(
+                  path: 'grid',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  builder: (context, state) => BlocProvider(
+                    create: (_) => sl<CategoriesCubit>(),
+                    child: CategoriesGridPage(
+                      type: state.uri.queryParameters['type'] ?? 'category',
+                    ),
+                  ),
+                ),
+                GoRoute(
+                  path: 'products',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  builder: (context, state) {
+                    final type = state.uri.queryParameters['type'] ?? 'category';
+                    final id = state.uri.queryParameters['id'] ?? '';
+                    final name = state.uri.queryParameters['name'] ?? '';
+                    
+                    final filters = type == 'category' 
+                        ? SearchFilters(categoryId: id, categoryName: name, sort: 'title')
+                        : SearchFilters(brandTitle: name, sort: 'title');
+
+                    return BlocProvider(
+                      create: (_) => sl<SearchCubit>(),
+                      child: SearchPage(initialFilters: filters),
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),

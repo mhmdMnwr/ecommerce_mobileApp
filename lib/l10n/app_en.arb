@@ -75,5 +75,26 @@
   "popular": "Popular",
   "viewMore": "View More",
   "failedToLoadData": "Failed to load data.",
-  "currency": "DA"
+  "currency": "DA",
+  "brands": "Brands",
+  "boxes": "Boxes",
+  "units": "Units",
+  "addToCart": "Add to cart",
+  "boxContainsUnits": "1 Box = {count} unit",
+  "@boxContainsUnits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reset": "Reset",
+  "priceRange": "Price Range",
+  "min": "Min",
+  "max": "Max",
+  "apply": "Apply",
+  "retry": "Retry",
+  "noResults": "No results found",
+  "newestProducts": "Newest Products",
+  "bestSelling": "Best Selling"
 }

@@ -15,6 +15,9 @@ import '../../features/home/presentation/cubit/home_cubit.dart';
 import '../../features/search/data/data_sources/search_remote_data_source.dart';
 import '../../features/search/data/repositories/search_repository.dart';
 import '../../features/search/presentation/cubit/search_cubit.dart';
+import '../../features/categories/data/datasources/categories_remote_data_source.dart';
+import '../../features/categories/data/repositories/categories_repository.dart';
+import '../../features/categories/presentation/cubit/categories_cubit.dart';
 
 /// Global service locator instance.
 final GetIt sl = GetIt.instance;
@@ -91,5 +94,20 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<SearchCubit>(
     () => SearchCubit(sl<SearchRepository>(), sl<HomeRepository>()),
+  );
+
+  // ──────────────────────────────────────────────
+  // Feature — Categories
+  // ──────────────────────────────────────────────
+  sl.registerLazySingleton<CategoriesRemoteDataSource>(
+    () => CategoriesRemoteDataSource(sl<ApiClient>().dio),
+  );
+
+  sl.registerLazySingleton<CategoriesRepository>(
+    () => CategoriesRepository(sl<CategoriesRemoteDataSource>()),
+  );
+
+  sl.registerFactory<CategoriesCubit>(
+    () => CategoriesCubit(sl<CategoriesRepository>()),
   );
 }

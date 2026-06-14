@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/auth_message_translator.dart';
+import '../../../search/presentation/cubit/search_cubit.dart';
+import '../../../search/presentation/cubit/search_state.dart';
+import '../../../search/presentation/pages/search_page.dart';
 import '../cubit/home_cubit.dart';
 import '../cubit/home_state.dart';
 import '../widgets/header_with_categories.dart';
@@ -25,6 +29,36 @@ class _HomePageState extends State<HomePage> {
     context.read<HomeCubit>().loadHomeData();
   }
 
+  void _viewMoreNew() {
+    // Navigate to SearchPage sorted by newest (sort=-createdAt), limit 50
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (_) => sl<SearchCubit>(),
+          child: SearchPage(
+            initialFilters: const SearchFilters(sort: '-createdAt'),
+            pageTitle: null, // will use l10n.newestProducts
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _viewMorePopular() {
+    // Navigate to SearchPage sorted by best-selling (sort=-sold), limit 50
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (_) => sl<SearchCubit>(),
+          child: SearchPage(
+            initialFilters: const SearchFilters(sort: '-sold'),
+            pageTitle: null, // will use l10n.bestSelling
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -40,7 +74,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           if (state is HomeError) {
-            return _buildError(context, state.message);
+            return _buildError(context, state.message, l10n);
           }
 
           if (state is HomeLoaded) {
@@ -61,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         SectionHeader(
                           title: l10n.newProducts,
-                          onViewMore: () {},
+                          onViewMore: _viewMoreNew,
                         ),
                         SizedBox(height: 12.h),
                         ProductsRow(
@@ -71,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(height: 36.h),
                         SectionHeader(
                           title: l10n.popular,
-                          onViewMore: () {},
+                          onViewMore: _viewMorePopular,
                         ),
                         SizedBox(height: 12.h),
                         ProductsRow(
@@ -93,15 +127,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildError(BuildContext context, String message) {
+  Widget _buildError(BuildContext context, String message, AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error_outline, size: 48.r, color: AppColors.error),
-            SizedBox(height: 16.h),
+            Container(
+              width: 80.r,
+              height: 80.r,
+              decoration: BoxDecoration(
+                color: AppColors.error.withAlpha(15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.error_outline, size: 40.r, color: AppColors.error),
+            ),
+            SizedBox(height: 20.h),
             Text(
               translateAuthMessage(context, message),
               textAlign: TextAlign.center,
@@ -110,11 +152,14 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 14.sp,
               ),
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 24.h),
             TextButton.icon(
               onPressed: () => context.read<HomeCubit>().loadHomeData(),
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(l10n.retry),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primary,
+              ),
             ),
           ],
         ),

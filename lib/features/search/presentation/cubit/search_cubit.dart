@@ -34,6 +34,7 @@ class SearchCubit extends Cubit<SearchState> {
       final result = await _searchRepo.searchProducts(
         query: query.isEmpty ? null : query,
         categoryId: f.categoryId,
+        brandTitle: f.brandTitle,
         minPrice: f.minPrice,
         maxPrice: f.maxPrice,
         sort: f.sort,
@@ -68,6 +69,7 @@ class SearchCubit extends Cubit<SearchState> {
       final result = await _searchRepo.searchProducts(
         query: s.query.isEmpty ? null : s.query,
         categoryId: s.filters.categoryId,
+        brandTitle: s.filters.brandTitle,
         minPrice: s.filters.minPrice,
         maxPrice: s.filters.maxPrice,
         sort: s.filters.sort,

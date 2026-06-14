@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/routing/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/product_model.dart';
 
@@ -17,91 +19,115 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 160.w,
-      padding: EdgeInsets.all(12.r),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(14.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(15),
-            blurRadius: 15,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image
-          Expanded(
-            child: Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.r),
-                child: product.image.isNotEmpty
-                    ? Image.network(
-                        product.image,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => Icon(
-                          Icons.image_not_supported_outlined,
-                          size: 36.r,
-                          color: AppColors.textSecondary,
-                        ),
-                      )
-                    : Icon(
-                        Icons.image_not_supported_outlined,
-                        size: 36.r,
-                        color: AppColors.textSecondary,
-                      ),
-              ),
+    return GestureDetector(
+      onTap: () => context.push(AppRoutes.product, extra: product),
+      child: Container(
+        width: 160.w,
+        padding: EdgeInsets.all(12.r),
+        decoration: BoxDecoration(
+          color: AppColors.background,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(12),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             ),
-          ),
-          SizedBox(height: 12.h),
-
-          // Title
-          Text(
-            product.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: AppColors.textSecondary,
+            BoxShadow(
+              color: Colors.black.withAlpha(6),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
             ),
-          ),
-          SizedBox(height: 6.h),
-
-          // Price + add
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  '${product.price} $currency',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image with subtle background
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.r),
+                      child: product.image.isNotEmpty
+                          ? Image.network(
+                              product.image,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) => Icon(
+                                Icons.image_not_supported_outlined,
+                                size: 36.r,
+                                color: AppColors.textSecondary,
+                              ),
+                            )
+                          : Icon(
+                              Icons.image_not_supported_outlined,
+                              size: 36.r,
+                              color: AppColors.textSecondary,
+                            ),
+                    ),
                   ),
                 ),
               ),
-              Container(
-                width: 28.r,
-                height: 28.r,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.primary, width: 1.5),
-                ),
-                child: Icon(
-                  Icons.add,
-                  size: 16.r,
-                  color: AppColors.primary,
-                ),
+            ),
+            SizedBox(height: 12.h),
+
+            // Title
+            Text(
+              product.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: AppColors.textSecondary,
+                height: 1.2,
               ),
-            ],
-          ),
-        ],
+            ),
+            SizedBox(height: 8.h),
+
+            // Price + add button
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    '${product.price.toInt()} $currency',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 30.r,
+                  height: 30.r,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withAlpha(15),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.primary.withAlpha(80),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.add,
+                    size: 16.r,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
