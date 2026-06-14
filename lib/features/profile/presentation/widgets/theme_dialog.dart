@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_cubit.dart';
+import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 /// Popup dialog for selecting the app theme.
 class ThemeDialog extends StatelessWidget {
@@ -10,10 +11,10 @@ class ThemeDialog extends StatelessWidget {
 
   const ThemeDialog({super.key, required this.themeCubit});
 
-  static const _options = [
-    (mode: ThemeMode.system, label: 'System', icon: Icons.brightness_auto),
-    (mode: ThemeMode.light, label: 'Light', icon: Icons.light_mode_outlined),
-    (mode: ThemeMode.dark, label: 'Dark', icon: Icons.dark_mode_outlined),
+  List<({ThemeMode mode, String Function(BuildContext) label, IconData icon})> _getOptions() => [
+    (mode: ThemeMode.system, label: (c) => AppLocalizations.of(c)!.system, icon: Icons.brightness_auto),
+    (mode: ThemeMode.light, label: (c) => AppLocalizations.of(c)!.light, icon: Icons.light_mode_outlined),
+    (mode: ThemeMode.dark, label: (c) => AppLocalizations.of(c)!.dark, icon: Icons.dark_mode_outlined),
   ];
 
   @override
@@ -30,7 +31,7 @@ class ThemeDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Theme',
+              AppLocalizations.of(context)!.theme,
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w700,
@@ -38,7 +39,7 @@ class ThemeDialog extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.h),
-            ..._options.map((opt) {
+            ..._getOptions().map((opt) {
               final selected = opt.mode == current;
 
               return ListTile(
@@ -47,7 +48,7 @@ class ThemeDialog extends StatelessWidget {
                         ? AppColors.primary
                         : AppColors.textMuted),
                 title: Text(
-                  opt.label,
+                  opt.label(context),
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight:

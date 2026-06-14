@@ -3,14 +3,18 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
-import '../../features/auth/presentation/pages/splash_page.dart';
+import '../../features/home/presentation/cubit/home_cubit.dart';
+import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/profile/presentation/pages/profile_information_page.dart';
+import '../../features/search/presentation/cubit/search_cubit.dart';
+import '../../features/search/presentation/pages/search_page.dart';
+import '../di/injection_container.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import 'app_shell.dart';
 
 /// Application route paths — centralised to avoid magic strings.
 abstract class AppRoutes {
-  static const String splash = '/';
   static const String login = '/login';
   static const String register = '/register';
   static const String home = '/home';
@@ -53,14 +57,10 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 /// Creates and configures the [GoRouter] instance.
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: AppRoutes.splash,
+  initialLocation: AppRoutes.login,
   debugLogDiagnostics: true,
   routes: <RouteBase>[
     // ── Auth routes (no bottom nav) ─────────────
-    GoRoute(
-      path: AppRoutes.splash,
-      builder: (context, state) => const SplashPage(),
-    ),
     GoRoute(
       path: AppRoutes.login,
       builder: (context, state) => const LoginPage(),
@@ -80,8 +80,10 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.home,
-              builder: (context, state) =>
-                  const _ComingSoonPage(title: 'Home'),
+              builder: (context, state) => BlocProvider(
+                create: (_) => sl<HomeCubit>(),
+                child: const HomePage(),
+              ),
             ),
           ],
         ),
@@ -91,8 +93,10 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.search,
-              builder: (context, state) =>
-                  const _ComingSoonPage(title: 'Search'),
+              builder: (context, state) => BlocProvider(
+                create: (_) => sl<SearchCubit>(),
+                child: const SearchPage(),
+              ),
             ),
           ],
         ),

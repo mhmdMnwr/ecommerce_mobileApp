@@ -39,7 +39,7 @@ class EcommerceApp extends StatelessWidget {
             ]),
             builder: (context, _) {
               return MaterialApp.router(
-                title: 'E-Commerce App',
+                onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
                 debugShowCheckedModeBanner: false,
 
                 // ── Theme ──────────────────────────────

@@ -12,6 +12,9 @@ import '../../../auth/presentation/cubit/auth_cubit.dart';
 import '../../../auth/presentation/cubit/auth_state.dart';
 import '../widgets/language_dialog.dart';
 import '../widgets/theme_dialog.dart';
+import 'package:ecommerce_app/l10n/app_localizations.dart';
+import '../../../../core/utils/icons_helper.dart';
+import '../widgets/profile_menu_item.dart';
 
 /// Main profile screen — shows user info and menu items.
 class ProfilePage extends StatelessWidget {
@@ -23,7 +26,7 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
-          'Profile',
+          AppLocalizations.of(context)!.profile,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
@@ -49,8 +52,8 @@ class ProfilePage extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      width: 56.r,
-                      height: 56.r,
+                      width: 60.r,
+                      height: 60.r,
                       decoration: BoxDecoration(
                         color: AppColors.surface,
                         shape: BoxShape.circle,
@@ -59,10 +62,10 @@ class ProfilePage extends StatelessWidget {
                           width: 1.5,
                         ),
                       ),
-                      child: Icon(
-                        Icons.sentiment_satisfied_alt_outlined,
-                        size: 30.r,
-                        color: AppColors.primary,
+                      child: Image.asset(
+                        IconsHelper.userAccount,
+                        height: 60.r,
+                        width: 60.r,
                       ),
                     ),
                     SizedBox(width: 16.w),
@@ -71,7 +74,8 @@ class ProfilePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            user?.username ?? 'Guest',
+                            user?.username ??
+                                AppLocalizations.of(context)!.guest,
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w700,
@@ -91,56 +95,53 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 32.h),
+                SizedBox(height: 36.h),
 
                 // ── Menu items ──────────────────────
-                _MenuItem(
-                  icon: Icons.person_outline,
-                  title: 'Profile information',
+                ProfileMenuItem(
+                  pngAsset: IconsHelper.userAccount,
+                  title: AppLocalizations.of(context)!.profileInformation,
                   onTap: () => context.push(AppRoutes.profileInfo),
                 ),
-                _MenuItem(
-                  icon: Icons.notifications_none_outlined,
-                  title: 'Notification',
+                ProfileMenuItem(
+                  pngAsset: IconsHelper.notification,
+                  title: AppLocalizations.of(context)!.notification,
                   onTap: () => _comingSoon(context),
                 ),
-                _MenuItem(
-                  icon: Icons.receipt_long_outlined,
-                  title: 'Orders history',
+                ProfileMenuItem(
+                  pngAsset: IconsHelper.orderHistory,
+                  title: AppLocalizations.of(context)!.ordersHistory,
                   onTap: () => _comingSoon(context),
                 ),
-                _MenuItem(
-                  icon: Icons.language_outlined,
-                  title: 'Language',
+                ProfileMenuItem(
+                  pngAsset: IconsHelper.language,
+                  title: AppLocalizations.of(context)!.language,
                   onTap: () => showDialog(
                     context: context,
-                    builder: (_) => LanguageDialog(
-                      localeCubit: sl<LocaleCubit>(),
-                    ),
+                    builder: (_) =>
+                        LanguageDialog(localeCubit: sl<LocaleCubit>()),
                   ),
                 ),
-                _MenuItem(
-                  icon: Icons.dark_mode_outlined,
-                  title: 'Theme',
+                ProfileMenuItem(
+                  pngAsset: IconsHelper.theme,
+                  title: AppLocalizations.of(context)!.theme,
                   onTap: () => showDialog(
                     context: context,
-                    builder: (_) => ThemeDialog(
-                      themeCubit: sl<ThemeCubit>(),
-                    ),
+                    builder: (_) => ThemeDialog(themeCubit: sl<ThemeCubit>()),
                   ),
                 ),
-                _MenuItem(
-                  icon: Icons.phone_outlined,
-                  title: 'Contact us',
+                ProfileMenuItem(
+                  pngAsset: IconsHelper.phone,
+                  title: AppLocalizations.of(context)!.contactUs,
                   onTap: () => _comingSoon(context),
                 ),
 
-                SizedBox(height: 32.h),
+                SizedBox(height: 36.h),
 
                 // ── Logout ──────────────────────────
-                _MenuItem(
+                ProfileMenuItem(
                   icon: Icons.logout_rounded,
-                  title: 'Log out',
+                  title: AppLocalizations.of(context)!.logOut,
                   titleColor: AppColors.error,
                   iconColor: AppColors.error,
                   showArrow: false,
@@ -162,70 +163,14 @@ class ProfilePage extends StatelessWidget {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: const Text('Coming soon'),
+          content: Text(AppLocalizations.of(context)!.comingSoon),
           behavior: SnackBarBehavior.floating,
           backgroundColor: AppColors.primary,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.r),
+          ),
           duration: const Duration(seconds: 1),
         ),
       );
-  }
-}
-
-// ── Reusable menu item row ─────────────────────────
-
-class _MenuItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final VoidCallback onTap;
-  final Color? titleColor;
-  final Color? iconColor;
-  final bool showArrow;
-
-  const _MenuItem({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-    this.titleColor,
-    this.iconColor,
-    this.showArrow = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12.r),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 24.r,
-              color: iconColor ?? AppColors.textMuted,
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w500,
-                  color: titleColor ?? AppColors.textPrimary,
-                ),
-              ),
-            ),
-            if (showArrow)
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16.r,
-                color: AppColors.textSecondary,
-              ),
-          ],
-        ),
-      ),
-    );
   }
 }

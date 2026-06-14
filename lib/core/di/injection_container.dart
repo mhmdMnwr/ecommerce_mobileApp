@@ -9,6 +9,12 @@ import '../utils/constants.dart';
 import '../../features/auth/data/data_sources/auth_remote_data_source.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/home/data/data_sources/home_remote_data_source.dart';
+import '../../features/home/data/repositories/home_repository.dart';
+import '../../features/home/presentation/cubit/home_cubit.dart';
+import '../../features/search/data/data_sources/search_remote_data_source.dart';
+import '../../features/search/data/repositories/search_repository.dart';
+import '../../features/search/presentation/cubit/search_cubit.dart';
 
 /// Global service locator instance.
 final GetIt sl = GetIt.instance;
@@ -55,5 +61,35 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<AuthCubit>(
     () => AuthCubit(sl<AuthRepository>()),
+  );
+
+  // ──────────────────────────────────────────────
+  // Feature — Home
+  // ──────────────────────────────────────────────
+  sl.registerLazySingleton<HomeRemoteDataSource>(
+    () => HomeRemoteDataSource(sl<ApiClient>().dio),
+  );
+
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepository(sl<HomeRemoteDataSource>()),
+  );
+
+  sl.registerFactory<HomeCubit>(
+    () => HomeCubit(sl<HomeRepository>()),
+  );
+
+  // ──────────────────────────────────────────────
+  // Feature — Search
+  // ──────────────────────────────────────────────
+  sl.registerLazySingleton<SearchRemoteDataSource>(
+    () => SearchRemoteDataSource(sl<ApiClient>().dio),
+  );
+
+  sl.registerLazySingleton<SearchRepository>(
+    () => SearchRepository(sl<SearchRemoteDataSource>()),
+  );
+
+  sl.registerFactory<SearchCubit>(
+    () => SearchCubit(sl<SearchRepository>(), sl<HomeRepository>()),
   );
 }

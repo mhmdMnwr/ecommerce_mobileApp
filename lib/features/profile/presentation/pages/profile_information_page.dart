@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_text_field.dart';
-import '../../../auth/data/models/user_model.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
 import '../../../auth/presentation/cubit/auth_state.dart';
+import '../../../auth/presentation/pages/map_picker_page.dart';
+import '../widgets/edit_profile_dialog.dart';
+import '../widgets/info_card.dart';
 import '../widgets/password_reset_dialog.dart';
+import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 /// Shows user's personal info and allows editing.
 class ProfileInformationPage extends StatelessWidget {
@@ -17,11 +18,13 @@ class ProfileInformationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
-          'Profile Information',
+          l10n.profileInformation,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
@@ -40,12 +43,17 @@ class ProfileInformationPage extends StatelessWidget {
           if (user == null) {
             return Center(
               child: Text(
-                'Not logged in',
+                l10n.notLoggedIn,
                 style: TextStyle(
-                    fontSize: 15.sp, color: AppColors.textSecondary),
+                  fontSize: 15.sp,
+                  color: AppColors.textSecondary,
+                ),
               ),
             );
           }
+
+          final hasLocation =
+              user.latitude != null && user.longitude != null;
 
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -53,7 +61,7 @@ class ProfileInformationPage extends StatelessWidget {
               children: [
                 SizedBox(height: 16.h),
 
-                // ── Avatar ──────────────────────
+                // Avatar
                 Container(
                   width: 72.r,
                   height: 72.r,
@@ -73,30 +81,52 @@ class ProfileInformationPage extends StatelessWidget {
                 ),
                 SizedBox(height: 28.h),
 
-                // ── Personal Information card ───
-                _InfoCard(
-                  title: 'Personal Information',
+                // Personal info card
+                InfoCard(
+                  title: l10n.personalInformation,
                   action: AppButton(
-                    text: 'Edit',
-                    onPressed: () => _showEditProfile(context, user),
+                    text: l10n.edit,
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (_) => EditProfileDialog(user: user),
+                    ),
                   ),
                   children: [
-                    _InfoRow(label: 'Name', value: user.username),
-                    _InfoRow(label: 'Phone', value: user.phone),
-                    _InfoRow(
-                        label: 'Address',
-                        value: user.address.isNotEmpty
-                            ? user.address
-                            : 'Not set'),
+                    InfoRow(label: l10n.name, value: user.username),
+                    InfoRow(label: l10n.phone, value: user.phone),
+                    InfoRow(
+                      label: l10n.address,
+                      value: user.address.isNotEmpty
+                          ? user.address
+                          : l10n.notSet,
+                    ),
                   ],
                 ),
                 SizedBox(height: 20.h),
 
-                // ── Privacy card ────────────────
-                _InfoCard(
-                  title: 'Privacy',
+                // Location card
+                InfoCard(
+                  title: l10n.location,
                   action: AppButton(
-                    text: 'Edit Password',
+                    text: l10n.changeLocation,
+                    onPressed: () => _openMapPicker(context),
+                  ),
+                  children: [
+                    LocationRow(
+                      hasLocation: hasLocation,
+                      label: hasLocation
+                          ? l10n.locationSet
+                          : l10n.locationNotSet,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+
+                // Privacy card
+                InfoCard(
+                  title: l10n.privacy,
+                  action: AppButton(
+                    text: l10n.editPassword,
                     onPressed: () => showDialog(
                       context: context,
                       builder: (_) => PasswordResetDialog(
@@ -105,7 +135,7 @@ class ProfileInformationPage extends StatelessWidget {
                     ),
                   ),
                   children: [
-                    _InfoRow(label: 'Password', value: '••••••••••••'),
+                    InfoRow(label: l10n.password, value: '••••••••••••'),
                   ],
                 ),
                 SizedBox(height: 32.h),
@@ -117,166 +147,16 @@ class ProfileInformationPage extends StatelessWidget {
     );
   }
 
-  void _showEditProfile(BuildContext context, UserModel user) {
-    final nameCtrl = TextEditingController(text: user.username);
-    final phoneCtrl = TextEditingController(text: user.phone);
-    final addressCtrl = TextEditingController(text: user.address);
-    final formKey = GlobalKey<FormState>();
-
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: AppColors.background,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r)),
-        insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
-        child: Padding(
-          padding: EdgeInsets.all(24.r),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Edit Profile',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.pop(ctx),
-                      child: Icon(Icons.close, size: 22.r,
-                          color: AppColors.textSecondary),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-                AppTextField(
-                  controller: nameCtrl,
-                  hintText: 'Name',
-                  validator: Validators.username,
-                ),
-                SizedBox(height: 12.h),
-                AppTextField(
-                  controller: phoneCtrl,
-                  hintText: 'Phone',
-                  keyboardType: TextInputType.phone,
-                  validator: Validators.phone,
-                ),
-                SizedBox(height: 12.h),
-                AppTextField(
-                  controller: addressCtrl,
-                  hintText: 'Address',
-                ),
-                SizedBox(height: 20.h),
-                AppButton(
-                  text: 'Save',
-                  onPressed: () {
-                    if (!formKey.currentState!.validate()) return;
-                    context.read<AuthCubit>().updateProfile(
-                          username: nameCtrl.text.trim(),
-                          address: addressCtrl.text.trim(),
-                          phone: phoneCtrl.text.trim(),
-                        );
-                    Navigator.pop(ctx);
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+  Future<void> _openMapPicker(BuildContext context) async {
+    final result = await Navigator.of(context).push<MapPickerResult>(
+      MaterialPageRoute(builder: (_) => const MapPickerPage()),
     );
-  }
-}
-
-// ── Info card with border ──────────────────────────
-
-class _InfoCard extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-  final Widget action;
-
-  const _InfoCard({
-    required this.title,
-    required this.children,
-    required this.action,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(20.r),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.fieldBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          ...children,
-          SizedBox(height: 16.h),
-          action,
-        ],
-      ),
-    );
-  }
-}
-
-// ── Info row (label + value) ──────────────────────
-
-class _InfoRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _InfoRow({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80.w,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.textBody,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    if (result != null && context.mounted) {
+      context.read<AuthCubit>().updateProfile(
+            address: result.address,
+            latitude: result.latitude,
+            longitude: result.longitude,
+          );
+    }
   }
 }

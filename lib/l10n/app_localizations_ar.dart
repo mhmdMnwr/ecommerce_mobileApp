@@ -10,4 +10,232 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appTitle => 'تطبيق التجارة الإلكترونية';
+
+  @override
+  String get profile => 'الملف الشخصي';
+
+  @override
+  String get guest => 'ضيف';
+
+  @override
+  String get profileInformation => 'معلومات الملف الشخصي';
+
+  @override
+  String get notification => 'الإشعارات';
+
+  @override
+  String get ordersHistory => 'سجل الطلبات';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get theme => 'المظهر';
+
+  @override
+  String get contactUs => 'اتصل بنا';
+
+  @override
+  String get logOut => 'تسجيل الخروج';
+
+  @override
+  String get comingSoon => 'قريباً';
+
+  @override
+  String get notLoggedIn => 'لم يتم تسجيل الدخول';
+
+  @override
+  String get personalInformation => 'المعلومات الشخصية';
+
+  @override
+  String get name => 'الاسم';
+
+  @override
+  String get phone => 'الهاتف';
+
+  @override
+  String get address => 'العنوان';
+
+  @override
+  String get notSet => 'لم يتم التعيين';
+
+  @override
+  String get edit => 'تعديل';
+
+  @override
+  String get privacy => 'الخصوصية';
+
+  @override
+  String get password => 'كلمة المرور';
+
+  @override
+  String get editPassword => 'تعديل كلمة المرور';
+
+  @override
+  String get editProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get passwordReset => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get oldPassword => 'كلمة المرور القديمة';
+
+  @override
+  String get requiredField => 'مطلوب';
+
+  @override
+  String get newPassword => 'كلمة المرور الجديدة';
+
+  @override
+  String get atLeast6Chars => '6 أحرف على الأقل';
+
+  @override
+  String get newPasswordConfirmation => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get passwordsDoNotMatch => 'كلمات المرور غير متطابقة';
+
+  @override
+  String get passwordUpdated => 'تم تحديث كلمة المرور بنجاح';
+
+  @override
+  String get system => 'النظام';
+
+  @override
+  String get light => 'فاتح';
+
+  @override
+  String get dark => 'داكن';
+
+  @override
+  String get home => 'الرئيسية';
+
+  @override
+  String get search => 'البحث';
+
+  @override
+  String get cart => 'عربة التسوق';
+
+  @override
+  String get categories => 'الفئات';
+
+  @override
+  String get logIn => 'تسجيل الدخول';
+
+  @override
+  String get signUp => 'إنشاء حساب';
+
+  @override
+  String get username => 'اسم المستخدم';
+
+  @override
+  String get dontHaveAccount => 'ليس لديك حساب بعد';
+
+  @override
+  String get alreadyHaveAccount => 'هل لديك حساب بالفعل ؟';
+
+  @override
+  String get phoneNumber => 'رقم الهاتف';
+
+  @override
+  String get deliveryAddress => 'عنوان التوصيل';
+
+  @override
+  String get orText => 'أو';
+
+  @override
+  String get selectLocationOnMap => 'تحديد الموقع بدقة على الخريطة';
+
+  @override
+  String get locationSelected => '📍 تم تحديد الموقع';
+
+  @override
+  String get pleaseProvideAddress =>
+      'يرجى تقديم عنوان أو تحديد موقع على الخريطة';
+
+  @override
+  String get selectLocation => 'تحديد الموقع';
+
+  @override
+  String get detectingLocation => 'جاري تحديد موقعك...';
+
+  @override
+  String get tapMapToSelect => 'اضغط على الخريطة لتحديد موقعك';
+
+  @override
+  String get selectedLocation => 'الموقع المحدد';
+
+  @override
+  String get confirmLocation => 'تأكيد الموقع';
+
+  @override
+  String get usernameRequired => 'اسم المستخدم مطلوب';
+
+  @override
+  String get usernameMinLength =>
+      'يجب أن يتكون اسم المستخدم من 3 أحرف على الأقل';
+
+  @override
+  String get passwordRequired => 'كلمة المرور مطلوبة';
+
+  @override
+  String get passwordMinLength =>
+      'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل';
+
+  @override
+  String get phoneRequired => 'رقم الهاتف مطلوب';
+
+  @override
+  String get phoneInvalid => 'يجب أن يبدأ الهاتف بـ 05 أو 06 أو 07 (10 أرقام)';
+
+  @override
+  String get addressRequired => 'العنوان مطلوب';
+
+  @override
+  String get loginFailed => 'فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get registrationFailed => 'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get profileUpdateFailed => 'فشل تحديث الملف الشخصي.';
+
+  @override
+  String get registrationSuccess => 'تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول.';
+
+  @override
+  String get location => 'الموقع';
+
+  @override
+  String get changeLocation => 'تغيير الموقع';
+
+  @override
+  String get locationNotSet => 'الموقع غير محدد';
+
+  @override
+  String get locationSet => 'تم تحديد الموقع';
+
+  @override
+  String get storeName => 'جروسيست مدبر';
+
+  @override
+  String get welcomeBack => '!مرحباً بعودتك';
+
+  @override
+  String get newProducts => 'جديد';
+
+  @override
+  String get popular => 'الأكثر مبيعاً';
+
+  @override
+  String get viewMore => 'عرض المزيد';
+
+  @override
+  String get failedToLoadData => 'فشل تحميل البيانات.';
+
+  @override
+  String get currency => 'دج';
 }

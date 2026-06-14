@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/locale/locale_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 /// Popup dialog for selecting the app language.
 class LanguageDialog extends StatelessWidget {
@@ -24,7 +25,7 @@ class LanguageDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Language',
+              AppLocalizations.of(context)!.language,
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w700,

@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
+import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 /// Dialog for changing the user's password.
 ///
@@ -39,7 +40,7 @@ class _PasswordResetDialogState extends State<PasswordResetDialog> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(SnackBar(
-          content: const Text('Passwords do not match'),
+          content: Text(AppLocalizations.of(context)!.passwordsDoNotMatch),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
           shape:
@@ -53,7 +54,7 @@ class _PasswordResetDialogState extends State<PasswordResetDialog> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
-        content: const Text('Password updated successfully'),
+        content: Text(AppLocalizations.of(context)!.passwordUpdated),
         backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
         shape:
@@ -80,7 +81,7 @@ class _PasswordResetDialogState extends State<PasswordResetDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Password Reset',
+                    AppLocalizations.of(context)!.passwordReset,
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w700,
@@ -99,34 +100,34 @@ class _PasswordResetDialogState extends State<PasswordResetDialog> {
               // ── Fields ──────────────────
               AppTextField(
                 controller: _oldCtrl,
-                hintText: 'Old password',
+                hintText: AppLocalizations.of(context)!.oldPassword,
                 obscureText: true,
                 validator: (v) =>
-                    (v == null || v.isEmpty) ? 'Required' : null,
+                    (v == null || v.isEmpty) ? AppLocalizations.of(context)!.requiredField : null,
               ),
               SizedBox(height: 12.h),
               AppTextField(
                 controller: _newCtrl,
-                hintText: 'New password',
+                hintText: AppLocalizations.of(context)!.newPassword,
                 obscureText: true,
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'Required';
-                  if (v.length < 6) return 'At least 6 characters';
+                  if (v == null || v.isEmpty) return AppLocalizations.of(context)!.requiredField;
+                  if (v.length < 6) return AppLocalizations.of(context)!.atLeast6Chars;
                   return null;
                 },
               ),
               SizedBox(height: 12.h),
               AppTextField(
                 controller: _confirmCtrl,
-                hintText: 'New password confirmation',
+                hintText: AppLocalizations.of(context)!.newPasswordConfirmation,
                 obscureText: true,
                 validator: (v) =>
-                    (v == null || v.isEmpty) ? 'Required' : null,
+                    (v == null || v.isEmpty) ? AppLocalizations.of(context)!.requiredField : null,
               ),
               SizedBox(height: 20.h),
 
               // ── Submit ──────────────────
-              AppButton(text: 'Edit', onPressed: _submit),
+              AppButton(text: AppLocalizations.of(context)!.edit, onPressed: _submit),
             ],
           ),
         ),

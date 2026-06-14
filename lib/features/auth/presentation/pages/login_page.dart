@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/routing/app_router.dart';
+import 'package:ecommerce_app/l10n/app_localizations.dart';
+import '../../../../core/utils/auth_message_translator.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -68,7 +70,7 @@ class _LoginPageState extends State<LoginPage>
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(
-                content: Text(state.message),
+                content: Text(translateAuthMessage(context, state.message)),
                 backgroundColor: AppColors.error,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
@@ -89,7 +91,7 @@ class _LoginPageState extends State<LoginPage>
                     children: [
                       // ── Title ────────────────────────
                       Text(
-                        'Log in',
+                        AppLocalizations.of(context)!.logIn,
                         style: TextStyle(
                           fontSize: 30.sp,
                           fontWeight: FontWeight.w900,
@@ -102,8 +104,8 @@ class _LoginPageState extends State<LoginPage>
                       // ── Username ────────────────────
                       AppTextField(
                         controller: _usernameCtrl,
-                        hintText: 'Username',
-                        validator: Validators.username,
+                        hintText: AppLocalizations.of(context)!.username,
+                        validator: (v) => Validators.username(context, v),
                         textInputAction: TextInputAction.next,
                       ),
                       SizedBox(height: 14.h),
@@ -111,9 +113,9 @@ class _LoginPageState extends State<LoginPage>
                       // ── Password ────────────────────
                       AppTextField(
                         controller: _passwordCtrl,
-                        hintText: 'Password',
+                        hintText: AppLocalizations.of(context)!.password,
                         obscureText: _obscure,
-                        validator: Validators.password,
+                        validator: (v) => Validators.password(context, v),
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => _onLogin(),
                         suffixIcon: GestureDetector(
@@ -134,7 +136,7 @@ class _LoginPageState extends State<LoginPage>
                       BlocBuilder<AuthCubit, AuthState>(
                         builder: (context, state) {
                           return AppButton(
-                            text: 'Log in',
+                            text: AppLocalizations.of(context)!.logIn,
                             isLoading: state is AuthLoading,
                             onPressed: _onLogin,
                           );
@@ -147,7 +149,7 @@ class _LoginPageState extends State<LoginPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "you don't have an account yet",
+                            AppLocalizations.of(context)!.dontHaveAccount,
                             style: TextStyle(
                               fontSize: 13.sp,
                               color: AppColors.textSecondary,
@@ -157,7 +159,7 @@ class _LoginPageState extends State<LoginPage>
                           GestureDetector(
                             onTap: () => context.go(AppRoutes.register),
                             child: Text(
-                              'Sign up',
+                              AppLocalizations.of(context)!.signUp,
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w700,

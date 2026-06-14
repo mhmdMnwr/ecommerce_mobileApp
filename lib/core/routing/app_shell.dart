@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../theme/app_colors.dart';
+import '../utils/icons_helper.dart';
+import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 /// Main app scaffold with a persistent bottom navigation bar.
 ///
@@ -15,6 +17,8 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentIndex = navigationShell.currentIndex;
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: Container(
@@ -24,43 +28,76 @@ class AppShell extends StatelessWidget {
           ),
         ),
         child: NavigationBar(
-          selectedIndex: navigationShell.currentIndex,
-          onDestinationSelected: (index) =>
-              navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex),
+          selectedIndex: currentIndex,
+          onDestinationSelected: (index) => navigationShell.goBranch(
+            index,
+            initialLocation: index == currentIndex,
+          ),
           backgroundColor: AppColors.background,
           surfaceTintColor: Colors.transparent,
           indicatorColor: Colors.transparent,
           height: 64.h,
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           destinations: [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined, size: 24.r, color: AppColors.textSecondary),
-              selectedIcon: Icon(Icons.home_rounded, size: 24.r, color: AppColors.primary),
-              label: 'Home',
+            _buildDestination(
+              asset: IconsHelper.home,
+              label: AppLocalizations.of(context)!.home,
+              isSelected: currentIndex == 0,
             ),
-            NavigationDestination(
-              icon: Icon(Icons.search_outlined, size: 24.r, color: AppColors.textSecondary),
-              selectedIcon: Icon(Icons.search_rounded, size: 24.r, color: AppColors.primary),
-              label: 'Search',
+            _buildDestination(
+              asset: IconsHelper.search,
+              label: AppLocalizations.of(context)!.search,
+              isSelected: currentIndex == 1,
             ),
-            NavigationDestination(
-              icon: Icon(Icons.shopping_cart_outlined, size: 24.r, color: AppColors.textSecondary),
-              selectedIcon: Icon(Icons.shopping_cart_rounded, size: 24.r, color: AppColors.primary),
-              label: 'Cart',
+            _buildDestination(
+              asset: IconsHelper.cart,
+              label: AppLocalizations.of(context)!.cart,
+              isSelected: currentIndex == 2,
             ),
-            NavigationDestination(
-              icon: Icon(Icons.grid_view_outlined, size: 24.r, color: AppColors.textSecondary),
-              selectedIcon: Icon(Icons.grid_view_rounded, size: 24.r, color: AppColors.primary),
-              label: 'Categories',
+            _buildDestination(
+              asset: IconsHelper.categories,
+              label: AppLocalizations.of(context)!.categories,
+              isSelected: currentIndex == 3,
             ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline, size: 24.r, color: AppColors.textSecondary),
-              selectedIcon: Icon(Icons.person_rounded, size: 24.r, color: AppColors.primary),
-              label: 'Profile',
+            _buildDestination(
+              asset: IconsHelper.user,
+              label: AppLocalizations.of(context)!.profile,
+              isSelected: currentIndex == 4,
             ),
           ],
         ),
       ),
+    );
+  }
+
+  /// Builds a nav destination with opacity + dot indicator.
+  NavigationDestination _buildDestination({
+    required String asset,
+    required String label,
+    required bool isSelected,
+  }) {
+    return NavigationDestination(
+      icon: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            asset,
+            width: 24.r,
+            height: 24.r,
+            color: isSelected ? AppColors.primary : Colors.black,
+          ),
+          SizedBox(height: 4.h),
+          Container(
+            width: 5.r,
+            height: 5.r,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isSelected ? AppColors.primary : Colors.transparent,
+            ),
+          ),
+        ],
+      ),
+      label: label,
     );
   }
 }
