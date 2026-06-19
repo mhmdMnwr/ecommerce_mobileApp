@@ -45,7 +45,7 @@ dependencies:
   json_annotation: ^4.12.0
 
   # Secure Storage for JWT tokens
-  flutter_secure_storage: ^9.2.4
+  flutter_secure_storage: ^10.3.1
 
   # Map & Location Picker
   flutter_map: ^7.0.2

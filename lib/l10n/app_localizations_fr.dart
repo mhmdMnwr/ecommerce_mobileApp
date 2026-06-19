@@ -287,4 +287,80 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get bestSelling => 'Meilleures ventes';
+
+  @override
+  String get cartItems => 'Cart items';
+
+  @override
+  String get removeAll => 'Remove All';
+
+  @override
+  String get clearCartConfirm =>
+      'Are you sure you want to remove all items from your cart?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get productsTotal => 'Products total';
+
+  @override
+  String get delivery => 'Delivery';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get placeOrder => 'Place Order';
+
+  @override
+  String get cartEmpty => 'Your cart is empty';
+
+  @override
+  String get cartEmptyMessage =>
+      'Browse products and add items to your cart to get started.';
+
+  @override
+  String get addedToCart => 'Added to cart!';
+
+  @override
+  String get pleaseWaitOrderRegistered =>
+      'Please wait while your order gets registered';
+
+  @override
+  String get orderRegisteredSuccess => 'Your order has been registered!';
+
+  @override
+  String get order => 'Order';
+
+  @override
+  String get noOrders => 'No orders yet';
+
+  @override
+  String get cancelOrder => 'Cancel Order';
+
+  @override
+  String get cancelOrderConfirm =>
+      'Are you sure you want to cancel this order?';
+
+  @override
+  String get pleaseWait => 'Please wait...';
+
+  @override
+  String get statusPending => 'Pending';
+
+  @override
+  String get statusProcessing => 'Processing';
+
+  @override
+  String get statusShipped => 'Shipped';
+
+  @override
+  String get statusDelivered => 'Delivered';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get selectQuantity => 'Please select a quantity first';
 }

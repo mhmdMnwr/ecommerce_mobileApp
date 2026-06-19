@@ -18,6 +18,9 @@ import '../../features/search/presentation/cubit/search_cubit.dart';
 import '../../features/categories/data/datasources/categories_remote_data_source.dart';
 import '../../features/categories/data/repositories/categories_repository.dart';
 import '../../features/categories/presentation/cubit/categories_cubit.dart';
+import '../../features/cart/data/data_sources/order_remote_data_source.dart';
+import '../../features/cart/data/repositories/order_repository.dart';
+import '../../features/cart/presentation/cubit/cart_cubit.dart';
 
 /// Global service locator instance.
 final GetIt sl = GetIt.instance;
@@ -109,5 +112,21 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<CategoriesCubit>(
     () => CategoriesCubit(sl<CategoriesRepository>()),
+  );
+
+  // ──────────────────────────────────────────────
+  // Feature — Cart / Orders
+  // ──────────────────────────────────────────────
+  sl.registerLazySingleton<OrderRemoteDataSource>(
+    () => OrderRemoteDataSource(sl<ApiClient>().dio),
+  );
+
+  sl.registerLazySingleton<OrderRepository>(
+    () => OrderRepository(sl<OrderRemoteDataSource>()),
+  );
+
+  // Singleton so cart state persists across tab switches
+  sl.registerLazySingleton<CartCubit>(
+    () => CartCubit(sl<OrderRepository>()),
   );
 }

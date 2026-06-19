@@ -1,7 +1,7 @@
 /// Application-wide constants.
 abstract class AppConstants {
   /// Base URL for the API.
-  static const String baseUrl = 'http://192.168.1.9:4000';
+  static const String baseUrl = 'http://192.168.1.17:4000';
 
   /// SharedPreferences keys.
   static const String localeKey = 'app_locale';

@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../theme/app_colors.dart';
 
-/// Reusable quantity control with a label, decrement/increment buttons.
+/// Reusable quantity selector card with title, +/- buttons and value.
+///
+/// Used on both the product page and the cart item tile.
 class QuantitySelector extends StatelessWidget {
   final String title;
   final int value;
@@ -20,59 +22,91 @@ class QuantitySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 10.sp,
-            color: AppColors.textSecondary,
-            fontWeight: FontWeight.w500,
-          ),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(
+          color: value > 0
+              ? AppColors.primary.withAlpha(60)
+              : AppColors.fieldBorder.withAlpha(100),
+          width: 1,
         ),
-        SizedBox(height: 4.h),
-        Container(
-          height: 34.h,
-          padding: EdgeInsets.symmetric(horizontal: 4.w),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+              letterSpacing: 0.3,
+            ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+          SizedBox(height: 10.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _button(Icons.remove, onDecrement),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
+              _roundButton(
+                Icons.remove,
+                onDecrement,
+                enabled: value > 0,
+              ),
+              Container(
+                constraints: BoxConstraints(minWidth: 40.w),
+                alignment: Alignment.center,
                 child: Text(
                   '$value',
                   style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w800,
+                    color: value > 0
+                        ? AppColors.primary
+                        : AppColors.textPrimary,
                   ),
                 ),
               ),
-              _button(Icons.add, onIncrement),
+              _roundButton(
+                Icons.add,
+                onIncrement,
+                isAdd: true,
+              ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _button(IconData icon, VoidCallback onTap) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(6.r),
-        child: Padding(
-          padding: EdgeInsets.all(6.r),
-          child: Icon(icon, size: 16.r, color: AppColors.textPrimary),
+  Widget _roundButton(
+    IconData icon,
+    VoidCallback onTap, {
+    bool isAdd = false,
+    bool enabled = true,
+  }) {
+    final color = isAdd
+        ? AppColors.primary
+        : (enabled ? AppColors.textSecondary : AppColors.fieldBorder);
+    final bg = isAdd
+        ? AppColors.primary.withAlpha(15)
+        : (enabled ? AppColors.surface : Colors.transparent);
+
+    return GestureDetector(
+      onTap: enabled ? onTap : null,
+      child: Container(
+        width: 32.r,
+        height: 32.r,
+        decoration: BoxDecoration(
+          color: bg,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: color.withAlpha(isAdd ? 60 : 40),
+            width: 1.5,
+          ),
         ),
+        child: Icon(icon, size: 16.r, color: color),
       ),
     );
   }

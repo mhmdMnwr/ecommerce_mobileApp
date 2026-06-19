@@ -10,6 +10,7 @@ import '../widgets/search_bar_widgets.dart';
 import '../widgets/search_filters_sheet.dart';
 import '../widgets/search_results_list.dart';
 import '../widgets/search_states.dart';
+import '../widgets/search_active_filters.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 class SearchPage extends StatefulWidget {
@@ -44,16 +45,13 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _onScroll() {
-    if (_scrollCtrl.position.pixels >=
-        _scrollCtrl.position.maxScrollExtent - 200) {
+    if (_scrollCtrl.position.pixels >= _scrollCtrl.position.maxScrollExtent - 200) {
       context.read<SearchCubit>().loadMore();
     }
   }
 
   void _runSearch() {
-    context
-        .read<SearchCubit>()
-        .search(_searchCtrl.text.trim(), filters: _filters);
+    context.read<SearchCubit>().search(_searchCtrl.text.trim(), filters: _filters);
   }
 
   void _openFilters(List<CategoryModel> categories) {
@@ -61,9 +59,7 @@ class _SearchPageState extends State<SearchPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.background,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20.r))),
       builder: (_) => SearchFiltersSheet(
         currentFilters: _filters,
         categories: categories,
@@ -85,7 +81,14 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           children: [
             _buildTopBar(l10n),
-            _buildActiveFilters(l10n),
+            SearchActiveFilters(
+              filters: _filters,
+              l10n: l10n,
+              onFiltersChanged: (f) {
+                setState(() => _filters = f);
+                _runSearch();
+              },
+            ),
             Expanded(child: _buildBody(l10n)),
           ],
         ),
@@ -96,19 +99,12 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildTopBar(AppLocalizations l10n) {
     return BlocBuilder<SearchCubit, SearchState>(
       builder: (context, state) {
-        final cats = state is SearchInitial
-            ? state.categories
-            : state is SearchLoaded
-                ? state.categories
-                : <CategoryModel>[];
+        final cats = state is SearchInitial ? state.categories : (state is SearchLoaded ? state.categories : <CategoryModel>[]);
         return Padding(
           padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 8.h),
           child: Row(children: [
             if (Navigator.canPop(context)) ...[
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
+              IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),
               SizedBox(width: 8.w),
             ],
             Expanded(
@@ -129,88 +125,19 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _buildActiveFilters(AppLocalizations l10n) {
-    if (!_filters.hasActiveFilters) return const SizedBox.shrink();
-    final chips = <Widget>[];
-
-    if (_filters.categoryName != null) {
-      chips.add(ActiveFilterChip(
-        label: _filters.categoryName!,
-        onRemove: () => setState(() {
-          _filters = _filters.copyWith(clearCategory: true);
-          _runSearch();
-        }),
-      ));
-    }
-    if (_filters.brandTitle != null) {
-      chips.add(ActiveFilterChip(
-        label: _filters.brandTitle!,
-        onRemove: () => setState(() {
-          _filters = _filters.copyWith(clearBrand: true);
-          _runSearch();
-        }),
-      ));
-    }
-    if (_filters.minPrice != null || _filters.maxPrice != null) {
-      chips.add(ActiveFilterChip(
-        label: _priceLabel(l10n),
-        onRemove: () => setState(() {
-          _filters = _filters.copyWith(clearPrice: true);
-          _runSearch();
-        }),
-      ));
-    }
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: SizedBox(
-        height: 36.h,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: chips.length,
-          separatorBuilder: (ctx, i) => SizedBox(width: 8.w),
-          itemBuilder: (ctx, i) => chips[i],
-        ),
-      ),
-    );
-  }
-
-  String _priceLabel(AppLocalizations l10n) {
-    final c = l10n.currency;
-    if (_filters.minPrice != null && _filters.maxPrice != null) {
-      return '${_filters.minPrice!.toInt()} – ${_filters.maxPrice!.toInt()} $c';
-    }
-    if (_filters.minPrice != null) return '≥ ${_filters.minPrice!.toInt()} $c';
-    return '≤ ${_filters.maxPrice!.toInt()} $c';
-  }
-
   Widget _buildBody(AppLocalizations l10n) {
     return BlocBuilder<SearchCubit, SearchState>(
       builder: (context, state) {
-        if (state is SearchInitial) {
-          return SearchEmptyState(label: l10n.search);
-        }
-        if (state is SearchLoading) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.primary),
-          );
-        }
-        if (state is SearchError) {
-          return SearchErrorState(
-              message: state.message, onRetry: _runSearch);
-        }
+        if (state is SearchInitial) return SearchEmptyState(label: l10n.search);
+        if (state is SearchLoading) return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+        if (state is SearchError) return SearchErrorState(message: state.message, onRetry: _runSearch);
         if (state is SearchLoaded) {
           return state.products.isEmpty
               ? const SearchNoResults()
-              : SearchResultsList(
-                  state: state,
-                  currency: l10n.currency,
-                  scrollCtrl: _scrollCtrl,
-                );
+              : SearchResultsList(state: state, currency: l10n.currency, scrollCtrl: _scrollCtrl);
         }
         return const SizedBox.shrink();
       },
     );
   }
-
 }

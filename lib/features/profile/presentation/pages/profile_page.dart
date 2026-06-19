@@ -111,7 +111,7 @@ class ProfilePage extends StatelessWidget {
                 ProfileMenuItem(
                   pngAsset: IconsHelper.orderHistory,
                   title: AppLocalizations.of(context)!.ordersHistory,
-                  onTap: () => _comingSoon(context),
+                  onTap: () => context.push(AppRoutes.ordersHistory),
                 ),
                 ProfileMenuItem(
                   pngAsset: IconsHelper.language,

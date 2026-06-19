@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/utils/icons_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,8 +53,7 @@ class ProfileInformationPage extends StatelessWidget {
             );
           }
 
-          final hasLocation =
-              user.latitude != null && user.longitude != null;
+          final hasLocation = user.latitude != null && user.longitude != null;
 
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -73,11 +73,7 @@ class ProfileInformationPage extends StatelessWidget {
                       width: 1.5,
                     ),
                   ),
-                  child: Icon(
-                    Icons.sentiment_satisfied_alt_outlined,
-                    size: 38.r,
-                    color: AppColors.primary,
-                  ),
+                  child: Image.asset(IconsHelper.userAccount),
                 ),
                 SizedBox(height: 28.h),
 
@@ -153,10 +149,10 @@ class ProfileInformationPage extends StatelessWidget {
     );
     if (result != null && context.mounted) {
       context.read<AuthCubit>().updateProfile(
-            address: result.address,
-            latitude: result.latitude,
-            longitude: result.longitude,
-          );
+        address: result.address,
+        latitude: result.latitude,
+        longitude: result.longitude,
+      );
     }
   }
 }

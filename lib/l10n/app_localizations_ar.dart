@@ -282,4 +282,77 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get bestSelling => 'الأكثر مبيعاً';
+
+  @override
+  String get cartItems => 'عناصر السلة';
+
+  @override
+  String get removeAll => 'إزالة الكل';
+
+  @override
+  String get clearCartConfirm =>
+      'هل أنت متأكد من إزالة جميع العناصر من سلة التسوق؟';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get productsTotal => 'إجمالي المنتجات';
+
+  @override
+  String get delivery => 'التوصيل';
+
+  @override
+  String get total => 'المجموع';
+
+  @override
+  String get placeOrder => 'تأكيد الطلب';
+
+  @override
+  String get cartEmpty => 'سلة التسوق فارغة';
+
+  @override
+  String get cartEmptyMessage => 'تصفح المنتجات وأضف عناصر إلى سلتك للبدء.';
+
+  @override
+  String get addedToCart => 'تمت الإضافة إلى السلة!';
+
+  @override
+  String get pleaseWaitOrderRegistered => 'يرجى الانتظار حتى يتم تسجيل طلبك';
+
+  @override
+  String get orderRegisteredSuccess => 'تم تسجيل طلبك بنجاح!';
+
+  @override
+  String get order => 'طلب';
+
+  @override
+  String get noOrders => 'لا توجد طلبات بعد';
+
+  @override
+  String get cancelOrder => 'إلغاء الطلب';
+
+  @override
+  String get cancelOrderConfirm => 'هل أنت متأكد من إلغاء هذا الطلب؟';
+
+  @override
+  String get pleaseWait => 'يرجى الانتظار...';
+
+  @override
+  String get statusPending => 'قيد الانتظار';
+
+  @override
+  String get statusProcessing => 'قيد المعالجة';
+
+  @override
+  String get statusShipped => 'تم الشحن';
+
+  @override
+  String get statusDelivered => 'تم التوصيل';
+
+  @override
+  String get statusCancelled => 'ملغى';
+
+  @override
+  String get selectQuantity => 'يرجى تحديد الكمية أولاً';
 }

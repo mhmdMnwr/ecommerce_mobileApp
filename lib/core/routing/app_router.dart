@@ -17,6 +17,9 @@ import '../../features/search/presentation/cubit/search_state.dart';
 import '../../features/categories/presentation/cubit/categories_cubit.dart';
 import '../../features/categories/presentation/pages/categories_page.dart';
 import '../../features/categories/presentation/pages/categories_grid_page.dart';
+import '../../features/cart/presentation/cubit/cart_cubit.dart';
+import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/cart/presentation/pages/orders_history_page.dart';
 import 'app_shell.dart';
 
 /// Application route paths — centralised to avoid magic strings.
@@ -30,33 +33,9 @@ abstract class AppRoutes {
   static const String profile = '/profile';
   static const String profileInfo = '/profile/info';
   static const String product = '/product';
+  static const String ordersHistory = '/orders-history';
 }
 
-/// Placeholder page for tabs that are not yet implemented.
-class _ComingSoonPage extends StatelessWidget {
-  final String title;
-  const _ComingSoonPage({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(title),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: const Center(
-        child: Text(
-          'Coming soon',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
-        ),
-      ),
-    );
-  }
-}
 
 // ── Navigation key for the shell ──────────────────
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -83,6 +62,15 @@ final GoRouter appRouter = GoRouter(
         final product = state.extra as ProductModel;
         return ProductPage(product: product);
       },
+    ),
+    // ── Orders History (full-screen, outside shell) ──
+    GoRoute(
+      path: AppRoutes.ordersHistory,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => BlocProvider.value(
+        value: sl<CartCubit>(),
+        child: const OrdersHistoryPage(),
+      ),
     ),
 
     // ── Main app shell with bottom nav ──────────
@@ -121,8 +109,10 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.cart,
-              builder: (context, state) =>
-                  const _ComingSoonPage(title: 'Cart'),
+              builder: (context, state) => BlocProvider.value(
+                value: sl<CartCubit>(),
+                child: const CartPage(),
+              ),
             ),
           ],
         ),
