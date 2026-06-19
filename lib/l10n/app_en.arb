@@ -105,6 +105,7 @@
   "delivery": "Delivery",
   "total": "Total",
   "placeOrder": "Place Order",
+  "updateOrder": "Update Order",
   "cartEmpty": "Your cart is empty",
   "cartEmptyMessage": "Browse products and add items to your cart to get started.",
   "addedToCart": "Added to cart!",

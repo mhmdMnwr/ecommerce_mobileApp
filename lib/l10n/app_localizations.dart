@@ -688,6 +688,12 @@ abstract class AppLocalizations {
   /// **'Place Order'**
   String get placeOrder;
 
+  /// No description provided for @updateOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Order'**
+  String get updateOrder;
+
   /// No description provided for @cartEmpty.
   ///
   /// In en, this message translates to:

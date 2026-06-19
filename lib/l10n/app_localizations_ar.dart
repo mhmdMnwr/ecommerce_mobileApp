@@ -309,6 +309,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get placeOrder => 'تأكيد الطلب';
 
   @override
+  String get updateOrder => 'تحديث الطلب';
+
+  @override
   String get cartEmpty => 'سلة التسوق فارغة';
 
   @override

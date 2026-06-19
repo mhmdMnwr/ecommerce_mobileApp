@@ -13,6 +13,7 @@ class CartCubit extends Cubit<CartState> {
 
   // ──────────────────────────────────────────────────────
   //  Local Cart Management
+  //  All mutations MUST carry the current activeOrder forward.
   // ──────────────────────────────────────────────────────
 
   /// Add a product to the cart or update quantity if already present.
@@ -21,136 +22,194 @@ class CartCubit extends Cubit<CartState> {
     final idx = current.indexWhere((e) => e.productId == item.productId);
 
     if (idx >= 0) {
-      // Update quantity
       current[idx] = current[idx].copyWith(
-        quantity: current[idx].quantity + item.quantity,
+        boxes: current[idx].boxes + item.boxes,
+        units: current[idx].units + item.units,
       );
     } else {
       current.add(item);
     }
 
-    emit(CartIdle(cartItems: current));
+    // ✅ Carry activeOrder forward so it is never lost.
+    emit(CartIdle(cartItems: current, activeOrder: state.activeOrder));
   }
 
-  /// Update the quantity of a specific cart item.
-  void updateQuantity(String productId, int newQuantity) {
+  /// Update the quantity (boxes or units) of a specific cart item.
+  /// Passing a value of 0 for both effectively removes the item.
+  void updateQuantity(String productId, {int? boxes, int? units}) {
     final current = List<CartItemModel>.from(state.cartItems);
     final idx = current.indexWhere((e) => e.productId == productId);
     if (idx < 0) return;
 
-    if (newQuantity <= 0) {
+    final updated = current[idx].copyWith(boxes: boxes, units: units);
+    if (updated.totalUnits <= 0) {
       current.removeAt(idx);
     } else {
-      current[idx] = current[idx].copyWith(quantity: newQuantity);
+      current[idx] = updated;
     }
 
-    emit(CartIdle(cartItems: current));
+    // ✅ Carry activeOrder forward.
+    emit(CartIdle(cartItems: current, activeOrder: state.activeOrder));
   }
 
   /// Remove a specific item from the cart.
   void removeFromCart(String productId) {
     final current = List<CartItemModel>.from(state.cartItems);
     current.removeWhere((e) => e.productId == productId);
-    emit(CartIdle(cartItems: current));
+    // ✅ Carry activeOrder forward.
+    emit(CartIdle(cartItems: current, activeOrder: state.activeOrder));
   }
 
-  /// Clear the entire cart.
+  /// Clear the entire cart (items only – does NOT affect the active order).
   void clearCart() {
-    emit(const CartIdle());
+    // ✅ Carry activeOrder forward — clearing the local cart does not cancel
+    //    a backend order.
+    emit(CartIdle(cartItems: const [], activeOrder: state.activeOrder));
   }
 
   // ──────────────────────────────────────────────────────
   //  Order API Operations
   // ──────────────────────────────────────────────────────
 
-  /// Place a new order from the current cart contents.
-  Future<void> placeOrder({String? comment}) async {
-    if (state.cartItems.isEmpty) return;
+  /// Fetch the latest order to determine if there's an active (non-terminal) order.
+  Future<void> loadActiveOrder() async {
+    try {
+      final orders = await _orderRepository.getMyOrders(page: 1, limit: 1);
+      if (orders.isNotEmpty) {
+        final latest = orders.first;
+        if (latest.status == 'Pending') {
+          emit(CartIdle(cartItems: state.cartItems, activeOrder: latest));
+          return;
+        } else if (state.activeOrder?.status == 'Pending') {
+          // The order was pending but is now something else (e.g. Processing).
+          // Empty the cart page as requested.
+          emit(CartIdle(cartItems: const [], activeOrder: null));
+          return;
+        }
+      }
+      emit(CartIdle(cartItems: state.cartItems, activeOrder: null));
+    } catch (_) {
+      // Silently ignore
+    }
+  }
 
-    final items = state.cartItems;
-    emit(CartLoading(cartItems: items));
+  /// Place or update an order.
+  ///
+  /// • If there is a **Pending** active order → **update** it with the current
+  ///   local cart items.
+  /// • Otherwise → **create** a brand-new order from the local cart items.
+  ///
+  /// The local cart items are always the source of truth; the backend order
+  /// items are never used as input.
+  Future<void> placeOrder({String? comment}) async {
+    // Capture snapshots before any emit changes the state reference.
+    final cartItems = state.cartItems;
+    final activeOrder = state.activeOrder;
+
+    if (cartItems.isEmpty) return;
+
+    emit(CartLoading(cartItems: cartItems, activeOrder: activeOrder));
 
     try {
-      await _orderRepository.createOrder(
-        items: items.map((e) => e.toOrderPayload()).toList(),
-        comment: comment,
-      );
-      emit(const CartOrderSuccess(
-        message: 'Your order has been registered!',
-      ));
+      final payload = cartItems.map((e) => e.toOrderPayload()).toList();
+
+      if (activeOrder != null && activeOrder.isPending) {
+        // Update the existing pending order with CART items.
+        final updated = await _orderRepository.updateMyOrder(
+          orderId: activeOrder.id,
+          items: payload,
+        );
+        if (updated.status != 'Pending') {
+          emit(CartOrderSuccess(message: 'orderUpdatedSuccess', cartItems: const [], activeOrder: null));
+          emit(const CartIdle(cartItems: [], activeOrder: null));
+        } else {
+          emit(CartOrderSuccess(message: 'orderUpdatedSuccess', cartItems: cartItems, activeOrder: updated));
+          emit(CartIdle(cartItems: cartItems, activeOrder: updated));
+        }
+      } else {
+        // Create a brand-new order.
+        final order = await _orderRepository.createOrder(
+          items: payload,
+          comment: comment,
+        );
+        if (order.status != 'Pending') {
+          emit(CartOrderSuccess(message: 'orderRegisteredSuccess', cartItems: const [], activeOrder: null));
+          emit(const CartIdle(cartItems: [], activeOrder: null));
+        } else {
+          emit(CartOrderSuccess(message: 'orderRegisteredSuccess', cartItems: cartItems, activeOrder: order));
+          emit(CartIdle(cartItems: cartItems, activeOrder: order));
+        }
+      }
     } on ServerException catch (e) {
-      emit(CartError(message: e.message, cartItems: items));
+      emit(CartError(
+        message: e.message,
+        cartItems: cartItems,
+        activeOrder: activeOrder,
+      ));
     } catch (_) {
       emit(CartError(
-        message: 'Failed to place order.',
-        cartItems: items,
+        message: 'orderFailed',
+        cartItems: cartItems,
+        activeOrder: activeOrder,
       ));
     }
   }
 
-  /// Fetch the user's order history.
+  /// Fetch the user's full order history.
   Future<void> loadMyOrders({int page = 1}) async {
-    final items = state.cartItems;
-    emit(CartLoading(cartItems: items));
+    final cartItems = state.cartItems;
+    final activeOrder = state.activeOrder;
+    emit(CartLoading(cartItems: cartItems, activeOrder: activeOrder));
 
     try {
       final orders = await _orderRepository.getMyOrders(page: page);
-      emit(CartOrdersLoaded(orders: orders, cartItems: items));
+      emit(CartOrdersLoaded(
+        orders: orders,
+        cartItems: cartItems,
+        activeOrder: activeOrder,
+      ));
     } on ServerException catch (e) {
-      emit(CartError(message: e.message, cartItems: items));
+      emit(CartError(
+        message: e.message,
+        cartItems: cartItems,
+        activeOrder: activeOrder,
+      ));
     } catch (_) {
       emit(CartError(
-        message: 'Failed to load orders.',
-        cartItems: items,
+        message: 'ordersFailed',
+        cartItems: cartItems,
+        activeOrder: activeOrder,
       ));
     }
   }
 
   /// Cancel a pending order.
   Future<void> cancelOrder(String orderId) async {
-    final items = state.cartItems;
-    emit(CartLoading(cartItems: items));
+    final cartItems = state.cartItems;
+    final activeOrder = state.activeOrder;
+    emit(CartLoading(cartItems: cartItems, activeOrder: activeOrder));
 
     try {
       await _orderRepository.cancelMyOrder(orderId);
+      // If the cancelled order was the active one, clear it.
+      final newActive = activeOrder?.id == orderId ? null : activeOrder;
       emit(CartOrderCancelled(
-        message: 'Order cancelled successfully.',
-        cartItems: items,
+        message: 'orderCancelledSuccess',
+        cartItems: cartItems,
+        activeOrder: newActive,
       ));
+      emit(CartIdle(cartItems: cartItems, activeOrder: newActive));
     } on ServerException catch (e) {
-      emit(CartError(message: e.message, cartItems: items));
+      emit(CartError(
+        message: e.message,
+        cartItems: cartItems,
+        activeOrder: activeOrder,
+      ));
     } catch (_) {
       emit(CartError(
-        message: 'Failed to cancel order.',
-        cartItems: items,
-      ));
-    }
-  }
-
-  /// Update a pending order's items.
-  Future<void> updateOrder({
-    required String orderId,
-    required List<Map<String, dynamic>> items,
-  }) async {
-    final cartItems = state.cartItems;
-    emit(CartLoading(cartItems: cartItems));
-
-    try {
-      final updated = await _orderRepository.updateMyOrder(
-        orderId: orderId,
-        items: items,
-      );
-      emit(CartOrderUpdated(
-        message: 'Your order has been updated.',
-        order: updated,
+        message: 'cancelFailed',
         cartItems: cartItems,
-      ));
-    } on ServerException catch (e) {
-      emit(CartError(message: e.message, cartItems: cartItems));
-    } catch (_) {
-      emit(CartError(
-        message: 'Failed to update order.',
-        cartItems: cartItems,
+        activeOrder: activeOrder,
       ));
     }
   }

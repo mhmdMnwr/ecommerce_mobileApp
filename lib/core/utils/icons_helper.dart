@@ -15,4 +15,6 @@ class IconsHelper {
   static const String map = "assets/icons/map.png";
   static const String timer = "assets/icons/timer.png";
   static const String arrow = "assets/icons/arrow.png";
+  static const String delete = "assets/icons/delete.png";
+  static const String taskCompleted = "assets/icons/taskCompleted.png";
 }

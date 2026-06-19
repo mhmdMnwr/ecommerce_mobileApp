@@ -52,15 +52,15 @@ class _ProductPageState extends State<ProductPage>
   }
 
   void _handleAddToCart(AppLocalizations l10n) {
-    final effectiveQty = _boxes > 0 ? _boxes : 1;
     sl<CartCubit>().addToCart(
       CartItemModel(
         productId: product.id,
         title: product.title,
         image: product.image,
         price: product.price,
-        units: product.units ?? 1,
-        quantity: effectiveQty,
+        unitsPerBox: product.units ?? 1,
+        boxes: _boxes,
+        units: _units,
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(
@@ -85,11 +85,7 @@ class _ProductPageState extends State<ProductPage>
     final l10n = AppLocalizations.of(context)!;
     final currency = l10n.currency;
     final hasItems = _boxes > 0 || _units > 0;
-    final total = (_boxes * product.price.toDouble()) +
-        (_units *
-            (product.units != null
-                ? product.price.toDouble() / product.units!
-                : product.price.toDouble()));
+    final total = ((_boxes * (product.units ?? 1)) + _units) * product.price.toDouble();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -109,13 +105,19 @@ class _ProductPageState extends State<ProductPage>
                     l10n: l10n,
                     boxes: _boxes,
                     units: _units,
-                    onBoxInc: () => setState(() => _boxes++),
-                    onBoxDec: () {
-                      if (_boxes > 0) setState(() => _boxes--);
-                    },
-                    onUnitInc: () => setState(() => _units++),
-                    onUnitDec: () {
-                      if (_units > 0) setState(() => _units--);
+                    onBoxChanged: (val) => setState(() => _boxes = val),
+                    onUnitChanged: (val) {
+                      setState(() {
+                        int newUnits = val;
+                        int newBoxes = _boxes;
+                        final unitsPerBox = product.units ?? 1;
+                        if (newUnits >= unitsPerBox) {
+                          newBoxes += newUnits ~/ unitsPerBox;
+                          newUnits = newUnits % unitsPerBox;
+                        }
+                        _boxes = newBoxes;
+                        _units = newUnits;
+                      });
                     },
                   ),
                 ),

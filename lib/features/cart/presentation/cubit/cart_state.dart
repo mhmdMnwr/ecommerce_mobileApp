@@ -7,8 +7,10 @@ import '../../data/models/order_model.dart';
 abstract class CartState extends Equatable {
   /// Items currently in the local cart (pre-order).
   final List<CartItemModel> cartItems;
+  /// The currently active backend order, if any.
+  final OrderModel? activeOrder;
 
-  const CartState({this.cartItems = const []});
+  const CartState({this.cartItems = const [], this.activeOrder});
 
   /// Total price of all items in the cart.
   double get cartTotal =>
@@ -18,53 +20,53 @@ abstract class CartState extends Equatable {
   int get cartCount => cartItems.length;
 
   @override
-  List<Object?> get props => [cartItems];
+  List<Object?> get props => [cartItems, activeOrder];
 }
 
 /// Initial idle state.
 class CartIdle extends CartState {
-  const CartIdle({super.cartItems});
+  const CartIdle({super.cartItems, super.activeOrder});
 }
 
 /// An order is being placed / fetched / updated.
 class CartLoading extends CartState {
-  const CartLoading({super.cartItems});
+  const CartLoading({super.cartItems, super.activeOrder});
 }
 
 /// An order was placed successfully.
 class CartOrderSuccess extends CartState {
   final String message;
-  const CartOrderSuccess({required this.message, super.cartItems});
+  const CartOrderSuccess({required this.message, super.cartItems, super.activeOrder});
 
   @override
-  List<Object?> get props => [message, cartItems];
+  List<Object?> get props => [message, cartItems, activeOrder];
 }
 
 /// Orders history loaded successfully.
 class CartOrdersLoaded extends CartState {
   final List<OrderModel> orders;
-  const CartOrdersLoaded({required this.orders, super.cartItems});
+  const CartOrdersLoaded({required this.orders, super.cartItems, super.activeOrder});
 
   @override
-  List<Object?> get props => [orders, cartItems];
+  List<Object?> get props => [orders, cartItems, activeOrder];
 }
 
 /// An error occurred.
 class CartError extends CartState {
   final String message;
-  const CartError({required this.message, super.cartItems});
+  const CartError({required this.message, super.cartItems, super.activeOrder});
 
   @override
-  List<Object?> get props => [message, cartItems];
+  List<Object?> get props => [message, cartItems, activeOrder];
 }
 
 /// Order cancelled successfully.
 class CartOrderCancelled extends CartState {
   final String message;
-  const CartOrderCancelled({required this.message, super.cartItems});
+  const CartOrderCancelled({required this.message, super.cartItems, super.activeOrder});
 
   @override
-  List<Object?> get props => [message, cartItems];
+  List<Object?> get props => [message, cartItems, activeOrder];
 }
 
 /// Order updated successfully.
@@ -75,8 +77,9 @@ class CartOrderUpdated extends CartState {
     required this.message,
     required this.order,
     super.cartItems,
+    super.activeOrder,
   });
 
   @override
-  List<Object?> get props => [message, order, cartItems];
+  List<Object?> get props => [message, order, cartItems, activeOrder];
 }

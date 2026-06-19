@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/icons_helper.dart';
 import '../../data/models/cart_item_model.dart';
+import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 /// A single cart item row matching the design mockup perfectly.
 class CartItemTile extends StatelessWidget {
   final CartItemModel item;
   final String currency;
-  final ValueChanged<int> onQuantityChanged;
+  final void Function(int? boxes, int? units) onQuantityChanged;
   final VoidCallback onRemove;
 
   const CartItemTile({
@@ -19,58 +22,94 @@ class CartItemTile extends StatelessWidget {
     required this.onRemove,
   });
 
+  Future<void> _handleDelete(BuildContext context, AppLocalizations? l10n) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.background,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        // ✅ Use cancelOrder label as the title – semantically closer to "remove"
+        //    than "Remove All". A dedicated l10n key would be even better.
+        title: Text(l10n?.cancelOrder ?? 'Remove Item'),
+        content: Text(l10n?.cancelOrderConfirm ?? 'Are you sure you want to remove this item from your cart?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n?.cancel ?? 'Cancel',
+                style: const TextStyle(color: AppColors.textSecondary)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            // ✅ Use the generic "cancel" (which in context means confirm removal)
+            child: Text(l10n?.cancelOrder ?? 'Remove',
+                style: const TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      onRemove();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // The mockup uses a blue border for the active/first item. We can't know if it's active easily, 
-    // so we just show the card. If you want the blue border, wrap the child in a Container with border.
-    // For now, I'll use a clean white card for all to be consistent unless selected state is added.
+    final l10n = AppLocalizations.of(context);
     
-    return Dismissible(
-      key: ValueKey(item.productId),
-      direction: DismissDirection.endToStart,
-      onDismissed: (_) => onRemove(),
-      background: Container(
-        margin: EdgeInsets.symmetric(vertical: 6.h),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF4D4D6), // Pinkish background for delete
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 24.w),
-        child: Container(
-          padding: EdgeInsets.all(8.r),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.textPrimary, width: 1.5),
-          ),
-          child: Icon(
-            Icons.delete_outline_rounded,
-            color: AppColors.textPrimary,
-            size: 20.r,
-          ),
-        ),
-      ),
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 6.h),
-        padding: EdgeInsets.all(12.r),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(10),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 6.h),
+      child: Slidable(
+        key: ValueKey(item.productId),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          extentRatio: 0.28, // Increase ratio to account for the margin
+          children: [
+            CustomSlidableAction(
+              onPressed: (ctx) => _handleDelete(context, l10n),
+              backgroundColor: Colors.transparent, // Let Scaffold background show through the gap
+              foregroundColor: AppColors.textPrimary,
+              padding: EdgeInsets.zero,
+              child: Container(
+                margin: EdgeInsets.only(left: 12.w), // Space between card and button
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF4D4D6), // Pinkish background for delete
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Center(
+                  child: Image.asset(
+                    IconsHelper.delete,
+                    width: 32.r,
+                    height: 32.r,
+                    errorBuilder: (ctx, err, stack) => Icon(Icons.delete_outline_rounded, color: AppColors.textPrimary, size: 24.r),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildImage(),
-            SizedBox(width: 14.w),
-            Expanded(child: _buildDetails()),
-          ],
+        child: Container(
+          padding: EdgeInsets.all(12.r),
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(10),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildImage(),
+              SizedBox(width: 10.w),
+              Expanded(child: _buildDetails()),
+            ],
+          ),
         ),
       ),
     );
@@ -78,7 +117,7 @@ class CartItemTile extends StatelessWidget {
 
   Widget _buildImage() {
     return Container(
-      width: 72.r, height: 72.r,
+      width: 56.r, height: 56.r,
       decoration: BoxDecoration(color: const Color(0xFFF8F9FB), borderRadius: BorderRadius.circular(12.r)),
       padding: EdgeInsets.all(4.r),
       child: item.image.isNotEmpty
@@ -113,7 +152,7 @@ class CartItemTile extends StatelessWidget {
         ),
         SizedBox(height: 4.h),
         Text(
-          '1 Box = ${item.units} unit',
+          '1 Box = ${item.unitsPerBox} unit',
           style: TextStyle(
             fontSize: 9.sp,
             color: AppColors.textHint,
@@ -124,16 +163,21 @@ class CartItemTile extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            _buildQtyPill('Boxes', item.quantity, (q) => onQuantityChanged(q)),
-            SizedBox(width: 12.w),
-            _buildQtyPill('Units', 1, (q) {}), // Mockup has Units. Fixed to 1 for visuals based on mockup
-            const Spacer(),
-            Text(
-              '${item.lineTotal.toInt()} $currency',
-              style: TextStyle(
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
+            _CartQtyPill(label: 'Boxes', value: item.boxes, onChanged: (q) => onQuantityChanged(q, null)),
+            SizedBox(width: 8.w),
+            _CartQtyPill(label: 'Units', value: item.units, onChanged: (q) => onQuantityChanged(null, q)),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Text(
+                '${item.lineTotal.toStringAsFixed(2)} $currency',
+                textAlign: TextAlign.end,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
+                ),
               ),
             ),
           ],
@@ -141,13 +185,67 @@ class CartItemTile extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildQtyPill(String label, int value, ValueChanged<int> onChanged) {
+class _CartQtyPill extends StatefulWidget {
+  final String label;
+  final int value;
+  final ValueChanged<int> onChanged;
+
+  const _CartQtyPill({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  State<_CartQtyPill> createState() => _CartQtyPillState();
+}
+
+class _CartQtyPillState extends State<_CartQtyPill> {
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value.toString());
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        final val = int.tryParse(_controller.text) ?? 0;
+        widget.onChanged(val);
+        if (_controller.text.isEmpty) {
+          _controller.text = '0';
+        }
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant _CartQtyPill oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      if (int.tryParse(_controller.text) != widget.value) {
+        _controller.text = widget.value.toString();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          widget.label,
           style: TextStyle(
             fontSize: 9.sp,
             fontWeight: FontWeight.w600,
@@ -165,21 +263,34 @@ class CartItemTile extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _qtyBtn(Icons.remove, () {
-                if (value > 1) onChanged(value - 1);
+                if (widget.value > 0) widget.onChanged(widget.value - 1);
               }),
               Container(
-                constraints: BoxConstraints(minWidth: 16.w),
+                width: 24.w,
                 alignment: Alignment.center,
-                child: Text(
-                  '$value',
+                child: TextField(
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textPrimary,
                   ),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  onSubmitted: (val) {
+                    final intVal = int.tryParse(val) ?? 0;
+                    widget.onChanged(intVal);
+                  },
                 ),
               ),
-              _qtyBtn(Icons.add, () => onChanged(value + 1)),
+              _qtyBtn(Icons.add, () => widget.onChanged(widget.value + 1)),
             ],
           ),
         ),
@@ -192,7 +303,7 @@ class CartItemTile extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(20.r),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
         child: Icon(icon, size: 12.r, color: AppColors.textSecondary),
       ),
     );

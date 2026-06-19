@@ -98,6 +98,7 @@
   "delivery": "التوصيل",
   "total": "المجموع",
   "placeOrder": "تأكيد الطلب",
+  "updateOrder": "تحديث الطلب",
   "cartEmpty": "سلة التسوق فارغة",
   "cartEmptyMessage": "تصفح المنتجات وأضف عناصر إلى سلتك للبدء.",
   "addedToCart": "تمت الإضافة إلى السلة!",

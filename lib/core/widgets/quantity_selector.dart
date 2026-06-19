@@ -1,24 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../theme/app_colors.dart';
 
-/// Reusable quantity selector card with title, +/- buttons and value.
-///
-/// Used on both the product page and the cart item tile.
-class QuantitySelector extends StatelessWidget {
+/// Reusable quantity selector card with title, +/- buttons and value input.
+class QuantitySelector extends StatefulWidget {
   final String title;
   final int value;
-  final VoidCallback onIncrement;
-  final VoidCallback onDecrement;
+  final ValueChanged<int> onChanged;
 
   const QuantitySelector({
     super.key,
     required this.title,
     required this.value,
-    required this.onIncrement,
-    required this.onDecrement,
+    required this.onChanged,
   });
+
+  @override
+  State<QuantitySelector> createState() => _QuantitySelectorState();
+}
+
+class _QuantitySelectorState extends State<QuantitySelector> {
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value.toString());
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        final val = int.tryParse(_controller.text) ?? 0;
+        widget.onChanged(val);
+        if (_controller.text.isEmpty) {
+          _controller.text = '0';
+        }
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant QuantitySelector oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      if (int.tryParse(_controller.text) != widget.value) {
+        _controller.text = widget.value.toString();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _increment() => widget.onChanged(widget.value + 1);
+  void _decrement() {
+    if (widget.value > 0) widget.onChanged(widget.value - 1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +71,7 @@ class QuantitySelector extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
-          color: value > 0
+          color: widget.value > 0
               ? AppColors.primary.withAlpha(60)
               : AppColors.fieldBorder.withAlpha(100),
           width: 1,
@@ -37,7 +80,7 @@ class QuantitySelector extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            title,
+            widget.title,
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,
@@ -51,26 +94,38 @@ class QuantitySelector extends StatelessWidget {
             children: [
               _roundButton(
                 Icons.remove,
-                onDecrement,
-                enabled: value > 0,
+                _decrement,
+                enabled: widget.value > 0,
               ),
               Container(
-                constraints: BoxConstraints(minWidth: 40.w),
+                width: 60.w,
                 alignment: Alignment.center,
-                child: Text(
-                  '$value',
+                child: TextField(
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                  textAlign: TextAlign.center,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w800,
-                    color: value > 0
-                        ? AppColors.primary
-                        : AppColors.textPrimary,
+                    color: widget.value > 0 ? AppColors.primary : AppColors.textPrimary,
                   ),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  onSubmitted: (val) {
+                    final intVal = int.tryParse(val) ?? 0;
+                    widget.onChanged(intVal);
+                  },
                 ),
               ),
               _roundButton(
                 Icons.add,
-                onIncrement,
+                _increment,
                 isAdd: true,
               ),
             ],

@@ -65,7 +65,7 @@ class ProductBottomBar extends StatelessWidget {
         ),
         SizedBox(height: 2.h),
         Text(
-          '${total.toInt()} $currency',
+          '${total.toStringAsFixed(2)} $currency',
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w800,

@@ -7,27 +7,27 @@ import 'package:ecommerce_app/l10n/app_localizations.dart';
 class CartSummaryBar extends StatelessWidget {
   final int totalItems;
   final double totalPrice;
-  final double deliveryFee;
   final String currency;
   final AppLocalizations l10n;
   final VoidCallback? onPlaceOrder;
   final bool isLoading;
+  final bool isLocked;
+  final bool isUpdating;
 
   const CartSummaryBar({
     super.key,
     required this.totalItems,
     required this.totalPrice,
-    required this.deliveryFee,
     required this.currency,
     required this.l10n,
     this.onPlaceOrder,
     this.isLoading = false,
+    this.isLocked = false,
+    this.isUpdating = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final grandTotal = totalPrice + deliveryFee;
-
     return Container(
       padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 20.h + MediaQuery.of(context).padding.bottom),
       decoration: BoxDecoration(
@@ -44,40 +44,38 @@ class CartSummaryBar extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _summaryRow('${l10n.productsTotal} (${totalItems.toString().padLeft(2, '0')})', '${totalPrice.toInt()} $currency'),
-          SizedBox(height: 8.h),
-          _summaryRow(l10n.delivery, '${deliveryFee.toInt()} $currency'),
-          SizedBox(height: 12.h),
           _summaryRow(
             l10n.total,
-            '${grandTotal.toInt()} $currency',
+            '${totalPrice.toStringAsFixed(2)} $currency',
             isBold: true,
             fontSize: 18.sp,
           ),
-          SizedBox(height: 20.h),
-          SizedBox(
-            width: double.infinity,
-            height: 54.h,
-            child: ElevatedButton(
-              onPressed: isLoading ? null : onPlaceOrder,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8B92A5), // Gray color matching the mockup
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+          if (!isLocked) ...[
+            SizedBox(height: 20.h),
+            SizedBox(
+              width: double.infinity,
+              height: 54.h,
+              child: ElevatedButton(
+                onPressed: isLoading ? null : onPlaceOrder,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  elevation: 0,
                 ),
-                elevation: 0,
-              ),
-              child: Text(
-                'waiting for delivery', // Matching the exact text from mockup
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
+                child: Text(
+                  isUpdating ? l10n.updateOrder : l10n.placeOrder,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
         ],
       ),
     );

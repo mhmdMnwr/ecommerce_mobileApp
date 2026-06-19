@@ -13,10 +13,8 @@ class ProductInfoSection extends StatelessWidget {
   final AppLocalizations l10n;
   final int boxes;
   final int units;
-  final VoidCallback onBoxInc;
-  final VoidCallback onBoxDec;
-  final VoidCallback onUnitInc;
-  final VoidCallback onUnitDec;
+  final ValueChanged<int> onBoxChanged;
+  final ValueChanged<int> onUnitChanged;
 
   const ProductInfoSection({
     super.key,
@@ -25,10 +23,8 @@ class ProductInfoSection extends StatelessWidget {
     required this.l10n,
     required this.boxes,
     required this.units,
-    required this.onBoxInc,
-    required this.onBoxDec,
-    required this.onUnitInc,
-    required this.onUnitDec,
+    required this.onBoxChanged,
+    required this.onUnitChanged,
   });
 
   String get _brandName {
@@ -102,7 +98,7 @@ class ProductInfoSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        Text('${product.price.toInt()}', style: TextStyle(fontSize: 32.sp, fontWeight: FontWeight.w900, color: AppColors.primary, letterSpacing: -1)),
+        Text(product.price.toStringAsFixed(2), style: TextStyle(fontSize: 32.sp, fontWeight: FontWeight.w900, color: AppColors.primary, letterSpacing: -1)),
         SizedBox(width: 6.w),
         Padding(
           padding: EdgeInsets.only(bottom: 2.h),
@@ -172,8 +168,7 @@ class ProductInfoSection extends StatelessWidget {
               child: QuantitySelector(
                 title: l10n.boxes,
                 value: boxes,
-                onIncrement: onBoxInc,
-                onDecrement: onBoxDec,
+                onChanged: onBoxChanged,
               ),
             ),
             SizedBox(width: 14.w),
@@ -181,8 +176,7 @@ class ProductInfoSection extends StatelessWidget {
               child: QuantitySelector(
                 title: l10n.units,
                 value: units,
-                onIncrement: onUnitInc,
-                onDecrement: onUnitDec,
+                onChanged: onUnitChanged,
               ),
             ),
           ],
