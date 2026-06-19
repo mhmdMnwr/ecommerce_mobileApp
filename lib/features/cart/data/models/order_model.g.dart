@@ -10,6 +10,7 @@ OrderItemModel _$OrderItemModelFromJson(Map<String, dynamic> json) =>
     OrderItemModel(
       productId: json['productId'] as String,
       title: json['title'] as String?,
+      image: json['image'] as String?,
       quantity: (json['quantity'] as num).toInt(),
       units: (json['units'] as num).toInt(),
       price: json['price'] as num,
@@ -19,6 +20,7 @@ Map<String, dynamic> _$OrderItemModelToJson(OrderItemModel instance) =>
     <String, dynamic>{
       'productId': instance.productId,
       'title': instance.title,
+      'image': instance.image,
       'quantity': instance.quantity,
       'units': instance.units,
       'price': instance.price,
@@ -39,6 +41,9 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
+  deliveredAt: json['deliveredAt'] == null
+      ? null
+      : DateTime.parse(json['deliveredAt'] as String),
 );
 
 Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
@@ -51,4 +56,5 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'status': instance.status,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'deliveredAt': instance.deliveredAt?.toIso8601String(),
     };

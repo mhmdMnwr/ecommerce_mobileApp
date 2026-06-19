@@ -33,7 +33,7 @@ class CartLoading extends CartState {
   const CartLoading({super.cartItems, super.activeOrder});
 }
 
-/// An order was placed successfully.
+/// An order was placed or updated successfully.
 class CartOrderSuccess extends CartState {
   final String message;
   const CartOrderSuccess({required this.message, super.cartItems, super.activeOrder});
@@ -42,13 +42,26 @@ class CartOrderSuccess extends CartState {
   List<Object?> get props => [message, cartItems, activeOrder];
 }
 
-/// Orders history loaded successfully.
+/// Orders history loaded successfully, with pagination metadata.
 class CartOrdersLoaded extends CartState {
   final List<OrderModel> orders;
-  const CartOrdersLoaded({required this.orders, super.cartItems, super.activeOrder});
+  final int currentPage;
+  final int totalPages;
+  final int totalItems;
+
+  const CartOrdersLoaded({
+    required this.orders,
+    required this.currentPage,
+    required this.totalPages,
+    required this.totalItems,
+    super.cartItems,
+    super.activeOrder,
+  });
+
+  bool get hasMore => currentPage < totalPages;
 
   @override
-  List<Object?> get props => [orders, cartItems, activeOrder];
+  List<Object?> get props => [orders, currentPage, totalPages, totalItems, cartItems, activeOrder];
 }
 
 /// An error occurred.

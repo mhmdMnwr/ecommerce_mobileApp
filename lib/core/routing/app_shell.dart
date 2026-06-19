@@ -1,103 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../di/injection_container.dart';
 import '../theme/app_colors.dart';
 import '../utils/icons_helper.dart';
+import '../../features/notifications/presentation/cubit/notification_cubit.dart';
+import '../../features/notifications/presentation/cubit/notification_state.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
 
-/// Main app scaffold with a persistent bottom navigation bar.
-///
-/// Wraps the [StatefulNavigationShell] from GoRouter to maintain
-/// state across tabs.
 class AppShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
-
   const AppShell({super.key, required this.navigationShell});
 
   @override
   Widget build(BuildContext context) {
-    final currentIndex = navigationShell.currentIndex;
-
+    final idx = navigationShell.currentIndex;
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(color: AppColors.fieldBorder, width: 0.5),
-          ),
+          border: Border(top: BorderSide(color: AppColors.fieldBorder, width: 0.5)),
         ),
         child: NavigationBar(
-          selectedIndex: currentIndex,
-          onDestinationSelected: (index) => navigationShell.goBranch(
-            index,
-            initialLocation: index == currentIndex,
-          ),
+          selectedIndex: idx,
+          onDestinationSelected: (i) => navigationShell.goBranch(i, initialLocation: i == idx),
           backgroundColor: AppColors.background,
           surfaceTintColor: Colors.transparent,
           indicatorColor: Colors.transparent,
           height: 64.h,
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           destinations: [
-            _buildDestination(
-              asset: IconsHelper.home,
-              label: AppLocalizations.of(context)!.home,
-              isSelected: currentIndex == 0,
-            ),
-            _buildDestination(
-              asset: IconsHelper.search,
-              label: AppLocalizations.of(context)!.search,
-              isSelected: currentIndex == 1,
-            ),
-            _buildDestination(
-              asset: IconsHelper.cart,
-              label: AppLocalizations.of(context)!.cart,
-              isSelected: currentIndex == 2,
-            ),
-            _buildDestination(
-              asset: IconsHelper.categories,
-              label: AppLocalizations.of(context)!.categories,
-              isSelected: currentIndex == 3,
-            ),
-            _buildDestination(
-              asset: IconsHelper.user,
-              label: AppLocalizations.of(context)!.profile,
-              isSelected: currentIndex == 4,
-            ),
+            _dest(IconsHelper.home, AppLocalizations.of(context)!.home, idx == 0),
+            _dest(IconsHelper.search, AppLocalizations.of(context)!.search, idx == 1),
+            _dest(IconsHelper.cart, AppLocalizations.of(context)!.cart, idx == 2),
+            _dest(IconsHelper.categories, AppLocalizations.of(context)!.categories, idx == 3),
+            _profileDest(context, idx == 4),
           ],
         ),
       ),
     );
   }
 
-  /// Builds a nav destination with opacity + dot indicator.
-  NavigationDestination _buildDestination({
-    required String asset,
-    required String label,
-    required bool isSelected,
-  }) {
+  NavigationDestination _dest(String asset, String label, bool sel) {
     return NavigationDestination(
       icon: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(
-            asset,
-            width: 24.r,
-            height: 24.r,
-            color: isSelected ? AppColors.primary : Colors.black,
-          ),
+          Image.asset(asset, width: 24.r, height: 24.r, color: sel ? AppColors.primary : Colors.black),
           SizedBox(height: 4.h),
-          Container(
-            width: 5.r,
-            height: 5.r,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isSelected ? AppColors.primary : Colors.transparent,
-            ),
-          ),
+          Container(width: 5.r, height: 5.r, decoration: BoxDecoration(shape: BoxShape.circle, color: sel ? AppColors.primary : Colors.transparent)),
         ],
       ),
       label: label,
+    );
+  }
+
+  NavigationDestination _profileDest(BuildContext context, bool sel) {
+    return NavigationDestination(
+      icon: BlocBuilder<NotificationCubit, NotificationState>(
+        bloc: sl<NotificationCubit>(),
+        builder: (context, state) {
+          final count = state is NotificationLoaded ? state.unreadCount : 0;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Image.asset(IconsHelper.user, width: 24.r, height: 24.r, color: sel ? AppColors.primary : Colors.black),
+                  if (count > 0)
+                    Positioned(
+                      right: -6, top: -4,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                        decoration: BoxDecoration(
+                          color: AppColors.error,
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.all(color: AppColors.background, width: 1.5),
+                        ),
+                        constraints: BoxConstraints(minWidth: 16.r, minHeight: 14.r),
+                        child: Text(
+                          count > 99 ? '99+' : '$count',
+                          style: TextStyle(color: Colors.white, fontSize: 9.sp, fontWeight: FontWeight.w700),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              SizedBox(height: 4.h),
+              Container(width: 5.r, height: 5.r, decoration: BoxDecoration(shape: BoxShape.circle, color: sel ? AppColors.primary : Colors.transparent)),
+            ],
+          );
+        },
+      ),
+      label: AppLocalizations.of(context)!.profile,
     );
   }
 }

@@ -21,6 +21,29 @@ abstract class AppTheme {
           centerTitle: true,
           elevation: 0,
         ),
+        dialogTheme: const DialogThemeData(
+          titleTextStyle: TextStyle(
+            color: Color(0xFF000000),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+          contentTextStyle: TextStyle(
+            color: Color(0xFF555555),
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        snackBarTheme: SnackBarThemeData(
+          contentTextStyle: const TextStyle(
+            color: Color(0xFFFFFFFF),
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),

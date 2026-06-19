@@ -114,5 +114,20 @@
   "statusShipped": "تم الشحن",
   "statusDelivered": "تم التوصيل",
   "statusCancelled": "ملغى",
-  "selectQuantity": "يرجى تحديد الكمية أولاً"
+  "selectQuantity": "يرجى تحديد الكمية أولاً",
+  "products": "منتجات",
+  "orderUpdatedSuccess": "تم تحديث طلبك بنجاح!",
+  "markAllRead": "قراءة الكل",
+  "noNotifications": "لا توجد إشعارات",
+  "noNotificationsMessage": "أنت على اطلاع! سنعلمك عندما يحدث شيء.",
+  "feedback": "التقييم",
+  "feedbackTitle": "نود سماع رأيك",
+  "feedbackSubtitle": "أخبرنا برأيك حول خدمتنا. ملاحظاتك تساعدنا على التحسين.",
+  "yourFeedback": "ملاحظاتك",
+  "feedbackHint": "اكتب ملاحظاتك هنا...",
+  "feedbackRequired": "يرجى كتابة ملاحظاتك",
+  "submitFeedback": "إرسال التقييم",
+  "feedbackSuccess": "شكراً لملاحظاتك!",
+  "removeItem": "إزالة المنتج",
+  "removeItemConfirm": "هل أنت متأكد من إزالة هذا المنتج من سلة التسوق؟"
 }

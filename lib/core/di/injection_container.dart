@@ -21,6 +21,12 @@ import '../../features/categories/presentation/cubit/categories_cubit.dart';
 import '../../features/cart/data/data_sources/order_remote_data_source.dart';
 import '../../features/cart/data/repositories/order_repository.dart';
 import '../../features/cart/presentation/cubit/cart_cubit.dart';
+import '../../features/notifications/data/data_sources/notification_remote_data_source.dart';
+import '../../features/notifications/data/repositories/notification_repository.dart';
+import '../../features/notifications/presentation/cubit/notification_cubit.dart';
+import '../../features/feedback/data/data_sources/feedback_remote_data_source.dart';
+import '../../features/feedback/data/repositories/feedback_repository.dart';
+import '../../features/feedback/presentation/cubit/feedback_cubit.dart';
 
 /// Global service locator instance.
 final GetIt sl = GetIt.instance;
@@ -128,5 +134,36 @@ Future<void> initDependencies() async {
   // Singleton so cart state persists across tab switches
   sl.registerLazySingleton<CartCubit>(
     () => CartCubit(sl<OrderRepository>()),
+  );
+
+  // ──────────────────────────────────────────────
+  // Feature — Notifications
+  // ──────────────────────────────────────────────
+  sl.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSource(sl<ApiClient>().dio),
+  );
+
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepository(sl<NotificationRemoteDataSource>()),
+  );
+
+  // Singleton so badge count persists across tab switches
+  sl.registerLazySingleton<NotificationCubit>(
+    () => NotificationCubit(sl<NotificationRepository>()),
+  );
+
+  // ──────────────────────────────────────────────
+  // Feature — Feedback
+  // ──────────────────────────────────────────────
+  sl.registerLazySingleton<FeedbackRemoteDataSource>(
+    () => FeedbackRemoteDataSource(sl<ApiClient>().dio),
+  );
+
+  sl.registerLazySingleton<FeedbackRepository>(
+    () => FeedbackRepository(sl<FeedbackRemoteDataSource>()),
+  );
+
+  sl.registerFactory<FeedbackCubit>(
+    () => FeedbackCubit(sl<FeedbackRepository>()),
   );
 }

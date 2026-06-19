@@ -13,7 +13,7 @@ class OrderRepository {
   }) =>
       _remoteDataSource.createOrder(items: items, comment: comment);
 
-  Future<List<OrderModel>> getMyOrders({int page = 1, int limit = 20}) =>
+  Future<OrdersPage> getMyOrders({int page = 1, int limit = 10}) =>
       _remoteDataSource.getMyOrders(page: page, limit: limit);
 
   Future<OrderModel> updateMyOrder({

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/routing/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/category_model.dart';
 
@@ -39,7 +41,11 @@ class _CategoryCardState extends State<CategoryCard> {
         borderRadius: BorderRadius.circular(12.r),
         child: InkWell(
           borderRadius: BorderRadius.circular(12.r),
-          onTap: () {}, // TODO: filter by category
+          onTap: () {
+            context.push(
+              '${AppRoutes.categories}/products?type=category&id=${widget.category.id}&name=${widget.category.title}',
+            );
+          },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
             child: hasImage

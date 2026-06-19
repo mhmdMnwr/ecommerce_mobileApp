@@ -20,6 +20,10 @@ import '../../features/categories/presentation/pages/categories_grid_page.dart';
 import '../../features/cart/presentation/cubit/cart_cubit.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/cart/presentation/pages/orders_history_page.dart';
+import '../../features/notifications/presentation/cubit/notification_cubit.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
+import '../../features/feedback/presentation/cubit/feedback_cubit.dart';
+import '../../features/feedback/presentation/pages/feedback_page.dart';
 import 'app_shell.dart';
 
 /// Application route paths — centralised to avoid magic strings.
@@ -34,6 +38,8 @@ abstract class AppRoutes {
   static const String profileInfo = '/profile/info';
   static const String product = '/product';
   static const String ordersHistory = '/orders-history';
+  static const String notifications = '/notifications';
+  static const String feedback = '/feedback';
 }
 
 
@@ -70,6 +76,24 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => BlocProvider.value(
         value: sl<CartCubit>(),
         child: const OrdersHistoryPage(),
+      ),
+    ),
+    // ── Notifications (full-screen, outside shell) ──
+    GoRoute(
+      path: AppRoutes.notifications,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => BlocProvider.value(
+        value: sl<NotificationCubit>(),
+        child: const NotificationsPage(),
+      ),
+    ),
+    // ── Feedback (full-screen, outside shell) ──
+    GoRoute(
+      path: AppRoutes.feedback,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => BlocProvider(
+        create: (_) => sl<FeedbackCubit>(),
+        child: const FeedbackPage(),
       ),
     ),
 

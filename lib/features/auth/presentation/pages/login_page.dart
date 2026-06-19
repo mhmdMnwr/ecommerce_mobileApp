@@ -10,6 +10,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../../notifications/presentation/cubit/notification_cubit.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -65,6 +67,8 @@ class _LoginPageState extends State<LoginPage>
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
+            // Start notification polling on successful login
+            sl<NotificationCubit>().startPolling();
             context.go(AppRoutes.home);
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context)

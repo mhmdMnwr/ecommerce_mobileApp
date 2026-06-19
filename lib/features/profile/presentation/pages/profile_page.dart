@@ -10,6 +10,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_cubit.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
 import '../../../auth/presentation/cubit/auth_state.dart';
+import '../../../notifications/presentation/cubit/notification_cubit.dart';
+import '../../../notifications/presentation/cubit/notification_state.dart';
 import '../widgets/language_dialog.dart';
 import '../widgets/theme_dialog.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
@@ -103,15 +105,19 @@ class ProfilePage extends StatelessWidget {
                   title: AppLocalizations.of(context)!.profileInformation,
                   onTap: () => context.push(AppRoutes.profileInfo),
                 ),
-                ProfileMenuItem(
-                  pngAsset: IconsHelper.notification,
-                  title: AppLocalizations.of(context)!.notification,
-                  onTap: () => _comingSoon(context),
+                // Notification with badge
+                _NotificationMenuItem(
+                  onTap: () => context.push(AppRoutes.notifications),
                 ),
                 ProfileMenuItem(
                   pngAsset: IconsHelper.orderHistory,
                   title: AppLocalizations.of(context)!.ordersHistory,
                   onTap: () => context.push(AppRoutes.ordersHistory),
+                ),
+                ProfileMenuItem(
+                  icon: Icons.rate_review_outlined,
+                  title: AppLocalizations.of(context)!.feedback,
+                  onTap: () => context.push(AppRoutes.feedback),
                 ),
                 ProfileMenuItem(
                   pngAsset: IconsHelper.language,
@@ -147,6 +153,7 @@ class ProfilePage extends StatelessWidget {
                   showArrow: false,
                   onTap: () {
                     context.read<AuthCubit>().logout();
+                    sl<NotificationCubit>().stopPolling();
                     context.go(AppRoutes.login);
                   },
                 ),
@@ -172,5 +179,62 @@ class ProfilePage extends StatelessWidget {
           duration: const Duration(seconds: 1),
         ),
       );
+  }
+}
+
+/// Notification menu item with unread badge.
+class _NotificationMenuItem extends StatelessWidget {
+  final VoidCallback onTap;
+  const _NotificationMenuItem({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<NotificationCubit, NotificationState>(
+      bloc: sl<NotificationCubit>(),
+      builder: (context, state) {
+        final count = state is NotificationLoaded ? state.unreadCount : 0;
+        return InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12.r),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 18.h),
+            child: Row(
+              children: [
+                Image.asset(IconsHelper.notification, width: 28.r, height: 28.r),
+                SizedBox(width: 18.w),
+                Expanded(
+                  child: Text(
+                    AppLocalizations.of(context)!.notification,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+                if (count > 0)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.error,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Text(
+                      count > 99 ? '99+' : '$count',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                SizedBox(width: 8.w),
+                Icon(Icons.arrow_forward_ios, size: 16.r, color: AppColors.textSecondary),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

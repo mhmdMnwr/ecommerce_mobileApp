@@ -3,6 +3,21 @@ import 'package:dio/dio.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../models/order_model.dart';
 
+/// Pagination wrapper returned by [getMyOrders].
+class OrdersPage {
+  final List<OrderModel> orders;
+  final int currentPage;
+  final int totalPages;
+  final int totalItems;
+
+  const OrdersPage({
+    required this.orders,
+    required this.currentPage,
+    required this.totalPages,
+    required this.totalItems,
+  });
+}
+
 /// Handles all order-related API calls.
 class OrderRemoteDataSource {
   final Dio _dio;
@@ -26,17 +41,26 @@ class OrderRemoteDataSource {
     }
   }
 
-  /// GET /orders/my-orders — Fetch current user's orders.
-  Future<List<OrderModel>> getMyOrders({int page = 1, int limit = 20}) async {
+  /// GET /orders/my-orders — Fetch current user's orders with pagination.
+  Future<OrdersPage> getMyOrders({int page = 1, int limit = 10}) async {
     try {
       final response = await _dio.get(
         '/orders/my-orders',
         queryParameters: {'page': page, 'limit': limit},
       );
       final List data = response.data['data'] as List;
-      return data
+      final pagination = response.data['pagination'] as Map<String, dynamic>? ?? {};
+
+      final orders = data
           .map((json) => OrderModel.fromJson(json as Map<String, dynamic>))
           .toList();
+
+      return OrdersPage(
+        orders: orders,
+        currentPage: (pagination['page'] as num?)?.toInt() ?? page,
+        totalPages: (pagination['totalPages'] as num?)?.toInt() ?? 1,
+        totalItems: (pagination['totalItems'] as num?)?.toInt() ?? orders.length,
+      );
     } on DioException catch (e) {
       throw _mapDioError(e);
     }

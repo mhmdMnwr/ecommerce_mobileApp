@@ -358,4 +358,51 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get selectQuantity => 'يرجى تحديد الكمية أولاً';
+
+  @override
+  String get products => 'منتجات';
+
+  @override
+  String get orderUpdatedSuccess => 'تم تحديث طلبك بنجاح!';
+
+  @override
+  String get markAllRead => 'قراءة الكل';
+
+  @override
+  String get noNotifications => 'لا توجد إشعارات';
+
+  @override
+  String get noNotificationsMessage => 'أنت على اطلاع! سنعلمك عندما يحدث شيء.';
+
+  @override
+  String get feedback => 'التقييم';
+
+  @override
+  String get feedbackTitle => 'نود سماع رأيك';
+
+  @override
+  String get feedbackSubtitle =>
+      'أخبرنا برأيك حول خدمتنا. ملاحظاتك تساعدنا على التحسين.';
+
+  @override
+  String get yourFeedback => 'ملاحظاتك';
+
+  @override
+  String get feedbackHint => 'اكتب ملاحظاتك هنا...';
+
+  @override
+  String get feedbackRequired => 'يرجى كتابة ملاحظاتك';
+
+  @override
+  String get submitFeedback => 'إرسال التقييم';
+
+  @override
+  String get feedbackSuccess => 'شكراً لملاحظاتك!';
+
+  @override
+  String get removeItem => 'إزالة المنتج';
+
+  @override
+  String get removeItemConfirm =>
+      'هل أنت متأكد من إزالة هذا المنتج من سلة التسوق؟';
 }

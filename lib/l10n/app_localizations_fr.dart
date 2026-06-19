@@ -289,81 +289,129 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bestSelling => 'Meilleures ventes';
 
   @override
-  String get cartItems => 'Cart items';
+  String get cartItems => 'Articles du panier';
 
   @override
-  String get removeAll => 'Remove All';
+  String get removeAll => 'Tout supprimer';
 
   @override
   String get clearCartConfirm =>
-      'Are you sure you want to remove all items from your cart?';
+      'Êtes-vous sûr de vouloir supprimer tous les articles de votre panier ?';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Annuler';
 
   @override
-  String get productsTotal => 'Products total';
+  String get productsTotal => 'Total des produits';
 
   @override
-  String get delivery => 'Delivery';
+  String get delivery => 'Livraison';
 
   @override
   String get total => 'Total';
 
   @override
-  String get placeOrder => 'Place Order';
+  String get placeOrder => 'Passer la commande';
 
   @override
-  String get updateOrder => 'Update Order';
+  String get updateOrder => 'Mettre à jour la commande';
 
   @override
-  String get cartEmpty => 'Your cart is empty';
+  String get cartEmpty => 'Votre panier est vide';
 
   @override
   String get cartEmptyMessage =>
-      'Browse products and add items to your cart to get started.';
+      'Parcourez les produits et ajoutez des articles à votre panier pour commencer.';
 
   @override
-  String get addedToCart => 'Added to cart!';
+  String get addedToCart => 'Ajouté au panier !';
 
   @override
   String get pleaseWaitOrderRegistered =>
-      'Please wait while your order gets registered';
+      'Veuillez patienter pendant l\'enregistrement de votre commande';
 
   @override
-  String get orderRegisteredSuccess => 'Your order has been registered!';
+  String get orderRegisteredSuccess => 'Votre commande a été enregistrée !';
 
   @override
-  String get order => 'Order';
+  String get order => 'Commande';
 
   @override
-  String get noOrders => 'No orders yet';
+  String get noOrders => 'Pas encore de commandes';
 
   @override
-  String get cancelOrder => 'Cancel Order';
+  String get cancelOrder => 'Annuler la commande';
 
   @override
   String get cancelOrderConfirm =>
-      'Are you sure you want to cancel this order?';
+      'Êtes-vous sûr de vouloir annuler cette commande ?';
 
   @override
-  String get pleaseWait => 'Please wait...';
+  String get pleaseWait => 'Veuillez patienter...';
 
   @override
-  String get statusPending => 'Pending';
+  String get statusPending => 'En attente';
 
   @override
-  String get statusProcessing => 'Processing';
+  String get statusProcessing => 'En traitement';
 
   @override
-  String get statusShipped => 'Shipped';
+  String get statusShipped => 'Expédié';
 
   @override
-  String get statusDelivered => 'Delivered';
+  String get statusDelivered => 'Livré';
 
   @override
-  String get statusCancelled => 'Cancelled';
+  String get statusCancelled => 'Annulé';
 
   @override
-  String get selectQuantity => 'Please select a quantity first';
+  String get selectQuantity => 'Veuillez d\'abord sélectionner une quantité';
+
+  @override
+  String get products => 'Produits';
+
+  @override
+  String get orderUpdatedSuccess => 'Votre commande a été mise à jour !';
+
+  @override
+  String get markAllRead => 'Mark all read';
+
+  @override
+  String get noNotifications => 'No notifications';
+
+  @override
+  String get noNotificationsMessage =>
+      'You\'re all caught up! We\'ll notify you when something happens.';
+
+  @override
+  String get feedback => 'Feedback';
+
+  @override
+  String get feedbackTitle => 'We\'d love your feedback';
+
+  @override
+  String get feedbackSubtitle =>
+      'Tell us what you think about our service. Your feedback helps us improve.';
+
+  @override
+  String get yourFeedback => 'Your feedback';
+
+  @override
+  String get feedbackHint => 'Write your feedback here...';
+
+  @override
+  String get feedbackRequired => 'Please write your feedback';
+
+  @override
+  String get submitFeedback => 'Submit Feedback';
+
+  @override
+  String get feedbackSuccess => 'Thank you for your feedback!';
+
+  @override
+  String get removeItem => 'Remove Item';
+
+  @override
+  String get removeItemConfirm =>
+      'Are you sure you want to remove this item from your cart?';
 }

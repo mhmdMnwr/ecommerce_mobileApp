@@ -789,6 +789,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please select a quantity first'**
   String get selectQuantity;
+
+  /// No description provided for @products.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get products;
+
+  /// No description provided for @orderUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order has been updated!'**
+  String get orderUpdatedSuccess;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get noNotifications;
+
+  /// No description provided for @noNotificationsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all caught up! We\'ll notify you when something happens.'**
+  String get noNotificationsMessage;
+
+  /// No description provided for @feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get feedback;
+
+  /// No description provided for @feedbackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'d love your feedback'**
+  String get feedbackTitle;
+
+  /// No description provided for @feedbackSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us what you think about our service. Your feedback helps us improve.'**
+  String get feedbackSubtitle;
+
+  /// No description provided for @yourFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Your feedback'**
+  String get yourFeedback;
+
+  /// No description provided for @feedbackHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your feedback here...'**
+  String get feedbackHint;
+
+  /// No description provided for @feedbackRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please write your feedback'**
+  String get feedbackRequired;
+
+  /// No description provided for @submitFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Feedback'**
+  String get submitFeedback;
+
+  /// No description provided for @feedbackSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your feedback!'**
+  String get feedbackSuccess;
+
+  /// No description provided for @removeItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Item'**
+  String get removeItem;
+
+  /// No description provided for @removeItemConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove this item from your cart?'**
+  String get removeItemConfirm;
 }
 
 class _AppLocalizationsDelegate

@@ -6,6 +6,7 @@ part 'order_model.g.dart';
 class OrderItemModel {
   final String productId;
   final String? title;
+  final String? image;
   final int quantity;
   final int units;
   final num price;
@@ -13,12 +14,13 @@ class OrderItemModel {
   const OrderItemModel({
     required this.productId,
     this.title,
+    this.image,
     required this.quantity,
     required this.units,
     required this.price,
   });
 
-  /// Total price for this line item.
+  /// Total price for this line item based on unit price × total quantity.
   double get lineTotal => price.toDouble() * quantity;
 
   factory OrderItemModel.fromJson(Map<String, dynamic> json) =>
@@ -37,6 +39,8 @@ class OrderModel {
   final String status;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  /// Stamped by the backend when status changes to Delivered.
+  final DateTime? deliveredAt;
 
   const OrderModel({
     required this.id,
@@ -47,10 +51,14 @@ class OrderModel {
     required this.status,
     this.createdAt,
     this.updatedAt,
+    this.deliveredAt,
   });
 
   /// Whether the order can be edited/cancelled by the customer.
   bool get isPending => status == 'Pending';
+
+  /// Total number of individual product units across all line items.
+  int get totalItemCount => items.fold(0, (sum, i) => sum + i.quantity);
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);

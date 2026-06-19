@@ -121,5 +121,20 @@
   "statusShipped": "Shipped",
   "statusDelivered": "Delivered",
   "statusCancelled": "Cancelled",
-  "selectQuantity": "Please select a quantity first"
+  "selectQuantity": "Please select a quantity first",
+  "products": "Products",
+  "orderUpdatedSuccess": "Your order has been updated!",
+  "markAllRead": "Mark all read",
+  "noNotifications": "No notifications",
+  "noNotificationsMessage": "You're all caught up! We'll notify you when something happens.",
+  "feedback": "Feedback",
+  "feedbackTitle": "We'd love your feedback",
+  "feedbackSubtitle": "Tell us what you think about our service. Your feedback helps us improve.",
+  "yourFeedback": "Your feedback",
+  "feedbackHint": "Write your feedback here...",
+  "feedbackRequired": "Please write your feedback",
+  "submitFeedback": "Submit Feedback",
+  "feedbackSuccess": "Thank you for your feedback!",
+  "removeItem": "Remove Item",
+  "removeItemConfirm": "Are you sure you want to remove this item from your cart?"
 }

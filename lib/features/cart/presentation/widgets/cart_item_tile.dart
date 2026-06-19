@@ -28,21 +28,24 @@ class CartItemTile extends StatelessWidget {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.background,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
-        // ✅ Use cancelOrder label as the title – semantically closer to "remove"
-        //    than "Remove All". A dedicated l10n key would be even better.
-        title: Text(l10n?.cancelOrder ?? 'Remove Item'),
-        content: Text(l10n?.cancelOrderConfirm ?? 'Are you sure you want to remove this item from your cart?'),
+        title: Text(
+          l10n?.removeItem ?? 'Remove Item',
+          style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
+        ),
+        content: Text(
+          l10n?.removeItemConfirm ?? 'Are you sure you want to remove this item from your cart?',
+          style: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
             child: Text(l10n?.cancel ?? 'Cancel',
-                style: const TextStyle(color: AppColors.textSecondary)),
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            // ✅ Use the generic "cancel" (which in context means confirm removal)
-            child: Text(l10n?.cancelOrder ?? 'Remove',
-                style: const TextStyle(color: Colors.red)),
+            child: Text(l10n?.removeItem ?? 'Remove',
+                style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600, fontSize: 14.sp)),
           ),
         ],
       ),

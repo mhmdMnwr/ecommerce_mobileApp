@@ -359,4 +359,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectQuantity => 'Please select a quantity first';
+
+  @override
+  String get products => 'Products';
+
+  @override
+  String get orderUpdatedSuccess => 'Your order has been updated!';
+
+  @override
+  String get markAllRead => 'Mark all read';
+
+  @override
+  String get noNotifications => 'No notifications';
+
+  @override
+  String get noNotificationsMessage =>
+      'You\'re all caught up! We\'ll notify you when something happens.';
+
+  @override
+  String get feedback => 'Feedback';
+
+  @override
+  String get feedbackTitle => 'We\'d love your feedback';
+
+  @override
+  String get feedbackSubtitle =>
+      'Tell us what you think about our service. Your feedback helps us improve.';
+
+  @override
+  String get yourFeedback => 'Your feedback';
+
+  @override
+  String get feedbackHint => 'Write your feedback here...';
+
+  @override
+  String get feedbackRequired => 'Please write your feedback';
+
+  @override
+  String get submitFeedback => 'Submit Feedback';
+
+  @override
+  String get feedbackSuccess => 'Thank you for your feedback!';
+
+  @override
+  String get removeItem => 'Remove Item';
+
+  @override
+  String get removeItemConfirm =>
+      'Are you sure you want to remove this item from your cart?';
 }

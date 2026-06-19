@@ -44,7 +44,7 @@ class _CartPageState extends State<CartPage> {
         } else if (state is CartOrderSuccess) {
           // Map internal message keys to l10n strings.
           final msg = state.message == 'orderUpdatedSuccess'
-              ? l10n.orderRegisteredSuccess
+              ? l10n.orderUpdatedSuccess
               : state.message == 'orderRegisteredSuccess'
                   ? l10n.orderRegisteredSuccess
                   : state.message;
@@ -226,13 +226,19 @@ class _CartPageState extends State<CartPage> {
         backgroundColor: AppColors.background,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.r)),
-        title: Text(l10n.removeAll),
-        content: Text(l10n.clearCartConfirm),
+        title: Text(
+          l10n.removeAll,
+          style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
+        ),
+        content: Text(
+          l10n.clearCartConfirm,
+          style: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(l10n.cancel,
-                style: const TextStyle(color: AppColors.textSecondary)),
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp)),
           ),
           TextButton(
             onPressed: () {
@@ -240,7 +246,7 @@ class _CartPageState extends State<CartPage> {
               context.read<CartCubit>().clearCart();
             },
             child: Text(l10n.removeAll,
-                style: const TextStyle(color: AppColors.error)),
+                style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600, fontSize: 14.sp)),
           ),
         ],
       ),
