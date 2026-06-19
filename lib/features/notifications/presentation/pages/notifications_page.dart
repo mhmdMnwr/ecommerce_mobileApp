@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/icons_helper.dart';
+import '../../../../core/widgets/app_loading_indicator.dart';
 import '../cubit/notification_cubit.dart';
 import '../cubit/notification_state.dart';
 import '../../data/models/notification_model.dart';
@@ -35,10 +35,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: Image.asset(
-            IconsHelper.arrow,
-            width: 16.r,
-            height: 16.r,
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            size: 18.r,
             color: AppColors.textPrimary,
           ),
           onPressed: () => Navigator.of(context).pop(),
@@ -77,7 +76,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         builder: (context, state) {
           if (state is NotificationLoading) {
             return const Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
+              child: AppLoadingIndicator(),
             );
           }
 

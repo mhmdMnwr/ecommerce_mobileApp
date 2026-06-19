@@ -159,8 +159,11 @@ class _CartPageState extends State<CartPage> {
                     isLoading: state is CartLoading,
                     isLocked: isLocked,
                     isUpdating: hasActiveOrder && state.activeOrder!.status == 'Pending',
-                    onPlaceOrder: () =>
-                        context.read<CartCubit>().placeOrder(),
+                    onPlaceOrder: (hasActiveOrder &&
+                            state.activeOrder!.status == 'Pending' &&
+                            !state.isCartModified)
+                        ? null
+                        : () => context.read<CartCubit>().placeOrder(),
                   ),
               ],
             ),

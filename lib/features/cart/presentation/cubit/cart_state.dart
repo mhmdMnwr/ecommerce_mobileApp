@@ -19,6 +19,21 @@ abstract class CartState extends Equatable {
   /// Total number of items in the cart.
   int get cartCount => cartItems.length;
 
+  /// Whether the current cart differs from the active order.
+  bool get isCartModified {
+    if (activeOrder == null) return true; // It's a new order
+    if (cartItems.length != activeOrder!.items.length) return true;
+    for (final cartItem in cartItems) {
+      final orderItem = activeOrder!.items.firstWhere(
+        (i) => i.productId == cartItem.productId,
+        orElse: () => const OrderItemModel(productId: '', quantity: -1, units: -1, price: 0),
+      );
+      if (orderItem.productId.isEmpty) return true;
+      if (cartItem.totalUnits != orderItem.quantity) return true;
+    }
+    return false;
+  }
+
   @override
   List<Object?> get props => [cartItems, activeOrder];
 }

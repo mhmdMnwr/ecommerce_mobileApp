@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_loading_indicator.dart';
 import '../../../../core/utils/auth_message_translator.dart';
 import '../../../search/presentation/cubit/search_cubit.dart';
 import '../../../search/presentation/cubit/search_state.dart';
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
         builder: (context, state) {
           if (state is HomeLoading) {
             return const Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
+              child: AppLoadingIndicator(),
             );
           }
 

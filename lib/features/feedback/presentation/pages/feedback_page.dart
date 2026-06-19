@@ -37,10 +37,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: Image.asset(
-            IconsHelper.arrow,
-            width: 16.r,
-            height: 16.r,
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            size: 18.r,
             color: AppColors.textPrimary,
           ),
           onPressed: () => Navigator.of(context).pop(),
@@ -224,13 +223,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
                         elevation: 0,
                       ),
                       child: isSubmitting
-                          ? SizedBox(
+                          ? Image.asset(
+                              IconsHelper.timer,
                               width: 22.r,
                               height: 22.r,
-                              child: const CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2.5,
-                              ),
+                              color: Colors.white,
                             )
                           : Text(
                               l10n.submitFeedback,

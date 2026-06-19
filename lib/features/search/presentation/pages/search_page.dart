@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_loading_indicator.dart';
 import '../../../home/data/models/category_model.dart';
 import '../cubit/search_cubit.dart';
 import '../cubit/search_state.dart';
@@ -129,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
     return BlocBuilder<SearchCubit, SearchState>(
       builder: (context, state) {
         if (state is SearchInitial) return SearchEmptyState(label: l10n.search);
-        if (state is SearchLoading) return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+        if (state is SearchLoading) return const Center(child: AppLoadingIndicator());
         if (state is SearchError) return SearchErrorState(message: state.message, onRetry: _runSearch);
         if (state is SearchLoaded) {
           return state.products.isEmpty

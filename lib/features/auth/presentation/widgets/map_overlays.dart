@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/utils/icons_helper.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 /// Floating chip that shows "Detecting location…" with a spinner.
@@ -31,8 +32,8 @@ class MapLocatingChip extends StatelessWidget {
             SizedBox(
               width: 16.r,
               height: 16.r,
-              child: const CircularProgressIndicator(
-                strokeWidth: 2,
+              child: Image.asset(
+                IconsHelper.timer,
                 color: AppColors.primary,
               ),
             ),
@@ -140,7 +141,7 @@ class MapAddressCard extends StatelessWidget {
               child: SizedBox(
                 width: 20.r,
                 height: 20.r,
-                child: const CircularProgressIndicator(strokeWidth: 2),
+                child: Image.asset(IconsHelper.timer),
               ),
             )
           else

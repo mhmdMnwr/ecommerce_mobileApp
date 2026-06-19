@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../theme/app_colors.dart';
+import '../utils/icons_helper.dart';
 
 /// App-wide reusable primary action button.
 ///
@@ -41,13 +42,11 @@ class AppButton extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? SizedBox(
+            ? Image.asset(
+                IconsHelper.timer,
                 width: 22.r,
                 height: 22.r,
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  color: AppColors.background,
-                ),
+                color: AppColors.background,
               )
             : Text(
                 text,

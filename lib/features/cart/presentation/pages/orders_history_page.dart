@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_loading_indicator.dart';
 import '../../data/models/order_model.dart';
 import '../cubit/cart_cubit.dart';
 import '../cubit/cart_state.dart';
@@ -126,7 +127,7 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
                     // Footer loader.
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.h),
-                      child: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+                      child: const Center(child: AppLoadingIndicator()),
                     );
                   }
                   return _OrderHistoryCard(

@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/core/utils/icons_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_loading_indicator.dart';
 import '../../../../core/routing/app_router.dart';
 import '../cubit/categories_cubit.dart';
 import '../../../home/data/models/category_model.dart';
@@ -38,10 +38,9 @@ class _CategoriesGridPageState extends State<CategoriesGridPage> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: Image.asset(
-            IconsHelper.arrow,
-            width: 16.r,
-            height: 16.r,
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            size: 18.r,
             color: AppColors.textPrimary,
           ),
           onPressed: () => context.pop(),
@@ -59,7 +58,7 @@ class _CategoriesGridPageState extends State<CategoriesGridPage> {
         builder: (context, state) {
           if (state is CategoriesLoading) {
             return const Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
+              child: AppLoadingIndicator(),
             );
           } else if (state is CategoriesError) {
             return Center(
