@@ -60,6 +60,8 @@ class CartSummaryBar extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
+                  disabledBackgroundColor: AppColors.primary.withAlpha(120),
+                  disabledForegroundColor: Colors.white.withAlpha(230),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),

@@ -1,6 +1,6 @@
 {
   "@@locale": "fr",
-  "appTitle": "Application E-Commerce",
+  "appTitle": "Grossist Bouchentouf",
   "profile": "Profil",
   "guest": "Invité",
   "profileInformation": "Informations du profil",
@@ -69,7 +69,7 @@
   "changeLocation": "Changer l'emplacement",
   "locationNotSet": "Emplacement non défini",
   "locationSet": "Emplacement défini",
-  "storeName": "Grocist Medber",
+  "storeName": "Grossist Bouchentouf",
   "welcomeBack": "Bienvenue !",
   "newProducts": "Nouveautés",
   "popular": "Populaire",
@@ -116,5 +116,9 @@
   "statusCancelled": "Annulé",
   "selectQuantity": "Veuillez d'abord sélectionner une quantité",
   "products": "Produits",
-  "orderUpdatedSuccess": "Votre commande a été mise à jour !"
+  "orderUpdatedSuccess": "Votre commande a été mise à jour !",
+  "storeContacts": "Contacts du Magasin",
+  "developerContacts": "Contacts du Développeur",
+  "callUs": "Appelez-nous",
+  "followUs": "Suivez-nous"
 }

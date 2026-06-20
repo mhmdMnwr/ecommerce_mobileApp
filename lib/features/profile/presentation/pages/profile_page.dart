@@ -139,7 +139,7 @@ class ProfilePage extends StatelessWidget {
                 ProfileMenuItem(
                   pngAsset: IconsHelper.phone,
                   title: AppLocalizations.of(context)!.contactUs,
-                  onTap: () => _comingSoon(context),
+                  onTap: () => context.push(AppRoutes.contactUs),
                 ),
 
                 SizedBox(height: 36.h),

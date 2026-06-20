@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'Application E-Commerce';
+  String get appTitle => 'Grossist Bouchentouf';
 
   @override
   String get profile => 'Profil';
@@ -224,7 +224,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get locationSet => 'Emplacement défini';
 
   @override
-  String get storeName => 'Grocist Medber';
+  String get storeName => 'Grossist Bouchentouf';
 
   @override
   String get welcomeBack => 'Bienvenue !';
@@ -435,4 +435,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get quantity => 'Quantity';
+
+  @override
+  String get storeContacts => 'Contacts du Magasin';
+
+  @override
+  String get developerContacts => 'Contacts du Développeur';
+
+  @override
+  String get callUs => 'Appelez-nous';
+
+  @override
+  String get followUs => 'Suivez-nous';
 }

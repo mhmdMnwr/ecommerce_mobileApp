@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'E-Commerce App'**
+  /// **'Grossist Bouchentouf'**
   String get appTitle;
 
   /// No description provided for @profile.
@@ -517,7 +517,7 @@ abstract class AppLocalizations {
   /// No description provided for @storeName.
   ///
   /// In en, this message translates to:
-  /// **'Grocist Medber'**
+  /// **'Grossist Bouchentouf'**
   String get storeName;
 
   /// No description provided for @welcomeBack.
@@ -921,6 +921,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quantity'**
   String get quantity;
+
+  /// No description provided for @storeContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Store Contacts'**
+  String get storeContacts;
+
+  /// No description provided for @developerContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer Contacts'**
+  String get developerContacts;
+
+  /// No description provided for @callUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Call Us'**
+  String get callUs;
+
+  /// No description provided for @followUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow Us'**
+  String get followUs;
 }
 
 class _AppLocalizationsDelegate

@@ -14,6 +14,9 @@ import '../widgets/location_picker_field.dart';
 import '../widgets/register_form_fields.dart';
 import 'map_picker_page.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
+import '../../../profile/presentation/widgets/language_dialog.dart';
+import '../../../../core/locale/locale_cubit.dart';
+import '../../../../core/di/injection_container.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -119,79 +122,99 @@ class _RegisterPageState extends State<RegisterPage>
           }
         },
         child: SafeArea(
-          child: FadeTransition(
-            opacity: _fadeIn,
-            child: Center(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 32.w),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(l10n.signUp,
-                          style: TextStyle(
-                            fontSize: 30.sp,
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.textPrimary,
-                            letterSpacing: -0.5,
-                          )),
-                      SizedBox(height: 40.h),
-                      RegisterFormFields(
-                        usernameCtrl: _usernameCtrl,
-                        phoneCtrl: _phoneCtrl,
-                        passwordCtrl: _passwordCtrl,
-                        addressCtrl: _addressCtrl,
-                        obscure: _obscure,
-                        onToggleObscure: () =>
-                            setState(() => _obscure = !_obscure),
-                      ),
-                      SizedBox(height: 10.h),
-                      const OrDivider(),
-                      SizedBox(height: 10.h),
-                      LocationPickerField(
-                        hasLocation: hasLocation,
-                        locationLabel: _locationLabel,
-                        onTap: _openMapPicker,
-                        onClear: () => setState(() {
-                          _latitude = null;
-                          _longitude = null;
-                          _locationLabel = null;
-                        }),
-                      ),
-                      SizedBox(height: 32.h),
-                      BlocBuilder<AuthCubit, AuthState>(
-                        builder: (context, state) => AppButton(
-                          text: l10n.signUp,
-                          isLoading: state is AuthLoading,
-                          onPressed: _onRegister,
-                        ),
-                      ),
-                      SizedBox(height: 28.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            children: [
+              FadeTransition(
+                opacity: _fadeIn,
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: 32.w),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(l10n.alreadyHaveAccount,
+                          Text(l10n.signUp,
                               style: TextStyle(
-                                  fontSize: 13.sp,
-                                  color: AppColors.textSecondary)),
-                          SizedBox(width: 8.w),
-                          GestureDetector(
-                            onTap: () => context.go(AppRoutes.login),
-                            child: Text(l10n.logIn,
-                                style: TextStyle(
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.accent)),
+                                fontSize: 30.sp,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.textPrimary,
+                                letterSpacing: -0.5,
+                              )),
+                          SizedBox(height: 40.h),
+                          RegisterFormFields(
+                            usernameCtrl: _usernameCtrl,
+                            phoneCtrl: _phoneCtrl,
+                            passwordCtrl: _passwordCtrl,
+                            addressCtrl: _addressCtrl,
+                            obscure: _obscure,
+                            onToggleObscure: () =>
+                                setState(() => _obscure = !_obscure),
                           ),
+                          SizedBox(height: 10.h),
+                          const OrDivider(),
+                          SizedBox(height: 10.h),
+                          LocationPickerField(
+                            hasLocation: hasLocation,
+                            locationLabel: _locationLabel,
+                            onTap: _openMapPicker,
+                            onClear: () => setState(() {
+                              _latitude = null;
+                              _longitude = null;
+                              _locationLabel = null;
+                            }),
+                          ),
+                          SizedBox(height: 32.h),
+                          BlocBuilder<AuthCubit, AuthState>(
+                            builder: (context, state) => AppButton(
+                              text: l10n.signUp,
+                              isLoading: state is AuthLoading,
+                              onPressed: _onRegister,
+                            ),
+                          ),
+                          SizedBox(height: 28.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(l10n.alreadyHaveAccount,
+                                  style: TextStyle(
+                                      fontSize: 13.sp,
+                                      color: AppColors.textSecondary)),
+                              SizedBox(width: 8.w),
+                              GestureDetector(
+                                onTap: () => context.go(AppRoutes.login),
+                                child: Text(l10n.logIn,
+                                    style: TextStyle(
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.accent)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 24.h),
                         ],
                       ),
-                      SizedBox(height: 24.h),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
+              Positioned(
+                top: 16.h,
+                right: 16.w,
+                child: FadeTransition(
+                  opacity: _fadeIn,
+                  child: IconButton(
+                    icon: Icon(Icons.language, color: AppColors.textPrimary, size: 28.r),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => LanguageDialog(localeCubit: sl<LocaleCubit>()),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

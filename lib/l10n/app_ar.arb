@@ -1,6 +1,6 @@
 {
   "@@locale": "ar",
-  "appTitle": "تطبيق التجارة الإلكترونية",
+  "appTitle": "Grossist Bouchentouf",
   "profile": "الملف الشخصي",
   "guest": "ضيف",
   "profileInformation": "معلومات الملف الشخصي",
@@ -69,7 +69,7 @@
   "changeLocation": "تغيير الموقع",
   "locationNotSet": "الموقع غير محدد",
   "locationSet": "تم تحديد الموقع",
-  "storeName": "جروسيست مدبر",
+  "storeName": "جروسيست بوشنتوف",
   "welcomeBack": "!مرحباً بعودتك",
   "newProducts": "جديد",
   "popular": "الأكثر مبيعاً",
@@ -136,5 +136,9 @@
   "unitPrice": "سعر الوحدة",
   "comment": "ملاحظة",
   "product": "المنتج",
-  "quantity": "الكمية"
+  "quantity": "الكمية",
+  "storeContacts": "جهات اتصال المتجر",
+  "developerContacts": "جهات اتصال المطور",
+  "callUs": "اتصل بنا",
+  "followUs": "تابعنا"
 }

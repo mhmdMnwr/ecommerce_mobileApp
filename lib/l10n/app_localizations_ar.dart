@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appTitle => 'تطبيق التجارة الإلكترونية';
+  String get appTitle => 'Grossist Bouchentouf';
 
   @override
   String get profile => 'الملف الشخصي';
@@ -219,7 +219,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get locationSet => 'تم تحديد الموقع';
 
   @override
-  String get storeName => 'جروسيست مدبر';
+  String get storeName => 'جروسيست بوشنتوف';
 
   @override
   String get welcomeBack => '!مرحباً بعودتك';
@@ -426,4 +426,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get quantity => 'الكمية';
+
+  @override
+  String get storeContacts => 'جهات اتصال المتجر';
+
+  @override
+  String get developerContacts => 'جهات اتصال المطور';
+
+  @override
+  String get callUs => 'اتصل بنا';
+
+  @override
+  String get followUs => 'تابعنا';
 }

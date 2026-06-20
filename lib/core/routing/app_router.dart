@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+
+
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
@@ -11,6 +13,7 @@ import '../../features/search/presentation/pages/search_page.dart';
 import '../di/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/contact_us_page.dart';
 import '../../features/product/presentation/pages/product_page.dart';
 import '../../features/home/data/models/product_model.dart';
 import '../../features/search/presentation/cubit/search_state.dart';
@@ -28,6 +31,7 @@ import 'app_shell.dart';
 
 /// Application route paths — centralised to avoid magic strings.
 abstract class AppRoutes {
+  static const String splash = '/';
   static const String login = '/login';
   static const String register = '/register';
   static const String home = '/home';
@@ -40,6 +44,7 @@ abstract class AppRoutes {
   static const String ordersHistory = '/orders-history';
   static const String notifications = '/notifications';
   static const String feedback = '/feedback';
+  static const String contactUs = '/contact-us';
 }
 
 
@@ -49,9 +54,14 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 /// Creates and configures the [GoRouter] instance.
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: AppRoutes.login,
+  initialLocation: AppRoutes.splash,
   debugLogDiagnostics: true,
   routes: <RouteBase>[
+    // ── Splash screen ──────────────────────────
+    GoRoute(
+      path: AppRoutes.splash,
+      builder: (context, state) => const LoginPage(),
+    ),
     // ── Auth routes (no bottom nav) ─────────────
     GoRoute(
       path: AppRoutes.login,
@@ -95,6 +105,13 @@ final GoRouter appRouter = GoRouter(
         create: (_) => sl<FeedbackCubit>(),
         child: const FeedbackPage(),
       ),
+    ),
+
+    // ── Contact Us (full-screen, outside shell) ──
+    GoRoute(
+      path: AppRoutes.contactUs,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const ContactUsPage(),
     ),
 
     // ── Main app shell with bottom nav ──────────

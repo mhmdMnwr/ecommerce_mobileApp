@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "E-Commerce App",
+  "appTitle": "Grossist Bouchentouf",
   "profile": "Profile",
   "guest": "Guest",
   "profileInformation": "Profile information",
@@ -69,7 +69,7 @@
   "changeLocation": "Change Location",
   "locationNotSet": "Location not set",
   "locationSet": "Location set",
-  "storeName": "Grocist Medber",
+  "storeName": "Grossist Bouchentouf",
   "welcomeBack": "Welcome Back !",
   "newProducts": "New",
   "popular": "Popular",
@@ -143,5 +143,9 @@
   "unitPrice": "Unit Price",
   "comment": "Comment",
   "product": "Product",
-  "quantity": "Quantity"
+  "quantity": "Quantity",
+  "storeContacts": "Store Contacts",
+  "developerContacts": "Developer Contacts",
+  "callUs": "Call Us",
+  "followUs": "Follow Us"
 }
