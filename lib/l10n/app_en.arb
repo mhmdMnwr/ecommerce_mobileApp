@@ -136,5 +136,12 @@
   "submitFeedback": "Submit Feedback",
   "feedbackSuccess": "Thank you for your feedback!",
   "removeItem": "Remove Item",
-  "removeItemConfirm": "Are you sure you want to remove this item from your cart?"
+  "removeItemConfirm": "Are you sure you want to remove this item from your cart?",
+  "orderInfo": "Order Info",
+  "date": "Date",
+  "time": "Time",
+  "unitPrice": "Unit Price",
+  "comment": "Comment",
+  "product": "Product",
+  "quantity": "Quantity"
 }

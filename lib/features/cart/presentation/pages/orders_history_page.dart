@@ -12,6 +12,7 @@ import '../widgets/empty_orders_view.dart';
 import '../widgets/orders_error_view.dart';
 import '../widgets/order_status_helper.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
+import 'order_detail_page.dart';
 
 /// Full-screen paginated Order History page.
 class OrdersHistoryPage extends StatefulWidget {
@@ -134,6 +135,17 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
                     order: orders[index],
                     currency: l10n.currency,
                     l10n: l10n,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => OrderDetailPage(
+                            order: orders[index],
+                            currency: l10n.currency,
+                          ),
+                        ),
+                      );
+                    },
                     onCancel: orders[index].isPending
                         ? () => _confirmCancel(context, orders[index], l10n)
                         : null,
@@ -186,12 +198,14 @@ class _OrderHistoryCard extends StatelessWidget {
   final OrderModel order;
   final String currency;
   final AppLocalizations l10n;
+  final VoidCallback? onTap;
   final VoidCallback? onCancel;
 
   const _OrderHistoryCard({
     required this.order,
     required this.currency,
     required this.l10n,
+    this.onTap,
     this.onCancel,
   });
 
@@ -205,7 +219,9 @@ class _OrderHistoryCard extends StatelessWidget {
     final orderDate = order.createdAt;
     final deliveredDate = order.deliveredAt;
 
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -296,29 +312,30 @@ class _OrderHistoryCard extends StatelessWidget {
 
           // ── Cancel button (Pending only) ───────────────────────────────
           if (onCancel != null)
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              decoration: BoxDecoration(
-                color: AppColors.error.withAlpha(8),
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.r)),
-              ),
-              child: GestureDetector(
+            Material(
+              color: AppColors.error.withAlpha(8),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.r)),
+              child: InkWell(
                 onTap: onCancel,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.cancel_outlined, size: 16.r, color: AppColors.error),
-                    SizedBox(width: 6.w),
-                    Text(
-                      l10n.cancelOrder,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.error,
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.r)),
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.cancel_outlined, size: 16.r, color: AppColors.error),
+                      SizedBox(width: 6.w),
+                      Text(
+                        l10n.cancelOrder,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.error,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             )
@@ -326,6 +343,7 @@ class _OrderHistoryCard extends StatelessWidget {
             SizedBox(height: 14.h),
         ],
       ),
+    ),
     );
   }
 }

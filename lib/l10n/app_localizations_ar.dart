@@ -405,4 +405,25 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get removeItemConfirm =>
       'هل أنت متأكد من إزالة هذا المنتج من سلة التسوق؟';
+
+  @override
+  String get orderInfo => 'تفاصيل الطلب';
+
+  @override
+  String get date => 'التاريخ';
+
+  @override
+  String get time => 'الوقت';
+
+  @override
+  String get unitPrice => 'سعر الوحدة';
+
+  @override
+  String get comment => 'ملاحظة';
+
+  @override
+  String get product => 'المنتج';
+
+  @override
+  String get quantity => 'الكمية';
 }

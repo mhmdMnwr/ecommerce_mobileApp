@@ -407,4 +407,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get removeItemConfirm =>
       'Are you sure you want to remove this item from your cart?';
+
+  @override
+  String get orderInfo => 'Order Info';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get unitPrice => 'Unit Price';
+
+  @override
+  String get comment => 'Comment';
+
+  @override
+  String get product => 'Product';
+
+  @override
+  String get quantity => 'Quantity';
 }

@@ -129,5 +129,12 @@
   "submitFeedback": "إرسال التقييم",
   "feedbackSuccess": "شكراً لملاحظاتك!",
   "removeItem": "إزالة المنتج",
-  "removeItemConfirm": "هل أنت متأكد من إزالة هذا المنتج من سلة التسوق؟"
+  "removeItemConfirm": "هل أنت متأكد من إزالة هذا المنتج من سلة التسوق؟",
+  "orderInfo": "تفاصيل الطلب",
+  "date": "التاريخ",
+  "time": "الوقت",
+  "unitPrice": "سعر الوحدة",
+  "comment": "ملاحظة",
+  "product": "المنتج",
+  "quantity": "الكمية"
 }
