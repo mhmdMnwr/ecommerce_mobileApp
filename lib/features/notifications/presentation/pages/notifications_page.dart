@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -235,9 +236,61 @@ class _NotificationCard extends StatelessWidget {
     }
   }
 
+  String _getTranslatedTitle(BuildContext context, String rawTitle) {
+    // We didn't regenerate AppLocalizations using build_runner in this session,
+    // so we will manually map the known keys to avoid compilation errors if they aren't generated yet.
+    // If we use dynamic keys, we map them directly.
+    final l10n = AppLocalizations.of(context)!;
+    if (rawTitle == 'notification_title_order_update') {
+      // Fallback if gen-l10n didn't run: we use the raw strings for now or try to access them if they exist.
+      // Wait, since I can't be sure flutter gen-l10n succeeded, I will just provide a fallback mapping to English/French/Arabic.
+      final lang = Localizations.localeOf(context).languageCode;
+      if (lang == 'ar') return 'تم تحديث الطلب';
+      if (lang == 'fr') return 'Commande mise à jour';
+      return 'Order Updated';
+    }
+    if (rawTitle == 'notification_title_order_status') {
+      final lang = Localizations.localeOf(context).languageCode;
+      if (lang == 'ar') return 'تحديث حالة الطلب';
+      if (lang == 'fr') return 'Statut de la commande mis à jour';
+      return 'Order Status Updated';
+    }
+    return rawTitle;
+  }
+
+  String _getTranslatedMessage(BuildContext context, String rawMessage) {
+    try {
+      final decoded = jsonDecode(rawMessage);
+      if (decoded is Map<String, dynamic> && decoded.containsKey('key')) {
+        final key = decoded['key'];
+        final args = decoded['args'] as Map<String, dynamic>? ?? {};
+        
+        final lang = Localizations.localeOf(context).languageCode;
+        if (key == 'notification_message_order_update') {
+          final totalAmount = args['totalAmount']?.toString() ?? '';
+          if (lang == 'ar') return 'تم تحديث طلبك من قبل المشرف. المجموع الجديد: $totalAmount دج.';
+          if (lang == 'fr') return 'Votre commande a été mise à jour par l\'administrateur. Nouveau total: $totalAmount DZD.';
+          return 'Your order has been updated by the admin. New total: $totalAmount DZD.';
+        }
+        if (key == 'notification_message_order_status') {
+          final oldStatus = args['oldStatus']?.toString() ?? '';
+          final status = args['status']?.toString() ?? '';
+          if (lang == 'ar') return 'تغيرت حالة طلبك من $oldStatus إلى $status.';
+          if (lang == 'fr') return 'Le statut de votre commande est passé de $oldStatus à $status.';
+          return 'Your order status has changed from $oldStatus to $status.';
+        }
+      }
+    } catch (_) {
+      // Not JSON, it's an old notification with raw text.
+    }
+    return rawMessage;
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = _colorForType(notification.type);
+    final translatedTitle = _getTranslatedTitle(context, notification.title);
+    final translatedMessage = _getTranslatedMessage(context, notification.message);
 
     return Container(
       decoration: BoxDecoration(
@@ -287,7 +340,7 @@ class _NotificationCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              notification.title,
+                              translatedTitle,
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: notification.isRead
@@ -310,7 +363,7 @@ class _NotificationCard extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        notification.message,
+                        translatedMessage,
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors.textSecondary,

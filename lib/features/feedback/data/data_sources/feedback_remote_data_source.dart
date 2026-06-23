@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/utils/api_constants.dart';
 
 /// Handles feedback-related API calls.
 class FeedbackRemoteDataSource {
@@ -11,7 +12,7 @@ class FeedbackRemoteDataSource {
   /// POST /feedbacks — Submit feedback.
   Future<void> submitFeedback(String comment) async {
     try {
-      await _dio.post('/feedbacks', data: {'comment': comment});
+      await _dio.post(ApiConstants.feedbacks, data: {'comment': comment});
     } on DioException catch (e) {
       throw _mapDioError(e);
     }

@@ -37,6 +37,8 @@
   "home": "Accueil",
   "search": "Recherche",
   "cart": "Panier",
+  "allCategories": "Toutes les catégories",
+  "pressBackAgainToExit": "Appuyez à nouveau pour quitter",
   "categories": "Catégories",
   "logIn": "Se connecter",
   "signUp": "S'inscrire",
@@ -120,5 +122,26 @@
   "storeContacts": "Contacts du Magasin",
   "developerContacts": "Contacts du Développeur",
   "callUs": "Appelez-nous",
-  "followUs": "Suivez-nous"
+  "followUs": "Suivez-nous",
+  "notification_title_order_update": "Commande mise à jour",
+  "notification_message_order_update": "Votre commande a été mise à jour par l'administrateur. Nouveau total: {totalAmount} DZD.",
+  "@notification_message_order_update": {
+    "placeholders": {
+      "totalAmount": {
+        "type": "String"
+      }
+    }
+  },
+  "notification_title_order_status": "Statut de la commande mis à jour",
+  "notification_message_order_status": "Le statut de votre commande est passé de {oldStatus} à {status}.",
+  "@notification_message_order_status": {
+    "placeholders": {
+      "oldStatus": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  }
 }

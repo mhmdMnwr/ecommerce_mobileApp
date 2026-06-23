@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/utils/api_constants.dart';
 import '../../../home/data/models/product_model.dart';
 
 /// Handles search API calls.
@@ -34,7 +35,7 @@ class SearchRemoteDataSource {
       if (maxPrice != null) params['maxPrice'] = maxPrice;
       if (sort != null) params['sort'] = sort;
 
-      final response = await _dio.get('/products', queryParameters: params);
+      final response = await _dio.get(ApiConstants.products, queryParameters: params);
       final List data = response.data['data'] as List;
       final meta = response.data['meta'] as Map<String, dynamic>?;
 

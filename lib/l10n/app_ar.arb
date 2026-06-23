@@ -37,6 +37,8 @@
   "home": "الرئيسية",
   "search": "البحث",
   "cart": "عربة التسوق",
+  "allCategories": "كل الفئات",
+  "pressBackAgainToExit": "اضغط مرة أخرى للخروج",
   "categories": "الفئات",
   "logIn": "تسجيل الدخول",
   "signUp": "إنشاء حساب",
@@ -140,5 +142,26 @@
   "storeContacts": "جهات اتصال المتجر",
   "developerContacts": "جهات اتصال المطور",
   "callUs": "اتصل بنا",
-  "followUs": "تابعنا"
+  "followUs": "تابعنا",
+  "notification_title_order_update": "تم تحديث الطلب",
+  "notification_message_order_update": "تم تحديث طلبك من قبل المشرف. المجموع الجديد: {totalAmount} دج.",
+  "@notification_message_order_update": {
+    "placeholders": {
+      "totalAmount": {
+        "type": "String"
+      }
+    }
+  },
+  "notification_title_order_status": "تحديث حالة الطلب",
+  "notification_message_order_status": "تغيرت حالة طلبك من {oldStatus} إلى {status}.",
+  "@notification_message_order_status": {
+    "placeholders": {
+      "oldStatus": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  }
 }

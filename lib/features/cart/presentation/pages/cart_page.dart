@@ -7,6 +7,7 @@ import '../../../../core/widgets/app_loading_dialog.dart';
 import '../../../../core/widgets/app_success_dialog.dart';
 import '../cubit/cart_cubit.dart';
 import '../cubit/cart_state.dart';
+import '../../data/models/order_model.dart';
 import '../widgets/cart_item_tile.dart';
 import '../widgets/cart_empty_view.dart';
 import '../widgets/cart_header.dart';
@@ -23,10 +24,31 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  final TextEditingController _commentController = TextEditingController();
+  OrderModel? _lastActiveOrder;
+
   @override
   void initState() {
     super.initState();
+    _commentController.addListener(_onCommentChanged);
+    // Initialize comment if there's already an active order in the cubit's state
+    final activeOrder = context.read<CartCubit>().state.activeOrder;
+    if (activeOrder != null) {
+      _lastActiveOrder = activeOrder;
+      _commentController.text = activeOrder.comment ?? '';
+    }
     context.read<CartCubit>().loadActiveOrder();
+  }
+
+  void _onCommentChanged() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _commentController.removeListener(_onCommentChanged);
+    _commentController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,8 +68,8 @@ class _CartPageState extends State<CartPage> {
           final msg = state.message == 'orderUpdatedSuccess'
               ? l10n.orderUpdatedSuccess
               : state.message == 'orderRegisteredSuccess'
-                  ? l10n.orderRegisteredSuccess
-                  : state.message;
+              ? l10n.orderRegisteredSuccess
+              : state.message;
           AppSuccessDialog.show(context, message: msg);
         } else if (state is CartOrderCancelled) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -72,6 +94,23 @@ class _CartPageState extends State<CartPage> {
             ),
           );
         }
+
+        // Update comment controller from active order
+        if (state.activeOrder != null) {
+          if (state.activeOrder?.id != _lastActiveOrder?.id) {
+            _lastActiveOrder = state.activeOrder;
+            final backendComment = state.activeOrder!.comment ?? '';
+            print('DEBUG UI: Syncing comment from backend: "$backendComment"');
+            if (_commentController.text != backendComment) {
+              _commentController.text = backendComment;
+            }
+          }
+        } else {
+          _lastActiveOrder = null;
+          if (state is CartOrderSuccess || state is CartOrderCancelled) {
+            _commentController.clear();
+          }
+        }
       },
       builder: (context, state) {
         final items = state.cartItems;
@@ -82,8 +121,7 @@ class _CartPageState extends State<CartPage> {
         // order is still Pending (customer can still modify it).
         final isLocked =
             hasActiveOrder && state.activeOrder!.status != 'Pending';
-        final orderStatus =
-            hasActiveOrder ? state.activeOrder!.status : null;
+        final orderStatus = hasActiveOrder ? state.activeOrder!.status : null;
 
         final isCartEmpty = items.isEmpty;
 
@@ -113,13 +151,70 @@ class _CartPageState extends State<CartPage> {
                 if (orderStatus != null)
                   _buildStatusBanner(orderStatus, isLocked, l10n),
 
+                // ── Comment Section ───────────────────────────────────────
+                if (!isLocked && !isCartEmpty)
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
+                    ),
+                    child: InkWell(
+                      onTap: () => _showCommentDialog(context, l10n),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: AppColors.primary.withAlpha(50),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.comment_outlined,
+                              color: AppColors.primary,
+                              size: 20.sp,
+                            ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: Text(
+                                _commentController.text.isEmpty
+                                    ? 'Add a comment to your order'
+                                    : _commentController.text,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: _commentController.text.isEmpty
+                                      ? AppColors.textSecondary
+                                      : AppColors.textPrimary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Icon(
+                              Icons.edit,
+                              color: AppColors.textSecondary,
+                              size: 16.sp,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
                 // ── Cart Items List ───────────────────────────────────────
                 Expanded(
                   child: isCartEmpty
                       ? const CartEmptyView()
                       : ListView.builder(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 16.w, vertical: 8.h),
+                            horizontal: 16.w,
+                            vertical: 8.h,
+                          ),
                           physics: const BouncingScrollPhysics(),
                           itemCount: items.length,
                           itemBuilder: (context, index) {
@@ -132,15 +227,15 @@ class _CartPageState extends State<CartPage> {
                                   currency: currency,
                                   onQuantityChanged: (boxes, units) {
                                     context.read<CartCubit>().updateQuantity(
-                                          items[index].productId,
-                                          boxes: boxes,
-                                          units: units,
-                                        );
+                                      items[index].productId,
+                                      boxes: boxes,
+                                      units: units,
+                                    );
                                   },
                                   onRemove: () {
-                                    context
-                                        .read<CartCubit>()
-                                        .removeFromCart(items[index].productId);
+                                    context.read<CartCubit>().removeFromCart(
+                                      items[index].productId,
+                                    );
                                   },
                                 ),
                               ),
@@ -158,12 +253,22 @@ class _CartPageState extends State<CartPage> {
                     l10n: l10n,
                     isLoading: state is CartLoading,
                     isLocked: isLocked,
-                    isUpdating: hasActiveOrder && state.activeOrder!.status == 'Pending',
-                    onPlaceOrder: (hasActiveOrder &&
+                    isUpdating:
+                        hasActiveOrder &&
+                        state.activeOrder!.status == 'Pending',
+                    onPlaceOrder:
+                        (hasActiveOrder &&
                             state.activeOrder!.status == 'Pending' &&
-                            !state.isCartModified)
+                            !state.isCartModified &&
+                            _commentController.text.trim() ==
+                                (state.activeOrder!.comment ?? ''))
                         ? null
-                        : () => context.read<CartCubit>().placeOrder(),
+                        : () {
+                            print('DEBUG UI CLICK UPDATE ORDER: "${_commentController.text.trim()}"');
+                            context.read<CartCubit>().placeOrder(
+                              comment: _commentController.text.trim(),
+                            );
+                          },
                   ),
               ],
             ),
@@ -173,8 +278,80 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
+  void _showCommentDialog(BuildContext context, AppLocalizations l10n) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.background,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        title: Text(
+          'Order Comment',
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+            fontSize: 16.sp,
+          ),
+        ),
+        content: TextField(
+          controller: _commentController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            hintText: 'Enter your comment here...',
+            hintStyle: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 14.sp,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: AppColors.primary.withAlpha(50)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: AppColors.primary.withAlpha(50)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: AppColors.primary),
+            ),
+          ),
+          style: TextStyle(fontSize: 14.sp, color: AppColors.textPrimary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              setState(() {});
+            },
+            child: Text(
+              l10n.cancel,
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              setState(() {});
+            },
+            child: Text(
+              'Save',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildStatusBanner(
-      String status, bool isLocked, AppLocalizations l10n) {
+    String status,
+    bool isLocked,
+    AppLocalizations l10n,
+  ) {
     final color = OrderStatusHelper.getColor(status);
     final label = OrderStatusHelper.getLabel(status, l10n);
 
@@ -199,9 +376,7 @@ class _CartPageState extends State<CartPage> {
             Expanded(
               child: Text(
                 // ✅ Uses l10n for status label, no hardcoded English.
-                isLocked
-                    ? '$label – ${_readOnlyLabel(l10n)}'
-                    : label,
+                isLocked ? '$label – ${_readOnlyLabel(l10n)}' : label,
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w600,
@@ -228,10 +403,15 @@ class _CartPageState extends State<CartPage> {
       builder: (_) => AlertDialog(
         backgroundColor: AppColors.background,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r)),
+          borderRadius: BorderRadius.circular(16.r),
+        ),
         title: Text(
           l10n.removeAll,
-          style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+            fontSize: 16.sp,
+          ),
         ),
         content: Text(
           l10n.clearCartConfirm,
@@ -240,16 +420,24 @@ class _CartPageState extends State<CartPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel,
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp)),
+            child: Text(
+              l10n.cancel,
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
+            ),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               context.read<CartCubit>().clearCart();
             },
-            child: Text(l10n.removeAll,
-                style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600, fontSize: 14.sp)),
+            child: Text(
+              l10n.removeAll,
+              style: TextStyle(
+                color: AppColors.error,
+                fontWeight: FontWeight.w600,
+                fontSize: 14.sp,
+              ),
+            ),
           ),
         ],
       ),

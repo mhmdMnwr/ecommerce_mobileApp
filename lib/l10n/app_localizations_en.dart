@@ -120,6 +120,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cart => 'Cart';
 
   @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get pressBackAgainToExit => 'Press back again to exit';
+
+  @override
   String get categories => 'Categories';
 
   @override

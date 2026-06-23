@@ -322,6 +322,18 @@ abstract class AppLocalizations {
   /// **'Cart'**
   String get cart;
 
+  /// No description provided for @allCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get allCategories;
+
+  /// No description provided for @pressBackAgainToExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Press back again to exit'**
+  String get pressBackAgainToExit;
+
   /// No description provided for @categories.
   ///
   /// In en, this message translates to:

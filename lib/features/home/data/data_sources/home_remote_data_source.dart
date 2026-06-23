@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/utils/api_constants.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
 
@@ -12,7 +13,7 @@ class HomeRemoteDataSource {
 
   Future<List<CategoryModel>> getCategories() async {
     try {
-      final response = await _dio.get('/categories');
+      final response = await _dio.get(ApiConstants.categories);
       final List data = response.data['data'] as List;
       return data
           .map((json) => CategoryModel.fromJson(json as Map<String, dynamic>))
@@ -24,7 +25,7 @@ class HomeRemoteDataSource {
 
   Future<List<ProductModel>> getNewProducts() async {
     try {
-      final response = await _dio.get('/products/new');
+      final response = await _dio.get(ApiConstants.newProducts);
       final List data = response.data['data'] as List;
       return data
           .map((json) => ProductModel.fromJson(json as Map<String, dynamic>))
@@ -36,7 +37,7 @@ class HomeRemoteDataSource {
 
   Future<List<ProductModel>> getPopularProducts() async {
     try {
-      final response = await _dio.get('/products/top');
+      final response = await _dio.get(ApiConstants.topProducts);
       final List data = response.data['data'] as List;
       return data
           .map((json) => ProductModel.fromJson(json as Map<String, dynamic>))

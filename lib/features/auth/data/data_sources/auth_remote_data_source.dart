@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/utils/api_constants.dart';
 import '../models/user_model.dart';
 
 /// Handles all authentication-related API calls.
@@ -16,7 +17,7 @@ class AuthRemoteDataSource {
   }) async {
     try {
       final response = await _dio.post(
-        '/users/login',
+        ApiConstants.login,
         data: {'username': username, 'password': password},
       );
       final data = response.data['data'] as Map<String, dynamic>;
@@ -49,7 +50,7 @@ class AuthRemoteDataSource {
       if (longitude != null) body['longitude'] = longitude;
 
       final response = await _dio.post(
-        '/users/registerCustomer',
+        ApiConstants.registerCustomer,
         data: body,
       );
       return UserModel.fromJson(
@@ -63,7 +64,7 @@ class AuthRemoteDataSource {
   /// GET /users/me → returns the authenticated user's profile.
   Future<UserModel> getProfile() async {
     try {
-      final response = await _dio.get('/users/me');
+      final response = await _dio.get(ApiConstants.profile);
       return UserModel.fromJson(
         response.data['data'] as Map<String, dynamic>,
       );
@@ -88,7 +89,7 @@ class AuthRemoteDataSource {
       if (latitude != null) body['latitude'] = latitude;
       if (longitude != null) body['longitude'] = longitude;
 
-      final response = await _dio.patch('/users/me', data: body);
+      final response = await _dio.patch(ApiConstants.profile, data: body);
       return UserModel.fromJson(
         response.data['data'] as Map<String, dynamic>,
       );

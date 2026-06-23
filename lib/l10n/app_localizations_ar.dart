@@ -120,6 +120,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cart => 'عربة التسوق';
 
   @override
+  String get allCategories => 'كل الفئات';
+
+  @override
+  String get pressBackAgainToExit => 'اضغط مرة أخرى للخروج';
+
+  @override
   String get categories => 'الفئات';
 
   @override

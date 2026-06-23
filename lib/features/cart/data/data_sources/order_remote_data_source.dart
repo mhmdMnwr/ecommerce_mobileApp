@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/utils/api_constants.dart';
 import '../models/order_model.dart';
 
 /// Pagination wrapper returned by [getMyOrders].
@@ -34,7 +35,7 @@ class OrderRemoteDataSource {
         'items': items,
         if (comment != null && comment.isNotEmpty) 'comment': comment,
       };
-      final response = await _dio.post('/orders', data: body);
+      final response = await _dio.post(ApiConstants.orders, data: body);
       return OrderModel.fromJson(response.data['data'] as Map<String, dynamic>);
     } on DioException catch (e) {
       throw _mapDioError(e);
@@ -45,14 +46,17 @@ class OrderRemoteDataSource {
   Future<OrdersPage> getMyOrders({int page = 1, int limit = 10}) async {
     try {
       final response = await _dio.get(
-        '/orders/my-orders',
+        ApiConstants.myOrders,
         queryParameters: {'page': page, 'limit': limit},
       );
       final List data = response.data['data'] as List;
       final pagination = response.data['pagination'] as Map<String, dynamic>? ?? {};
 
       final orders = data
-          .map((json) => OrderModel.fromJson(json as Map<String, dynamic>))
+          .map((json) {
+            print('DEBUG ORDER JSON: $json');
+            return OrderModel.fromJson(json as Map<String, dynamic>);
+          })
           .toList();
 
       return OrdersPage(
@@ -70,11 +74,16 @@ class OrderRemoteDataSource {
   Future<OrderModel> updateMyOrder({
     required String orderId,
     required List<Map<String, dynamic>> items,
+    String? comment,
   }) async {
     try {
+      final body = <String, dynamic>{
+        'items': items,
+        if (comment != null) 'comment': comment,
+      };
       final response = await _dio.patch(
-        '/orders/updateMyOrder/$orderId',
-        data: {'items': items},
+        ApiConstants.updateMyOrder(orderId),
+        data: body,
       );
       return OrderModel.fromJson(response.data['data'] as Map<String, dynamic>);
     } on DioException catch (e) {
@@ -85,7 +94,7 @@ class OrderRemoteDataSource {
   /// PATCH /orders/cancelMyOrder/:orderId — Cancel a pending order.
   Future<void> cancelMyOrder(String orderId) async {
     try {
-      await _dio.patch('/orders/cancelMyOrder/$orderId');
+      await _dio.patch(ApiConstants.cancelMyOrder(orderId));
     } on DioException catch (e) {
       throw _mapDioError(e);
     }

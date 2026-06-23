@@ -19,8 +19,9 @@ class OrderRepository {
   Future<OrderModel> updateMyOrder({
     required String orderId,
     required List<Map<String, dynamic>> items,
+    String? comment,
   }) =>
-      _remoteDataSource.updateMyOrder(orderId: orderId, items: items);
+      _remoteDataSource.updateMyOrder(orderId: orderId, items: items, comment: comment);
 
   Future<void> cancelMyOrder(String orderId) =>
       _remoteDataSource.cancelMyOrder(orderId);

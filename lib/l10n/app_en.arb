@@ -37,6 +37,8 @@
   "home": "Home",
   "search": "Search",
   "cart": "Cart",
+  "allCategories": "All Categories",
+  "pressBackAgainToExit": "Press back again to exit",
   "categories": "Categories",
   "logIn": "Log in",
   "signUp": "Sign up",
@@ -147,5 +149,26 @@
   "storeContacts": "Store Contacts",
   "developerContacts": "Developer Contacts",
   "callUs": "Call Us",
-  "followUs": "Follow Us"
+  "followUs": "Follow Us",
+  "notification_title_order_update": "Order Updated",
+  "notification_message_order_update": "Your order has been updated by the admin. New total: {totalAmount} DZD.",
+  "@notification_message_order_update": {
+    "placeholders": {
+      "totalAmount": {
+        "type": "String"
+      }
+    }
+  },
+  "notification_title_order_status": "Order Status Updated",
+  "notification_message_order_status": "Your order status has changed from {oldStatus} to {status}.",
+  "@notification_message_order_status": {
+    "placeholders": {
+      "oldStatus": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -62,6 +62,11 @@ class CartCubit extends Cubit<CartState> {
     emit(CartIdle(cartItems: const [], activeOrder: state.activeOrder));
   }
 
+  /// Reset the entire cubit state (e.g. on logout).
+  void reset() {
+    emit(const CartIdle(cartItems: [], activeOrder: null));
+  }
+
   // ──────────────────────────────────────────────────────
   //  Order API Operations
   // ──────────────────────────────────────────────────────
@@ -113,11 +118,14 @@ class CartCubit extends Cubit<CartState> {
 
     try {
       final payload = cartItems.map((e) => e.toOrderPayload()).toList();
+      print('DEBUG PLACE ORDER COMMENT: $comment');
+      print('DEBUG ACTIVE ORDER COMMENT: ${activeOrder?.comment}');
 
       if (activeOrder != null && activeOrder.isPending) {
         final updated = await _orderRepository.updateMyOrder(
           orderId: activeOrder.id,
           items: payload,
+          comment: comment ?? activeOrder.comment,
         );
         if (updated.status != 'Pending') {
           emit(CartOrderSuccess(message: 'orderUpdatedSuccess', cartItems: const [], activeOrder: null));

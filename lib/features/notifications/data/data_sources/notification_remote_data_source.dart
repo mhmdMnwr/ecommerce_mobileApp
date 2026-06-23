@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/utils/api_constants.dart';
 import '../models/notification_model.dart';
 
 /// Pagination wrapper for notifications.
@@ -28,7 +29,7 @@ class NotificationRemoteDataSource {
   Future<NotificationsPage> getMyNotifications({int page = 1, int limit = 20}) async {
     try {
       final response = await _dio.get(
-        '/notifications',
+        ApiConstants.notifications,
         queryParameters: {'page': page, 'limit': limit},
       );
       final List data = response.data['data'] as List;
@@ -52,7 +53,7 @@ class NotificationRemoteDataSource {
   /// GET /notifications/unread-count
   Future<int> getUnreadCount() async {
     try {
-      final response = await _dio.get('/notifications/unread-count');
+      final response = await _dio.get(ApiConstants.unreadNotificationsCount);
       final data = response.data['data'] as Map<String, dynamic>;
       return (data['count'] as num).toInt();
     } on DioException catch (e) {
@@ -63,7 +64,7 @@ class NotificationRemoteDataSource {
   /// PATCH /notifications/read/:notificationId
   Future<void> markAsRead(String notificationId) async {
     try {
-      await _dio.patch('/notifications/read/$notificationId');
+      await _dio.patch(ApiConstants.readNotification(notificationId));
     } on DioException catch (e) {
       throw _mapDioError(e);
     }
@@ -72,7 +73,7 @@ class NotificationRemoteDataSource {
   /// PATCH /notifications/read-all
   Future<void> markAllAsRead() async {
     try {
-      await _dio.patch('/notifications/read-all');
+      await _dio.patch(ApiConstants.readAllNotifications);
     } on DioException catch (e) {
       throw _mapDioError(e);
     }

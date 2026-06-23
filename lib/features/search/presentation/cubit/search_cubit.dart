@@ -19,7 +19,20 @@ class SearchCubit extends Cubit<SearchState> {
   Future<void> loadCategories() async {
     try {
       _categories = await _homeRepo.getCategories();
-      emit(SearchInitial(categories: _categories));
+      final s = state;
+      if (s is SearchInitial) {
+        emit(SearchInitial(categories: _categories));
+      } else if (s is SearchLoaded) {
+        emit(SearchLoaded(
+          query: s.query,
+          filters: s.filters,
+          products: s.products,
+          totalItems: s.totalItems,
+          totalPages: s.totalPages,
+          currentPage: s.currentPage,
+          categories: _categories,
+        ));
+      }
     } catch (_) {
       // Categories are optional — don't block.
     }

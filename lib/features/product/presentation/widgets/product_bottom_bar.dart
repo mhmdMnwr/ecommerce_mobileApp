@@ -98,6 +98,8 @@ class ProductBottomBar extends StatelessWidget {
                 ? AppColors.primary
                 : AppColors.primary.withAlpha(180),
             foregroundColor: AppColors.background,
+            disabledBackgroundColor: AppColors.primary.withAlpha(160),
+            disabledForegroundColor: Colors.white.withAlpha(220),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.r),
             ),

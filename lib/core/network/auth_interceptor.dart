@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../storage/token_storage.dart';
+import '../utils/api_constants.dart';
 
 /// Dio interceptor that handles JWT authentication transparently.
 ///
@@ -14,9 +15,9 @@ class AuthInterceptor extends QueuedInterceptor {
 
   /// Endpoints that must NOT carry an auth header.
   static const _publicPaths = [
-    '/users/login',
-    '/users/registerCustomer',
-    '/users/refresh-token',
+    ApiConstants.login,
+    ApiConstants.registerCustomer,
+    ApiConstants.refreshToken,
   ];
 
   AuthInterceptor({
@@ -72,7 +73,7 @@ class AuthInterceptor extends QueuedInterceptor {
 
     try {
       final res = await _refreshDio.post(
-        '/users/refresh-token',
+        ApiConstants.refreshToken,
         data: {'token': refreshToken},
       );
 

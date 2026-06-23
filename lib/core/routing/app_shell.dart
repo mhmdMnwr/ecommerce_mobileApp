@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -10,34 +11,71 @@ import '../../features/notifications/presentation/cubit/notification_cubit.dart'
 import '../../features/notifications/presentation/cubit/notification_state.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
 
-class AppShell extends StatelessWidget {
+class AppShell extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
   const AppShell({super.key, required this.navigationShell});
 
   @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  DateTime? _lastPressedAt;
+
+  @override
   Widget build(BuildContext context) {
-    final idx = navigationShell.currentIndex;
-    return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: AppColors.fieldBorder, width: 0.5)),
-        ),
-        child: NavigationBar(
-          selectedIndex: idx,
-          onDestinationSelected: (i) => navigationShell.goBranch(i, initialLocation: i == idx),
-          backgroundColor: AppColors.background,
-          surfaceTintColor: Colors.transparent,
-          indicatorColor: Colors.transparent,
-          height: 64.h,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-          destinations: [
-            _dest(IconsHelper.home, AppLocalizations.of(context)!.home, idx == 0),
-            _dest(IconsHelper.search, AppLocalizations.of(context)!.search, idx == 1),
-            _dest(IconsHelper.cart, AppLocalizations.of(context)!.cart, idx == 2),
-            _dest(IconsHelper.categories, AppLocalizations.of(context)!.categories, idx == 3),
-            _profileDest(context, idx == 4),
-          ],
+    final idx = widget.navigationShell.currentIndex;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+
+        // If go_router can pop deeper navigation, let it handle it.
+        if (context.canPop()) {
+          context.pop();
+          return;
+        }
+
+        final now = DateTime.now();
+        if (_lastPressedAt == null || now.difference(_lastPressedAt!) > const Duration(seconds: 2)) {
+          _lastPressedAt = now;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.pressBackAgainToExit),
+              duration: const Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+              backgroundColor: AppColors.primaryLight,
+            ),
+          );
+          return;
+        }
+
+        // Exit the app if pressed twice within 2 seconds
+        SystemNavigator.pop();
+      },
+      child: Scaffold(
+        body: widget.navigationShell,
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            border: Border(top: BorderSide(color: AppColors.fieldBorder, width: 0.5)),
+          ),
+          child: NavigationBar(
+            selectedIndex: idx,
+            onDestinationSelected: (i) => widget.navigationShell.goBranch(i, initialLocation: i == idx),
+            backgroundColor: AppColors.background,
+            surfaceTintColor: Colors.transparent,
+            indicatorColor: Colors.transparent,
+            height: 64.h,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+            destinations: [
+              _dest(IconsHelper.home, AppLocalizations.of(context)!.home, idx == 0),
+              _dest(IconsHelper.search, AppLocalizations.of(context)!.search, idx == 1),
+              _dest(IconsHelper.cart, AppLocalizations.of(context)!.cart, idx == 2),
+              _dest(IconsHelper.categories, AppLocalizations.of(context)!.categories, idx == 3),
+              _profileDest(context, idx == 4),
+            ],
+          ),
         ),
       ),
     );

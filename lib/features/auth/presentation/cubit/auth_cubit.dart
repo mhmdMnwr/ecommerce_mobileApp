@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../../cart/presentation/cubit/cart_cubit.dart';
 import '../../data/repositories/auth_repository.dart';
 import 'auth_state.dart';
 
@@ -100,6 +102,7 @@ class AuthCubit extends Cubit<AuthState> {
   /// Logs the user out and clears persisted tokens.
   Future<void> logout() async {
     await _repository.logout();
+    sl<CartCubit>().reset();
     emit(const AuthUnauthenticated());
   }
 }

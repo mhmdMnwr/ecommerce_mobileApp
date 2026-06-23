@@ -120,6 +120,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cart => 'Panier';
 
   @override
+  String get allCategories => 'Toutes les catégories';
+
+  @override
+  String get pressBackAgainToExit => 'Appuyez à nouveau pour quitter';
+
+  @override
   String get categories => 'Catégories';
 
   @override
