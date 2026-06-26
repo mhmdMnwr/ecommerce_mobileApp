@@ -444,4 +444,20 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get followUs => 'تابعنا';
+
+  @override
+  String get notification_title_order_update => 'تم تحديث الطلب';
+
+  @override
+  String notification_message_order_update(String totalAmount) {
+    return 'تم تحديث طلبك من قبل المشرف. المجموع الجديد: $totalAmount دج.';
+  }
+
+  @override
+  String get notification_title_order_status => 'تحديث حالة الطلب';
+
+  @override
+  String notification_message_order_status(String oldStatus, String status) {
+    return 'تغيرت حالة طلبك من $oldStatus إلى $status.';
+  }
 }

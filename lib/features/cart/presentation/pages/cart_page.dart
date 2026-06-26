@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +28,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final TextEditingController _commentController = TextEditingController();
   OrderModel? _lastActiveOrder;
+  Timer? _statusPollTimer;
 
   @override
   void initState() {
@@ -38,6 +41,11 @@ class _CartPageState extends State<CartPage> {
       _commentController.text = activeOrder.comment ?? '';
     }
     context.read<CartCubit>().loadActiveOrder();
+    // Poll for order status changes every 30 seconds
+    _statusPollTimer = Timer.periodic(
+      const Duration(seconds: 30),
+      (_) => context.read<CartCubit>().refreshActiveOrderStatus(),
+    );
   }
 
   void _onCommentChanged() {
@@ -46,6 +54,7 @@ class _CartPageState extends State<CartPage> {
 
   @override
   void dispose() {
+    _statusPollTimer?.cancel();
     _commentController.removeListener(_onCommentChanged);
     _commentController.dispose();
     super.dispose();
@@ -398,9 +407,10 @@ class _CartPageState extends State<CartPage> {
   }
 
   void _showClearConfirmation(BuildContext context, AppLocalizations l10n) {
+    final cartCubit = context.read<CartCubit>();
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.background,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
@@ -419,7 +429,7 @@ class _CartPageState extends State<CartPage> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               l10n.cancel,
               style: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
@@ -427,8 +437,8 @@ class _CartPageState extends State<CartPage> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              context.read<CartCubit>().clearCart();
+              Navigator.pop(dialogContext);
+              cartCubit.clearCart();
             },
             child: Text(
               l10n.removeAll,

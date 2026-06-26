@@ -957,6 +957,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Follow Us'**
   String get followUs;
+
+  /// No description provided for @notification_title_order_update.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Updated'**
+  String get notification_title_order_update;
+
+  /// No description provided for @notification_message_order_update.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order has been updated by the admin. New total: {totalAmount} DZD.'**
+  String notification_message_order_update(String totalAmount);
+
+  /// No description provided for @notification_title_order_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Status Updated'**
+  String get notification_title_order_status;
+
+  /// No description provided for @notification_message_order_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order status has changed from {oldStatus} to {status}.'**
+  String notification_message_order_status(String oldStatus, String status);
 }
 
 class _AppLocalizationsDelegate

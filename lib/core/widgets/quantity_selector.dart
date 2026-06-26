@@ -32,11 +32,8 @@ class _QuantitySelectorState extends State<QuantitySelector> {
     _focusNode = FocusNode();
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
-        final val = int.tryParse(_controller.text) ?? 0;
-        widget.onChanged(val);
-        if (_controller.text.isEmpty) {
-          _controller.text = '0';
-        }
+        // Sync the controller text to the current widget value when losing focus
+        _controller.text = widget.value.toString();
       }
     });
   }
@@ -44,7 +41,8 @@ class _QuantitySelectorState extends State<QuantitySelector> {
   @override
   void didUpdateWidget(covariant QuantitySelector oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value) {
+    // Only sync from parent when not actively editing (avoids cursor jumps)
+    if (oldWidget.value != widget.value && !_focusNode.hasFocus) {
       if (int.tryParse(_controller.text) != widget.value) {
         _controller.text = widget.value.toString();
       }
@@ -117,6 +115,10 @@ class _QuantitySelectorState extends State<QuantitySelector> {
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
                   ),
+                  onChanged: (val) {
+                    final intVal = int.tryParse(val) ?? 0;
+                    widget.onChanged(intVal);
+                  },
                   onSubmitted: (val) {
                     final intVal = int.tryParse(val) ?? 0;
                     widget.onChanged(intVal);

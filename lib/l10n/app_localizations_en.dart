@@ -446,4 +446,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get followUs => 'Follow Us';
+
+  @override
+  String get notification_title_order_update => 'Order Updated';
+
+  @override
+  String notification_message_order_update(String totalAmount) {
+    return 'Your order has been updated by the admin. New total: $totalAmount DZD.';
+  }
+
+  @override
+  String get notification_title_order_status => 'Order Status Updated';
+
+  @override
+  String notification_message_order_status(String oldStatus, String status) {
+    return 'Your order status has changed from $oldStatus to $status.';
+  }
 }

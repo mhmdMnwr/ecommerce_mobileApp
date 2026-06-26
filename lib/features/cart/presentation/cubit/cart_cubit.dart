@@ -57,9 +57,9 @@ class CartCubit extends Cubit<CartState> {
     emit(CartIdle(cartItems: current, activeOrder: state.activeOrder));
   }
 
-  /// Clear the entire cart (items only – does NOT affect the active order).
+  /// Clear the entire cart and reset the active order.
   void clearCart() {
-    emit(CartIdle(cartItems: const [], activeOrder: state.activeOrder));
+    emit(const CartIdle(cartItems: [], activeOrder: null));
   }
 
   /// Reset the entire cubit state (e.g. on logout).
@@ -101,9 +101,46 @@ class CartCubit extends Cubit<CartState> {
           return;
         }
       }
-      emit(CartIdle(cartItems: state.cartItems, activeOrder: null));
+      // No orders at all, or latest is not pending and we didn't have a pending one before.
+      // If we had an active order that's no longer in the list, clear it.
+      if (state.activeOrder != null) {
+        emit(const CartIdle(cartItems: [], activeOrder: null));
+      } else {
+        emit(CartIdle(cartItems: state.cartItems, activeOrder: null));
+      }
     } catch (_) {
       // Silently ignore — don't crash the cart if this fails.
+    }
+  }
+
+  /// Periodically poll the backend to check if the active order's status changed.
+  /// This allows the UI to dynamically reflect admin-side status updates.
+  Future<void> refreshActiveOrderStatus() async {
+    final activeOrder = state.activeOrder;
+    if (activeOrder == null) return;
+
+    try {
+      final page = await _orderRepository.getMyOrders(page: 1, limit: 1);
+      if (page.orders.isNotEmpty) {
+        final latest = page.orders.first;
+        // Check if it's the same order
+        if (latest.id == activeOrder.id) {
+          if (latest.status != activeOrder.status) {
+            // Status changed — if no longer Pending, lock/clear the cart
+            if (latest.status != 'Pending') {
+              emit(const CartIdle(cartItems: [], activeOrder: null));
+            } else {
+              emit(CartIdle(cartItems: state.cartItems, activeOrder: latest));
+            }
+          }
+        } else {
+          // The latest order is a different one — the active order may have been
+          // processed. Clear the cart.
+          emit(const CartIdle(cartItems: [], activeOrder: null));
+        }
+      }
+    } catch (_) {
+      // Silently ignore refresh errors
     }
   }
 

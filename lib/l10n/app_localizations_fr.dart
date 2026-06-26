@@ -453,4 +453,21 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get followUs => 'Suivez-nous';
+
+  @override
+  String get notification_title_order_update => 'Commande mise à jour';
+
+  @override
+  String notification_message_order_update(String totalAmount) {
+    return 'Votre commande a été mise à jour par l\'administrateur. Nouveau total: $totalAmount DZD.';
+  }
+
+  @override
+  String get notification_title_order_status =>
+      'Statut de la commande mis à jour';
+
+  @override
+  String notification_message_order_status(String oldStatus, String status) {
+    return 'Le statut de votre commande est passé de $oldStatus à $status.';
+  }
 }
