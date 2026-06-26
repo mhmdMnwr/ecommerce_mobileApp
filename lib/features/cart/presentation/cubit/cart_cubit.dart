@@ -51,15 +51,40 @@ class CartCubit extends Cubit<CartState> {
   }
 
   /// Remove a specific item from the cart.
+  /// If this was the last item and there's a pending order, cancel it.
   void removeFromCart(String productId) {
     final current = List<CartItemModel>.from(state.cartItems);
     current.removeWhere((e) => e.productId == productId);
-    emit(CartIdle(cartItems: current, activeOrder: state.activeOrder));
+
+    if (current.isEmpty && state.activeOrder != null && state.activeOrder!.isPending) {
+      // Last item removed from a pending order → cancel the order
+      _cancelActiveOrderAndClear();
+    } else {
+      emit(CartIdle(cartItems: current, activeOrder: state.activeOrder));
+    }
   }
 
-  /// Clear the entire cart and reset the active order.
+  /// Clear the entire cart.
+  /// If there's a pending order, cancel it on the backend first.
   void clearCart() {
+    if (state.activeOrder != null && state.activeOrder!.isPending) {
+      _cancelActiveOrderAndClear();
+    } else {
+      emit(const CartIdle(cartItems: [], activeOrder: null));
+    }
+  }
+
+  /// Cancel the active pending order on the backend, then clear local state.
+  Future<void> _cancelActiveOrderAndClear() async {
+    final orderId = state.activeOrder?.id;
     emit(const CartIdle(cartItems: [], activeOrder: null));
+    if (orderId != null) {
+      try {
+        await _orderRepository.cancelMyOrder(orderId);
+      } catch (_) {
+        // Silently fail — cart is already cleared locally
+      }
+    }
   }
 
   /// Reset the entire cubit state (e.g. on logout).

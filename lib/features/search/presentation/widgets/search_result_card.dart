@@ -129,7 +129,7 @@ class SearchResultCard extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                '${product.price.toInt()} $currency',
+                '${product.price.toStringAsFixed(2)} $currency',
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w800,

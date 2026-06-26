@@ -59,9 +59,9 @@ class SearchActiveFilters extends StatelessWidget {
   String _priceLabel(AppLocalizations l10n) {
     final c = l10n.currency;
     if (filters.minPrice != null && filters.maxPrice != null) {
-      return '${filters.minPrice!.toInt()} – ${filters.maxPrice!.toInt()} $c';
+      return '${filters.minPrice!.toStringAsFixed(2)} – ${filters.maxPrice!.toStringAsFixed(2)} $c';
     }
-    if (filters.minPrice != null) return '≥ ${filters.minPrice!.toInt()} $c';
-    return '≤ ${filters.maxPrice!.toInt()} $c';
+    if (filters.minPrice != null) return '≥ ${filters.minPrice!.toStringAsFixed(2)} $c';
+    return '≤ ${filters.maxPrice!.toStringAsFixed(2)} $c';
   }
 }

@@ -22,7 +22,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<NotificationCubit>().loadNotifications();
+    final cubit = context.read<NotificationCubit>();
+    // Load notifications and mark all as read when entering the page
+    cubit.loadNotifications();
+    cubit.markAllAsRead();
   }
 
   @override

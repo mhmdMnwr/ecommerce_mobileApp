@@ -2,7 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/routing/app_router.dart';
+import '../../../../core/services/push_notification_service.dart';
 import '../../../cart/presentation/cubit/cart_cubit.dart';
+import '../../../notifications/presentation/cubit/notification_cubit.dart';
 import '../../data/repositories/auth_repository.dart';
 import 'auth_state.dart';
 
@@ -20,6 +23,7 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await _repository.checkAuthStatus();
       if (user != null) {
         emit(AuthAuthenticated(user));
+        _initLocalNotifications();
       } else {
         emit(const AuthUnauthenticated());
       }
@@ -40,6 +44,7 @@ class AuthCubit extends Cubit<AuthState> {
         password: password,
       );
       emit(AuthAuthenticated(user));
+      _initLocalNotifications();
     } on ServerException catch (e) {
       emit(AuthError(e.message));
     } catch (_) {
@@ -103,6 +108,21 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> logout() async {
     await _repository.logout();
     sl<CartCubit>().reset();
+    sl<NotificationCubit>().stopPolling();
+    sl<LocalNotificationService>().dispose();
     emit(const AuthUnauthenticated());
+  }
+
+  /// Initialize local notification service and set tap handler.
+  void _initLocalNotifications() {
+    final localNotifService = sl<LocalNotificationService>();
+
+    // When a notification is tapped, navigate to the notifications page
+    localNotifService.onNotificationTapped = () {
+      appRouter.push(AppRoutes.notifications);
+    };
+
+    // Initialize the local notification plugin (channel, permissions, etc.)
+    localNotifService.initialize();
   }
 }

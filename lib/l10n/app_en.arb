@@ -170,5 +170,14 @@
         "type": "String"
       }
     }
+  },
+  "newNotification": "You have a new notification",
+  "newNotificationsCount": "You have {count} new notifications",
+  "@newNotificationsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../locale/locale_cubit.dart';
 import '../network/api_client.dart';
+import '../services/push_notification_service.dart';
 import '../storage/token_storage.dart';
 import '../theme/theme_cubit.dart';
 import '../utils/constants.dart';
@@ -149,7 +150,17 @@ Future<void> initDependencies() async {
 
   // Singleton so badge count persists across tab switches
   sl.registerLazySingleton<NotificationCubit>(
-    () => NotificationCubit(sl<NotificationRepository>()),
+    () => NotificationCubit(
+      sl<NotificationRepository>(),
+      sl<LocalNotificationService>(),
+    ),
+  );
+
+  // ──────────────────────────────────────────────
+  // Core — Local Notifications
+  // ──────────────────────────────────────────────
+  sl.registerLazySingleton<LocalNotificationService>(
+    () => LocalNotificationService(),
   );
 
   // ──────────────────────────────────────────────

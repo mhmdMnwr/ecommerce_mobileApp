@@ -143,5 +143,14 @@
         "type": "String"
       }
     }
+  },
+  "newNotification": "Vous avez une nouvelle notification",
+  "newNotificationsCount": "Vous avez {count} nouvelles notifications",
+  "@newNotificationsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

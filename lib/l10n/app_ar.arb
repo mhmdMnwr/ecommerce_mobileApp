@@ -163,5 +163,14 @@
         "type": "String"
       }
     }
+  },
+  "newNotification": "لديك إشعار جديد",
+  "newNotificationsCount": "لديك {count} إشعارات جديدة",
+  "@newNotificationsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

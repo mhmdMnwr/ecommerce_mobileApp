@@ -97,7 +97,7 @@ class ProductCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '${product.price.toInt()} $currency',
+                    '${product.price.toStringAsFixed(2)} $currency',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

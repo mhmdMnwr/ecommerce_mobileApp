@@ -462,4 +462,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String notification_message_order_status(String oldStatus, String status) {
     return 'Your order status has changed from $oldStatus to $status.';
   }
+
+  @override
+  String get newNotification => 'You have a new notification';
+
+  @override
+  String newNotificationsCount(int count) {
+    return 'You have $count new notifications';
+  }
 }

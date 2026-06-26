@@ -55,6 +55,9 @@ dependencies:
   flutter_svg: ^2.3.0
   url_launcher: ^6.3.2
 
+  # Local Notifications (shown when polling detects new notifications)
+  flutter_local_notifications: ^19.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

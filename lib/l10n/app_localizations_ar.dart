@@ -460,4 +460,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String notification_message_order_status(String oldStatus, String status) {
     return 'تغيرت حالة طلبك من $oldStatus إلى $status.';
   }
+
+  @override
+  String get newNotification => 'لديك إشعار جديد';
+
+  @override
+  String newNotificationsCount(int count) {
+    return 'لديك $count إشعارات جديدة';
+  }
 }

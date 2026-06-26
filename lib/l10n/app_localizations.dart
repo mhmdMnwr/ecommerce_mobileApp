@@ -981,6 +981,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your order status has changed from {oldStatus} to {status}.'**
   String notification_message_order_status(String oldStatus, String status);
+
+  /// No description provided for @newNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'You have a new notification'**
+  String get newNotification;
+
+  /// No description provided for @newNotificationsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'You have {count} new notifications'**
+  String newNotificationsCount(int count);
 }
 
 class _AppLocalizationsDelegate

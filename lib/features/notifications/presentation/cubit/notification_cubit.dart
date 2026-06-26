@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../../../core/locale/locale_cubit.dart';
+import '../../../../core/services/push_notification_service.dart';
 import '../../data/models/notification_model.dart';
 import '../../data/repositories/notification_repository.dart';
 import 'notification_state.dart';
@@ -9,9 +12,16 @@ import 'notification_state.dart';
 /// Manages notification state and polling for new notifications.
 class NotificationCubit extends Cubit<NotificationState> {
   final NotificationRepository _repository;
+  final LocalNotificationService? _localNotificationService;
   Timer? _pollingTimer;
 
-  NotificationCubit(this._repository) : super(const NotificationInitial());
+  /// Tracks the last known unread count to detect new notifications.
+  int _lastKnownUnreadCount = 0;
+
+  NotificationCubit(
+    this._repository, [
+    this._localNotificationService,
+  ]) : super(const NotificationInitial());
 
   /// Start periodic polling for unread count (every 30 seconds).
   void startPolling() {
@@ -31,10 +41,23 @@ class NotificationCubit extends Cubit<NotificationState> {
   }
 
   /// Fetch only the unread count (lightweight, used by badge).
+  /// If the count increased since last check, show a local notification.
   Future<void> fetchUnreadCount() async {
     try {
       final count = await _repository.getUnreadCount();
       final currentState = state;
+
+      // Show a local notification if new unread notifications appeared
+      if (count > _lastKnownUnreadCount && _lastKnownUnreadCount >= 0) {
+        final newCount = count - _lastKnownUnreadCount;
+        final body = _getLocalizedNotificationBody(newCount);
+        _localNotificationService?.show(
+          title: 'Grossist Bouchentouf',
+          body: body,
+        );
+      }
+      _lastKnownUnreadCount = count;
+
       if (currentState is NotificationLoaded) {
         emit(currentState.copyWith(unreadCount: count));
       } else {
@@ -133,6 +156,30 @@ class NotificationCubit extends Cubit<NotificationState> {
       }
     } catch (_) {
       // Silently fail
+    }
+  }
+
+  /// Returns a localized notification body based on the current app language.
+  String _getLocalizedNotificationBody(int count) {
+    final lang = sl<LocaleCubit>().locale.languageCode;
+    if (count == 1) {
+      switch (lang) {
+        case 'ar':
+          return 'لديك إشعار جديد';
+        case 'fr':
+          return 'Vous avez une nouvelle notification';
+        default:
+          return 'You have a new notification';
+      }
+    } else {
+      switch (lang) {
+        case 'ar':
+          return 'لديك $count إشعارات جديدة';
+        case 'fr':
+          return 'Vous avez $count nouvelles notifications';
+        default:
+          return 'You have $count new notifications';
+      }
     }
   }
 
