@@ -44,6 +44,11 @@ class AuthRegistrationSuccess extends AuthState {
   List<Object?> get props => [message];
 }
 
+/// The user's account exists but is pending admin approval.
+class AuthPendingApproval extends AuthState {
+  const AuthPendingApproval();
+}
+
 /// An auth operation failed.
 class AuthError extends AuthState {
   final String message;

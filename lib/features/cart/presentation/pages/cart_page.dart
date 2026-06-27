@@ -9,6 +9,8 @@ import '../../../../core/widgets/app_loading_dialog.dart';
 import '../../../../core/widgets/app_success_dialog.dart';
 import '../cubit/cart_cubit.dart';
 import '../cubit/cart_state.dart';
+import '../../../auth/presentation/cubit/auth_cubit.dart';
+import '../../../auth/presentation/cubit/auth_state.dart';
 import '../../data/models/order_model.dart';
 import '../widgets/cart_item_tile.dart';
 import '../widgets/cart_empty_view.dart';
@@ -92,6 +94,7 @@ class _CartPageState extends State<CartPage> {
             ),
           );
         } else if (state is CartError) {
+          if (!context.mounted || context.read<AuthCubit>().state is AuthUnauthenticated) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),

@@ -55,6 +55,13 @@ Future<void> initDependencies() async {
     () => ApiClient(
       baseUrl: AppConstants.baseUrl,
       tokenStorage: sl<TokenStorage>(),
+      onForceLogout: () {
+        Future.microtask(() {
+          if (sl.isRegistered<AuthCubit>()) {
+            sl<AuthCubit>().logout();
+          }
+        });
+      },
     ),
   );
 
@@ -72,7 +79,7 @@ Future<void> initDependencies() async {
     ),
   );
 
-  sl.registerFactory<AuthCubit>(
+  sl.registerLazySingleton<AuthCubit>(
     () => AuthCubit(sl<AuthRepository>()),
   );
 

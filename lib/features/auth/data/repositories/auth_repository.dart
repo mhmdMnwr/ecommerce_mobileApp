@@ -18,23 +18,26 @@ class AuthRepository {
         _tokenStorage = tokenStorage;
 
   /// Full login flow: authenticate → persist tokens → fetch profile.
-  Future<UserModel> login({
+  /// Returns a record with the user and their account status.
+  Future<({UserModel user, String status})> login({
     required String username,
     required String password,
   }) async {
     try {
-      // 1. Get tokens
-      final tokens = await _remote.login(
+      // 1. Get tokens + status
+      final result = await _remote.login(
         username: username,
         password: password,
       );
-      await _tokenStorage.saveAccessToken(tokens['accessToken']!);
-      await _tokenStorage.saveRefreshToken(tokens['refreshToken']!);
+      await _tokenStorage.saveAccessToken(result['accessToken']!);
+      await _tokenStorage.saveRefreshToken(result['refreshToken']!);
+
+      final status = result['status'] ?? 'active';
 
       // 2. Fetch & cache the user profile
       final user = await _remote.getProfile();
       await _tokenStorage.saveCachedUser(jsonEncode(user.toJson()));
-      return user;
+      return (user: user, status: status);
     } on ServerException {
       rethrow;
     } catch (e) {
@@ -43,7 +46,8 @@ class AuthRepository {
   }
 
   /// Register a new customer account.
-  Future<UserModel> register({
+  /// Saves tokens to cache and returns the account status.
+  Future<String> register({
     required String username,
     required String password,
     required String phone,
@@ -52,7 +56,7 @@ class AuthRepository {
     double? longitude,
   }) async {
     try {
-      return await _remote.register(
+      final result = await _remote.register(
         username: username,
         password: password,
         phone: phone,
@@ -60,6 +64,12 @@ class AuthRepository {
         latitude: latitude,
         longitude: longitude,
       );
+
+      // Save tokens so the session is cached
+      await _tokenStorage.saveAccessToken(result['accessToken']!);
+      await _tokenStorage.saveRefreshToken(result['refreshToken']!);
+
+      return result['status'] ?? 'inactive';
     } on ServerException {
       rethrow;
     } catch (e) {

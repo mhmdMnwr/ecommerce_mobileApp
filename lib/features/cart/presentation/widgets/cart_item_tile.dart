@@ -215,7 +215,10 @@ class _CartQtyPillState extends State<_CartQtyPill> {
     _controller = TextEditingController(text: widget.value.toString());
     _focusNode = FocusNode();
     _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
+      if (_focusNode.hasFocus) {
+        // Clear the field when focused so the user can type fresh
+        _controller.clear();
+      } else {
         // Sync the controller text to the current widget value when losing focus
         _controller.text = widget.value.toString();
       }

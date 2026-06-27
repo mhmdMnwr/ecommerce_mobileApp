@@ -152,5 +152,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "pendingApprovalTitle": "Compte en attente d'approbation",
+  "pendingApprovalMessage": "Votre compte a été créé avec succès.\nVeuillez attendre que l'administrateur active votre compte avant de pouvoir utiliser l'application.",
+  "checkStatus": "Vérifier le statut"
 }

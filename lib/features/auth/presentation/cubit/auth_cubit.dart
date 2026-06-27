@@ -22,8 +22,13 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final user = await _repository.checkAuthStatus();
       if (user != null) {
-        emit(AuthAuthenticated(user));
-        _initLocalNotifications();
+        // Check if the user's account is still inactive
+        if (user.status == 'inactive') {
+          emit(const AuthPendingApproval());
+        } else {
+          emit(AuthAuthenticated(user));
+          _initLocalNotifications();
+        }
       } else {
         emit(const AuthUnauthenticated());
       }
@@ -39,12 +44,16 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(const AuthLoading());
     try {
-      final user = await _repository.login(
+      final result = await _repository.login(
         username: username,
         password: password,
       );
-      emit(AuthAuthenticated(user));
-      _initLocalNotifications();
+      if (result.status != 'active') {
+        emit(const AuthPendingApproval());
+      } else {
+        emit(AuthAuthenticated(result.user));
+        _initLocalNotifications();
+      }
     } on ServerException catch (e) {
       emit(AuthError(e.message));
     } catch (_) {
@@ -63,7 +72,7 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(const AuthLoading());
     try {
-      await _repository.register(
+      final status = await _repository.register(
         username: username,
         password: password,
         phone: phone,
@@ -71,7 +80,14 @@ class AuthCubit extends Cubit<AuthState> {
         latitude: latitude,
         longitude: longitude,
       );
-      emit(const AuthRegistrationSuccess());
+      if (status == 'active') {
+        // Shouldn't happen for customers, but handle it
+        final user = await _repository.getProfile();
+        emit(AuthAuthenticated(user));
+        _initLocalNotifications();
+      } else {
+        emit(const AuthPendingApproval());
+      }
     } on ServerException catch (e) {
       emit(AuthError(e.message));
     } catch (_) {

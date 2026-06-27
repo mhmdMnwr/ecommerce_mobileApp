@@ -468,4 +468,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String newNotificationsCount(int count) {
     return 'لديك $count إشعارات جديدة';
   }
+
+  @override
+  String get pendingApprovalTitle => 'الحساب بانتظار الموافقة';
+
+  @override
+  String get pendingApprovalMessage =>
+      'تم إنشاء حسابك بنجاح.\nيرجى الانتظار حتى يقوم المسؤول بتفعيل حسابك قبل أن تتمكن من استخدام التطبيق.';
+
+  @override
+  String get checkStatus => 'تحقق من الحالة';
 }

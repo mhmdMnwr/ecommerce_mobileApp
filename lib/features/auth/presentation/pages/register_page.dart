@@ -110,7 +110,9 @@ class _RegisterPageState extends State<RegisterPage>
       backgroundColor: AppColors.background,
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is AuthRegistrationSuccess) {
+          if (state is AuthPendingApproval) {
+            context.go(AppRoutes.pendingApproval);
+          } else if (state is AuthRegistrationSuccess) {
             showAppSnackBar(context,
                 message: translateAuthMessage(context, state.message),
                 color: AppColors.success);

@@ -7,13 +7,13 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/locale/locale_cubit.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/theme_cubit.dart';
+
 import '../../../auth/presentation/cubit/auth_cubit.dart';
 import '../../../auth/presentation/cubit/auth_state.dart';
 import '../../../notifications/presentation/cubit/notification_cubit.dart';
 import '../../../notifications/presentation/cubit/notification_state.dart';
 import '../widgets/language_dialog.dart';
-import '../widgets/theme_dialog.dart';
+
 import 'package:ecommerce_app/l10n/app_localizations.dart';
 import '../../../../core/utils/icons_helper.dart';
 import '../widgets/profile_menu_item.dart';
@@ -128,14 +128,7 @@ class ProfilePage extends StatelessWidget {
                         LanguageDialog(localeCubit: sl<LocaleCubit>()),
                   ),
                 ),
-                ProfileMenuItem(
-                  pngAsset: IconsHelper.theme,
-                  title: AppLocalizations.of(context)!.theme,
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (_) => ThemeDialog(themeCubit: sl<ThemeCubit>()),
-                  ),
-                ),
+
                 ProfileMenuItem(
                   pngAsset: IconsHelper.phone,
                   title: AppLocalizations.of(context)!.contactUs,

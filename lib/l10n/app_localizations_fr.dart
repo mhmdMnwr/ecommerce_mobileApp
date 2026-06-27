@@ -478,4 +478,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String newNotificationsCount(int count) {
     return 'Vous avez $count nouvelles notifications';
   }
+
+  @override
+  String get pendingApprovalTitle => 'Compte en attente d\'approbation';
+
+  @override
+  String get pendingApprovalMessage =>
+      'Votre compte a été créé avec succès.\nVeuillez attendre que l\'administrateur active votre compte avant de pouvoir utiliser l\'application.';
+
+  @override
+  String get checkStatus => 'Vérifier le statut';
 }

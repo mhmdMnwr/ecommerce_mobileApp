@@ -10,6 +10,7 @@ import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
+import 'features/auth/presentation/cubit/auth_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +59,18 @@ class EcommerceApp extends StatelessWidget {
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: AppLocalizations.supportedLocales,
+
+                // ── Global App Builder ─────────────────
+                builder: (context, child) {
+                  return BlocListener<AuthCubit, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthUnauthenticated) {
+                        appRouter.go(AppRoutes.login);
+                      }
+                    },
+                    child: child!,
+                  );
+                },
 
                 // ── Routing ────────────────────────────
                 routerConfig: appRouter,

@@ -72,6 +72,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       context.go(AppRoutes.home);
       return;
     }
+    if (authState is AuthPendingApproval) {
+      context.go(AppRoutes.pendingApproval);
+      return;
+    }
 
     // Stage 3: Animate form sliding in.
     await _splashCtrl.animateTo(
@@ -159,6 +163,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           if (state is AuthAuthenticated && _splashCtrl.isCompleted) {
             sl<NotificationCubit>().startPolling();
             context.go(AppRoutes.home);
+          } else if (state is AuthPendingApproval) {
+            context.go(AppRoutes.pendingApproval);
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()

@@ -470,4 +470,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String newNotificationsCount(int count) {
     return 'You have $count new notifications';
   }
+
+  @override
+  String get pendingApprovalTitle => 'Account Pending Approval';
+
+  @override
+  String get pendingApprovalMessage =>
+      'Your account has been created successfully.\nPlease wait for the admin to activate your account before you can start using the app.';
+
+  @override
+  String get checkStatus => 'Check Status';
 }

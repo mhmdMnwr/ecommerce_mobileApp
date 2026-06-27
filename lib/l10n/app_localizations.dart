@@ -993,6 +993,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You have {count} new notifications'**
   String newNotificationsCount(int count);
+
+  /// No description provided for @pendingApprovalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Pending Approval'**
+  String get pendingApprovalTitle;
+
+  /// No description provided for @pendingApprovalMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been created successfully.\nPlease wait for the admin to activate your account before you can start using the app.'**
+  String get pendingApprovalMessage;
+
+  /// No description provided for @checkStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Status'**
+  String get checkStatus;
 }
 
 class _AppLocalizationsDelegate

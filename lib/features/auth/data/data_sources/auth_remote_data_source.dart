@@ -10,7 +10,7 @@ class AuthRemoteDataSource {
 
   AuthRemoteDataSource(this._dio);
 
-  /// POST /users/login → returns `{accessToken, refreshToken}`.
+  /// POST /users/login → returns `{accessToken, refreshToken, status}`.
   Future<Map<String, String>> login({
     required String username,
     required String password,
@@ -24,14 +24,15 @@ class AuthRemoteDataSource {
       return {
         'accessToken': data['accessToken'] as String,
         'refreshToken': data['refreshToken'] as String,
+        'status': (data['status'] as String?) ?? 'active',
       };
     } on DioException catch (e) {
       throw _mapDioError(e);
     }
   }
 
-  /// POST /users/registerCustomer → returns the created [UserModel].
-  Future<UserModel> register({
+  /// POST /users/registerCustomer → returns `{accessToken, refreshToken, status}`.
+  Future<Map<String, String>> register({
     required String username,
     required String password,
     required String phone,
@@ -53,9 +54,12 @@ class AuthRemoteDataSource {
         ApiConstants.registerCustomer,
         data: body,
       );
-      return UserModel.fromJson(
-        response.data['data'] as Map<String, dynamic>,
-      );
+      final data = response.data['data'] as Map<String, dynamic>;
+      return {
+        'accessToken': data['accessToken'] as String,
+        'refreshToken': data['refreshToken'] as String,
+        'status': (data['status'] as String?) ?? 'inactive',
+      };
     } on DioException catch (e) {
       throw _mapDioError(e);
     }

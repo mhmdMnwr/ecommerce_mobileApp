@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 
 import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/pending_approval_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
 import '../../features/home/presentation/pages/home_page.dart';
@@ -45,6 +46,7 @@ abstract class AppRoutes {
   static const String notifications = '/notifications';
   static const String feedback = '/feedback';
   static const String contactUs = '/contact-us';
+  static const String pendingApproval = '/pending-approval';
 }
 
 
@@ -70,6 +72,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.register,
       builder: (context, state) => const RegisterPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.pendingApproval,
+      builder: (context, state) => const PendingApprovalPage(),
     ),
     GoRoute(
       path: AppRoutes.product,
