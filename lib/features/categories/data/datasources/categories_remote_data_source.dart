@@ -12,7 +12,7 @@ class CategoriesRemoteDataSource {
 
   Future<List<CategoryModel>> getCategories() async {
     try {
-      final response = await _dio.get(ApiConstants.categories);
+      final response = await _dio.get(ApiConstants.categories, queryParameters: {'limit': 100});
       final data = response.data['data'] as List;
       return data.map((e) => CategoryModel.fromJson(e)).toList();
     } on DioException catch (e) {

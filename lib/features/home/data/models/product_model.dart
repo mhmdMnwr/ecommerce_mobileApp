@@ -8,6 +8,7 @@ class ProductModel {
   final String id;
   final String title;
   final num price;
+  @JsonKey(defaultValue: '')
   final String image;
   final int? units;
   final String? state;

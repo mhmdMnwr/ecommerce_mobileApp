@@ -7,6 +7,7 @@ class BrandModel {
   @JsonKey(name: '_id')
   final String id;
   final String title;
+  @JsonKey(defaultValue: '')
   final String? image;
 
   const BrandModel({

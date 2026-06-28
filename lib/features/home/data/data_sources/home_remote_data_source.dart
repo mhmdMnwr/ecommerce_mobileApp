@@ -13,7 +13,7 @@ class HomeRemoteDataSource {
 
   Future<List<CategoryModel>> getCategories() async {
     try {
-      final response = await _dio.get(ApiConstants.categories);
+      final response = await _dio.get(ApiConstants.categories, queryParameters: {'limit': 100});
       final List data = response.data['data'] as List;
       return data
           .map((json) => CategoryModel.fromJson(json as Map<String, dynamic>))
