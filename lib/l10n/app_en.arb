@@ -182,5 +182,21 @@
   },
   "pendingApprovalTitle": "Account Pending Approval",
   "pendingApprovalMessage": "Your account has been created successfully.\nPlease wait for the admin to activate your account before you can start using the app.",
-  "checkStatus": "Check Status"
+  "checkStatus": "Check Status",
+  "orderCommentTitle": "Order Comment",
+  "orderCommentHint": "Enter your comment here...",
+  "addOrderComment": "Add a comment to your order",
+  "error_invalid_credentials": "Username and password do not match",
+  "error_product_unavailable": "Product is currently unavailable",
+  "error_generic": "An unexpected error occurred. Please try again later.",
+  "failedToLoadSettings": "Failed to load settings",
+  "failedToParseSettings": "Failed to parse settings",
+  "weAreHereToHelp": "We are always here to help you.",
+  "storeLocation": "Store Location",
+  "developedBy": "Developed by",
+  "linkedinProfile": "LinkedIn Profile",
+  "email": "Email",
+  "facebook": "Facebook",
+  "linkedin": "LinkedIn",
+  "github": "GitHub"
 }

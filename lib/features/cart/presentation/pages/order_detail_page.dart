@@ -33,8 +33,11 @@ class OrderDetailPage extends StatelessWidget {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new,
-              size: 18.r, color: AppColors.textPrimary),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            size: 18.r,
+            color: AppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(

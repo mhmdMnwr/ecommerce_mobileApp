@@ -8,6 +8,9 @@ String translateAuthMessage(BuildContext context, String message) {
 
   // Map of English fallback keys → localized getters.
   // Only client-side messages that are NOT from the backend appear here.
+  final msg = message.toLowerCase().trim();
+
+  // Exact client-side mappings
   switch (message) {
     case 'Login failed. Please try again.':
       return l10n.loginFailed;
@@ -19,7 +22,20 @@ String translateAuthMessage(BuildContext context, String message) {
       return l10n.registrationSuccess;
     case 'Failed to load data.':
       return l10n.failedToLoadData;
-    default:
-      return message; // server message — show as-is
   }
+
+  // Server error matchings
+  if (msg.contains('username and password') || msg.contains('invalid credentials') || msg.contains('username or password')) {
+    return l10n.error_invalid_credentials;
+  }
+  
+  if (msg.contains('product') && msg.contains('not available') || msg.contains('product is currently unavailable')) {
+    return l10n.error_product_unavailable;
+  }
+  
+  if (msg.contains('server error') || msg.contains('something went wrong')) {
+    return l10n.error_generic;
+  }
+
+  return message; // fallback
 }

@@ -488,4 +488,55 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get checkStatus => 'Vérifier le statut';
+
+  @override
+  String get orderCommentTitle => 'Commentaire de commande';
+
+  @override
+  String get orderCommentHint => 'Entrez votre commentaire ici...';
+
+  @override
+  String get addOrderComment => 'Ajouter un commentaire à votre commande';
+
+  @override
+  String get error_invalid_credentials =>
+      'Le nom d\'utilisateur et le mot de passe ne correspondent pas';
+
+  @override
+  String get error_product_unavailable =>
+      'Le produit est actuellement indisponible';
+
+  @override
+  String get error_generic =>
+      'Une erreur inattendue s\'est produite. Veuillez réessayer.';
+
+  @override
+  String get failedToLoadSettings => 'Échec du chargement des paramètres';
+
+  @override
+  String get failedToParseSettings => 'Échec de l\'analyse des paramètres';
+
+  @override
+  String get weAreHereToHelp => 'Nous sommes toujours là pour vous aider.';
+
+  @override
+  String get storeLocation => 'Emplacement du Magasin';
+
+  @override
+  String get developedBy => 'Développé par';
+
+  @override
+  String get linkedinProfile => 'Profil LinkedIn';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get facebook => 'Facebook';
+
+  @override
+  String get linkedin => 'LinkedIn';
+
+  @override
+  String get github => 'GitHub';
 }

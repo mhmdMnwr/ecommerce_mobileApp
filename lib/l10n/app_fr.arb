@@ -155,5 +155,21 @@
   },
   "pendingApprovalTitle": "Compte en attente d'approbation",
   "pendingApprovalMessage": "Votre compte a été créé avec succès.\nVeuillez attendre que l'administrateur active votre compte avant de pouvoir utiliser l'application.",
-  "checkStatus": "Vérifier le statut"
+  "checkStatus": "Vérifier le statut",
+  "orderCommentTitle": "Commentaire de commande",
+  "orderCommentHint": "Entrez votre commentaire ici...",
+  "addOrderComment": "Ajouter un commentaire à votre commande",
+  "error_invalid_credentials": "Le nom d'utilisateur et le mot de passe ne correspondent pas",
+  "error_product_unavailable": "Le produit est actuellement indisponible",
+  "error_generic": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+  "failedToLoadSettings": "Échec du chargement des paramètres",
+  "failedToParseSettings": "Échec de l'analyse des paramètres",
+  "weAreHereToHelp": "Nous sommes toujours là pour vous aider.",
+  "storeLocation": "Emplacement du Magasin",
+  "developedBy": "Développé par",
+  "linkedinProfile": "Profil LinkedIn",
+  "email": "E-mail",
+  "facebook": "Facebook",
+  "linkedin": "LinkedIn",
+  "github": "GitHub"
 }

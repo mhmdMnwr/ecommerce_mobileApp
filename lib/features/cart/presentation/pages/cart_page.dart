@@ -11,6 +11,7 @@ import '../cubit/cart_cubit.dart';
 import '../cubit/cart_state.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
 import '../../../auth/presentation/cubit/auth_state.dart';
+import '../../../../core/utils/auth_message_translator.dart';
 import '../../data/models/order_model.dart';
 import '../widgets/cart_item_tile.dart';
 import '../widgets/cart_empty_view.dart';
@@ -80,7 +81,7 @@ class _CartPageState extends State<CartPage> {
               ? l10n.orderUpdatedSuccess
               : state.message == 'orderRegisteredSuccess'
               ? l10n.orderRegisteredSuccess
-              : state.message;
+              : translateAuthMessage(context, state.message);
           AppSuccessDialog.show(context, message: msg);
         } else if (state is CartOrderCancelled) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -97,7 +98,7 @@ class _CartPageState extends State<CartPage> {
           if (!context.mounted || context.read<AuthCubit>().state is AuthUnauthenticated) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content: Text(translateAuthMessage(context, state.message)),
               backgroundColor: AppColors.error,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -195,7 +196,7 @@ class _CartPageState extends State<CartPage> {
                             Expanded(
                               child: Text(
                                 _commentController.text.isEmpty
-                                    ? 'Add a comment to your order'
+                                    ? l10n.addOrderComment
                                     : _commentController.text,
                                 style: TextStyle(
                                   fontSize: 14.sp,
@@ -299,7 +300,7 @@ class _CartPageState extends State<CartPage> {
           borderRadius: BorderRadius.circular(16.r),
         ),
         title: Text(
-          'Order Comment',
+          l10n.orderCommentTitle,
           style: TextStyle(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w600,
@@ -310,7 +311,7 @@ class _CartPageState extends State<CartPage> {
           controller: _commentController,
           maxLines: 3,
           decoration: InputDecoration(
-            hintText: 'Enter your comment here...',
+            hintText: l10n.orderCommentHint,
             hintStyle: TextStyle(
               color: AppColors.textSecondary,
               fontSize: 14.sp,
@@ -347,7 +348,7 @@ class _CartPageState extends State<CartPage> {
               setState(() {});
             },
             child: Text(
-              'Save',
+              l10n.save,
               style: TextStyle(
                 color: AppColors.primary,
                 fontWeight: FontWeight.w600,

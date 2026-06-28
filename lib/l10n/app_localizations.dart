@@ -1011,6 +1011,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check Status'**
   String get checkStatus;
+
+  /// No description provided for @orderCommentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Comment'**
+  String get orderCommentTitle;
+
+  /// No description provided for @orderCommentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your comment here...'**
+  String get orderCommentHint;
+
+  /// No description provided for @addOrderComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a comment to your order'**
+  String get addOrderComment;
+
+  /// No description provided for @error_invalid_credentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Username and password do not match'**
+  String get error_invalid_credentials;
+
+  /// No description provided for @error_product_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Product is currently unavailable'**
+  String get error_product_unavailable;
+
+  /// No description provided for @error_generic.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again later.'**
+  String get error_generic;
+
+  /// No description provided for @failedToLoadSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load settings'**
+  String get failedToLoadSettings;
+
+  /// No description provided for @failedToParseSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to parse settings'**
+  String get failedToParseSettings;
+
+  /// No description provided for @weAreHereToHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'We are always here to help you.'**
+  String get weAreHereToHelp;
+
+  /// No description provided for @storeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Store Location'**
+  String get storeLocation;
+
+  /// No description provided for @developedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Developed by'**
+  String get developedBy;
+
+  /// No description provided for @linkedinProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'LinkedIn Profile'**
+  String get linkedinProfile;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @facebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook'**
+  String get facebook;
+
+  /// No description provided for @linkedin.
+  ///
+  /// In en, this message translates to:
+  /// **'LinkedIn'**
+  String get linkedin;
+
+  /// No description provided for @github.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub'**
+  String get github;
 }
 
 class _AppLocalizationsDelegate

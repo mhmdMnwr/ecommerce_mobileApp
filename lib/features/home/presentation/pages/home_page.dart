@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           if (state is HomeError) {
-            return _buildError(context, state.message, l10n);
+            return _buildError(context, translateAuthMessage(context, state.message), l10n);
           }
 
           if (state is HomeLoaded) {

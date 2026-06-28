@@ -10,6 +10,7 @@ import '../../../../core/routing/app_router.dart';
 import '../cubit/categories_cubit.dart';
 import '../../../home/data/models/category_model.dart';
 import '../../data/models/brand_model.dart';
+import '../../../../core/utils/auth_message_translator.dart';
 
 class CategoriesGridPage extends StatefulWidget {
   final String type; // 'category' or 'brand'
@@ -43,7 +44,7 @@ class _CategoriesGridPageState extends State<CategoriesGridPage> {
             size: 18.r,
             color: AppColors.textPrimary,
           ),
-          onPressed: () => context.pop(),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.type == 'category' ? l10n.categories : l10n.brands,
@@ -63,7 +64,7 @@ class _CategoriesGridPageState extends State<CategoriesGridPage> {
           } else if (state is CategoriesError) {
             return Center(
               child: Text(
-                state.message,
+                translateAuthMessage(context, state.message),
                 style: TextStyle(color: AppColors.error),
               ),
             );

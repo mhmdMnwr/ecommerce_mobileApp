@@ -225,7 +225,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get locationSet => 'تم تحديد الموقع';
 
   @override
-  String get storeName => 'جروسيست بوشنتوف';
+  String get storeName => 'محل بوشنتوف';
 
   @override
   String get welcomeBack => '!مرحباً بعودتك';
@@ -478,4 +478,53 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get checkStatus => 'تحقق من الحالة';
+
+  @override
+  String get orderCommentTitle => 'تعليق على الطلب';
+
+  @override
+  String get orderCommentHint => 'اكتب تعليقك هنا...';
+
+  @override
+  String get addOrderComment => 'أضف تعليقًا على طلبك';
+
+  @override
+  String get error_invalid_credentials =>
+      'اسم المستخدم وكلمة المرور غير متطابقين';
+
+  @override
+  String get error_product_unavailable => 'المنتج غير متوفر حاليا';
+
+  @override
+  String get error_generic => 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get failedToLoadSettings => 'فشل في تحميل الإعدادات';
+
+  @override
+  String get failedToParseSettings => 'فشل في تحليل الإعدادات';
+
+  @override
+  String get weAreHereToHelp => 'نحن دائما هنا لمساعدتك.';
+
+  @override
+  String get storeLocation => 'موقع المتجر';
+
+  @override
+  String get developedBy => 'تم التطوير بواسطة';
+
+  @override
+  String get linkedinProfile => 'ملف LinkedIn';
+
+  @override
+  String get email => 'البريد الإلكتروني';
+
+  @override
+  String get facebook => 'فيسبوك';
+
+  @override
+  String get linkedin => 'لينكد إن';
+
+  @override
+  String get github => 'جيت هاب';
 }

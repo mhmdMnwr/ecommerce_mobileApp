@@ -12,6 +12,7 @@ import '../widgets/empty_orders_view.dart';
 import '../widgets/orders_error_view.dart';
 import '../widgets/order_status_helper.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
+import '../../../../core/utils/auth_message_translator.dart';
 import 'order_detail_page.dart';
 
 /// Full-screen paginated Order History page.
@@ -69,7 +70,11 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
         shadowColor: Colors.black.withAlpha(20),
         scrolledUnderElevation: 1,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, size: 18.r, color: AppColors.textPrimary),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            size: 18.r,
+            color: AppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -89,7 +94,7 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
           } else if (state is CartError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(translateAuthMessage(context, state.message)),
                 backgroundColor: AppColors.error,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
@@ -104,7 +109,7 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
 
           if (state is CartError && state is! CartOrdersLoaded) {
             return OrdersErrorView(
-              message: state.message,
+              message: translateAuthMessage(context, state.message),
               l10n: l10n,
               onRetry: () => context.read<CartCubit>().loadMyOrders(),
             );

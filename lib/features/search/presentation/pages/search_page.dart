@@ -13,6 +13,7 @@ import '../widgets/search_results_list.dart';
 import '../widgets/search_states.dart';
 import '../widgets/search_active_filters.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
+import '../../../../core/utils/auth_message_translator.dart';
 
 class SearchPage extends StatefulWidget {
   final SearchFilters? initialFilters;
@@ -105,7 +106,14 @@ class _SearchPageState extends State<SearchPage> {
           padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 8.h),
           child: Row(children: [
             if (Navigator.canPop(context)) ...[
-              IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),
+              IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 18.r,
+                  color: AppColors.textPrimary,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
               SizedBox(width: 8.w),
             ],
             Expanded(
@@ -131,7 +139,7 @@ class _SearchPageState extends State<SearchPage> {
       builder: (context, state) {
         if (state is SearchInitial) return SearchEmptyState(label: l10n.search);
         if (state is SearchLoading) return const Center(child: AppLoadingIndicator());
-        if (state is SearchError) return SearchErrorState(message: state.message, onRetry: _runSearch);
+        if (state is SearchError) return SearchErrorState(message: translateAuthMessage(context, state.message), onRetry: _runSearch);
         if (state is SearchLoaded) {
           return state.products.isEmpty
               ? const SearchNoResults()

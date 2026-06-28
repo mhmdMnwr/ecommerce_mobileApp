@@ -7,6 +7,7 @@ import '../../../../core/utils/icons_helper.dart';
 import '../cubit/feedback_cubit.dart';
 import '../cubit/feedback_state.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
+import '../../../../core/utils/auth_message_translator.dart';
 
 /// Page for submitting user feedback.
 class FeedbackPage extends StatefulWidget {
@@ -42,7 +43,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
             size: 18.r,
             color: AppColors.textPrimary,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.feedback,
@@ -76,7 +77,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text(state.message),
+                  content: Text(translateAuthMessage(context, state.message)),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: AppColors.error,
                   shape: RoundedRectangleBorder(

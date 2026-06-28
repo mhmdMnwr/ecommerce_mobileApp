@@ -9,6 +9,7 @@ import '../cubit/notification_cubit.dart';
 import '../cubit/notification_state.dart';
 import '../../data/models/notification_model.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
+import '../../../../core/utils/auth_message_translator.dart';
 
 /// Full-screen notifications page.
 class NotificationsPage extends StatefulWidget {
@@ -44,7 +45,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             size: 18.r,
             color: AppColors.textPrimary,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.notification,
@@ -92,7 +93,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   Icon(Icons.error_outline, size: 48.r, color: AppColors.error),
                   SizedBox(height: 12.h),
                   Text(
-                    state.message,
+                    translateAuthMessage(context, state.message),
                     style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14.sp,

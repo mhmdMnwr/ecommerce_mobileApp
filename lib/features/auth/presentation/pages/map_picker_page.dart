@@ -113,6 +113,14 @@ class _MapPickerPageState extends State<MapPickerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            size: 18.r,
+            color: AppColors.textPrimary,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           AppLocalizations.of(context)!.selectLocation,
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.sp),
@@ -120,7 +128,7 @@ class _MapPickerPageState extends State<MapPickerPage> {
         centerTitle: true,
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.background,
-        foregroundColor: AppColors.primary,
+        foregroundColor: AppColors.textPrimary,
         elevation: 0,
       ),
       body: Stack(
