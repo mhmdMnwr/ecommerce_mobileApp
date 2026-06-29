@@ -103,12 +103,13 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   Widget _buildAnimatedLogo() {
     // Increased size to 280.w as requested ("make the logo on the login screen bigger")
-    final double logoWidth = 280.w; 
+    final double rawLogoWidth = 280.w;
+    final double logoWidth = rawLogoWidth > 0 ? rawLogoWidth : 280.0;
     final double scale = logoWidth / 584;
     final double logoHeight = 147 * scale;
     final double iconWidth = 168 * scale;
 
-    final double baseFactor = iconWidth / logoWidth;
+    final double baseFactor = logoWidth > 0 ? iconWidth / logoWidth : 0.0;
 
     return AnimatedBuilder(
       animation: _splashCtrl,
@@ -116,7 +117,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         // slideProgress: 0.0 -> 1.0 during controller 0.0 -> 0.4
         final slideProgress = (_splashCtrl.value / 0.4).clamp(0.0, 1.0);
         
-        final currentWidthFactor = baseFactor + ((1.0 - baseFactor) * slideProgress);
+        double currentWidthFactor = baseFactor + ((1.0 - baseFactor) * slideProgress);
+        if (currentWidthFactor.isNaN || currentWidthFactor < 0.0) {
+          currentWidthFactor = 0.0;
+        }
+
         final initialXOffset = (logoWidth / 2) - (iconWidth / 2);
         final currentXOffset = initialXOffset * (1.0 - slideProgress);
 

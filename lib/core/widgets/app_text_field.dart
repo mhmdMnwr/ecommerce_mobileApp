@@ -43,6 +43,7 @@ class AppTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radius = 10.r;
+    final double safeFontSize = 15.sp > 0 ? 15.sp : 15.0;
 
     return TextFormField(
       controller: controller,
@@ -55,7 +56,7 @@ class AppTextField extends StatelessWidget {
       onTap: onTap,
       onFieldSubmitted: onFieldSubmitted,
       style: TextStyle(
-        fontSize: 15.sp,
+        fontSize: safeFontSize,
         color: AppColors.textPrimary,
         fontWeight: FontWeight.w400,
       ),
@@ -66,7 +67,7 @@ class AppTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         hintStyle: TextStyle(
           color: AppColors.textHint,
-          fontSize: 15.sp,
+          fontSize: safeFontSize,
           fontWeight: FontWeight.w400,
         ),
         contentPadding: EdgeInsets.symmetric(

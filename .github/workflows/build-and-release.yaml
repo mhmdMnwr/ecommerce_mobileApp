@@ -29,7 +29,7 @@ jobs:
         run: flutter pub get
 
       - name: Decode keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release-key.jks
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/release-key.jks
 
       - name: Create key.properties
         run: |
@@ -61,21 +61,37 @@ jobs:
         run: |
           TIMESTAMP=$(date +%s)
           PUBLIC_ID="grossist-bouchentouf-v${{ steps.version.outputs.name }}-build${{ github.run_number }}"
-          SIGNATURE=$(echo -n "public_id=${PUBLIC_ID}&timestamp=${TIMESTAMP}${CLOUDINARY_API_SECRET}" | sha1sum | cut -d ' ' -f1)
+          
+          # Note: resource_type must be in alphabetical order for the signature!
+          # public_id -> resource_type -> timestamp
+          SIGNATURE_STRING="public_id=${PUBLIC_ID}&resource_type=raw&timestamp=${TIMESTAMP}${CLOUDINARY_API_SECRET}"
+          SIGNATURE=$(echo -n "$SIGNATURE_STRING" | sha1sum | cut -d ' ' -f1)
 
-          RESPONSE=$(curl -s -X POST "https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/raw/upload" \
+          echo "Uploading to Cloudinary..."
+          RESPONSE=$(curl -s -X POST "https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload" \
             -F "file=@build/app/outputs/flutter-apk/app-release.apk" \
             -F "public_id=${PUBLIC_ID}" \
+            -F "resource_type=raw" \
             -F "timestamp=${TIMESTAMP}" \
             -F "api_key=${CLOUDINARY_API_KEY}" \
             -F "signature=${SIGNATURE}")
 
+          echo "Cloudinary Response: $RESPONSE"
+
           DOWNLOAD_URL=$(echo "$RESPONSE" | jq -r '.secure_url')
+          if [ "$DOWNLOAD_URL" == "null" ] || [ -z "$DOWNLOAD_URL" ]; then
+            echo "Failed to extract secure_url from Cloudinary response!"
+            exit 1
+          fi
+
           echo "url=$DOWNLOAD_URL" >> $GITHUB_OUTPUT
+
 
       - name: Notify backend of new version
         run: |
-          curl -s -X POST "${{ secrets.BACKEND_URL }}/api/app-version" \
+          echo "Sending to backend: buildNumber=${{ github.run_number }}, versionName=${{ steps.version.outputs.name }}, downloadUrl=${{ steps.upload.outputs.url }}"
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.BACKEND_URL }}/api/app-version" \
             -H "Content-Type: application/json" \
             -H "x-ci-secret: ${{ secrets.CI_UPDATE_SECRET }}" \
             -d "{
@@ -83,4 +99,15 @@ jobs:
               \"versionName\": \"${{ steps.version.outputs.name }}\",
               \"downloadUrl\": \"${{ steps.upload.outputs.url }}\",
               \"releaseNotes\": \"Automated release from main branch\"
-            }"
+            }")
+            
+          HTTP_BODY=$(echo "$RESPONSE" | sed '$d')
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+          
+          echo "Backend Response Status: $HTTP_STATUS"
+          echo "Backend Response Body: $HTTP_BODY"
+          
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "Failed to notify backend!"
+            exit 1
+          fi
