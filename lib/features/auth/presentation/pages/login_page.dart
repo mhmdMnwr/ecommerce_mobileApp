@@ -17,6 +17,9 @@ import '../../../profile/presentation/widgets/language_dialog.dart';
 import '../../../../core/locale/locale_cubit.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
+import 'dart:io';
+import '../../../../core/services/version_service.dart';
+import '../../../splash/presentation/pages/update_required_screen.dart';
 
 /// Login screen handling both the initial Splash Sequence and Authentication.
 class LoginPage extends StatefulWidget {
@@ -49,6 +52,43 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     // Stage 1: Icon is centered. Allow native splash to transition and Flutter engine to settle.
     await Future.delayed(const Duration(milliseconds: 400));
     
+    if (mounted) {
+      bool versionCheckSuccess = false;
+      while (!versionCheckSuccess && mounted) {
+        final updateResult = await VersionService.checkForUpdate();
+        if (!mounted) return;
+        
+        if (updateResult.hasError) {
+          final retry = await showDialog<bool>(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              title: const Text('Connection Error'),
+              content: const Text('Failed to verify app version. Please check your internet connection and try again.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+          if (retry != true) return;
+          continue;
+        }
+        
+        versionCheckSuccess = true;
+        if (updateResult.updateRequired && updateResult.info != null) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => UpdateRequiredScreen(versionInfo: updateResult.info!),
+            ),
+          );
+          return;
+        }
+      }
+    }
+
     // Check Auth Status concurrently.
     if (mounted) {
       context.read<AuthCubit>().checkAuthStatus();

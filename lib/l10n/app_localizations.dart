@@ -1251,6 +1251,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Brand not found'**
   String get err_brand_not_found;
+
+  /// No description provided for @updateRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Required'**
+  String get updateRequiredTitle;
+
+  /// No description provided for @updateRequiredDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'We have launched a new version of the app to improve your experience.'**
+  String get updateRequiredDesc;
+
+  /// No description provided for @updateNowBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Now'**
+  String get updateNowBtn;
+
+  /// No description provided for @updateRequiredSubtext.
+  ///
+  /// In en, this message translates to:
+  /// **'Update is required to continue using the app.'**
+  String get updateRequiredSubtext;
 }
 
 class _AppLocalizationsDelegate

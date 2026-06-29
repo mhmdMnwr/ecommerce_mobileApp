@@ -215,5 +215,9 @@
   "err_min_amount_prefix": "الحد الأدنى للطلب هو ",
   "err_product_not_found": "المنتج غير موجود",
   "err_category_not_found": "الفئة غير موجودة",
-  "err_brand_not_found": "الماركة غير موجودة"
+  "err_brand_not_found": "الماركة غير موجودة",
+  "updateRequiredTitle": "تحديث مطلوب",
+  "updateRequiredDesc": "لقد أطلقنا إصدارًا جديدًا من التطبيق لتحسين تجربتك.",
+  "updateNowBtn": "تحديث الآن",
+  "updateRequiredSubtext": "التحديث مطلوب لمواصلة استخدام التطبيق."
 }

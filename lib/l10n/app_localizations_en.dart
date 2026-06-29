@@ -609,4 +609,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get err_brand_not_found => 'Brand not found';
+
+  @override
+  String get updateRequiredTitle => 'Update Required';
+
+  @override
+  String get updateRequiredDesc =>
+      'We have launched a new version of the app to improve your experience.';
+
+  @override
+  String get updateNowBtn => 'Update Now';
+
+  @override
+  String get updateRequiredSubtext =>
+      'Update is required to continue using the app.';
 }

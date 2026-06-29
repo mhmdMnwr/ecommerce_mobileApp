@@ -625,4 +625,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get err_brand_not_found => 'Marque introuvable';
+
+  @override
+  String get updateRequiredTitle => 'Mise à jour requise';
+
+  @override
+  String get updateRequiredDesc =>
+      'Nous avons lancé une nouvelle version de l\'application pour améliorer votre expérience.';
+
+  @override
+  String get updateNowBtn => 'Mettre à jour';
+
+  @override
+  String get updateRequiredSubtext =>
+      'La mise à jour est requise pour continuer à utiliser l\'application.';
 }

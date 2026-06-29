@@ -39,7 +39,7 @@ class VersionService {
   static Future<VersionCheckResult> checkForUpdate() async {
     try {
       final String platform = Platform.isAndroid ? 'android' : 'ios';
-      final response = await http.get(Uri.parse('${AppConstants.baseUrl}/app-version?platform=$platform'));
+      final response = await http.get(Uri.parse('${AppConstants.baseUrl}/api/app-version?platform=$platform'));
       
       if (response.statusCode != 200) {
         // Non-200 HTTP status

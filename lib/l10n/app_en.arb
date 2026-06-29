@@ -222,5 +222,9 @@
   "err_min_amount_prefix": "Minimum order amount is ",
   "err_product_not_found": "Product not found",
   "err_category_not_found": "Category not found",
-  "err_brand_not_found": "Brand not found"
+  "err_brand_not_found": "Brand not found",
+  "updateRequiredTitle": "Update Required",
+  "updateRequiredDesc": "We have launched a new version of the app to improve your experience.",
+  "updateNowBtn": "Update Now",
+  "updateRequiredSubtext": "Update is required to continue using the app."
 }

@@ -195,5 +195,9 @@
   "err_min_amount_prefix": "Le montant minimum de la commande est de ",
   "err_product_not_found": "Produit introuvable",
   "err_category_not_found": "Catégorie introuvable",
-  "err_brand_not_found": "Marque introuvable"
+  "err_brand_not_found": "Marque introuvable",
+  "updateRequiredTitle": "Mise à jour requise",
+  "updateRequiredDesc": "Nous avons lancé une nouvelle version de l'application pour améliorer votre expérience.",
+  "updateNowBtn": "Mettre à jour",
+  "updateRequiredSubtext": "La mise à jour est requise pour continuer à utiliser l'application."
 }

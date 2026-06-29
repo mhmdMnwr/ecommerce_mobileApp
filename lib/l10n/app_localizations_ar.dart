@@ -607,4 +607,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get err_brand_not_found => 'الماركة غير موجودة';
+
+  @override
+  String get updateRequiredTitle => 'تحديث مطلوب';
+
+  @override
+  String get updateRequiredDesc =>
+      'لقد أطلقنا إصدارًا جديدًا من التطبيق لتحسين تجربتك.';
+
+  @override
+  String get updateNowBtn => 'تحديث الآن';
+
+  @override
+  String get updateRequiredSubtext => 'التحديث مطلوب لمواصلة استخدام التطبيق.';
 }
