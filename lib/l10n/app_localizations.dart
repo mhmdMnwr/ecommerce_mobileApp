@@ -1107,6 +1107,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'GitHub'**
   String get github;
+
+  /// No description provided for @err_username_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is required'**
+  String get err_username_required;
+
+  /// No description provided for @err_username_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be between 3 and 30 characters'**
+  String get err_username_length;
+
+  /// No description provided for @err_username_chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Username can only contain letters, numbers, underscores, and dots'**
+  String get err_username_chars;
+
+  /// No description provided for @err_password_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get err_password_required;
+
+  /// No description provided for @err_password_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters long'**
+  String get err_password_length;
+
+  /// No description provided for @err_password_max_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must not exceed 128 characters'**
+  String get err_password_max_length;
+
+  /// No description provided for @err_password_upper.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one uppercase letter'**
+  String get err_password_upper;
+
+  /// No description provided for @err_password_lower.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one lowercase letter'**
+  String get err_password_lower;
+
+  /// No description provided for @err_password_digit.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one digit'**
+  String get err_password_digit;
+
+  /// No description provided for @err_phone_format.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number must be 8-15 digits, optionally starting with +'**
+  String get err_phone_format;
+
+  /// No description provided for @err_address_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Address must not exceed 200 characters'**
+  String get err_address_length;
+
+  /// No description provided for @err_username_in_use.
+  ///
+  /// In en, this message translates to:
+  /// **'That username is already in use'**
+  String get err_username_in_use;
+
+  /// No description provided for @err_order_items_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Order items are required'**
+  String get err_order_items_required;
+
+  /// No description provided for @err_order_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Order not found'**
+  String get err_order_not_found;
+
+  /// No description provided for @err_order_cannot_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot cancel order in current status'**
+  String get err_order_cannot_cancel;
+
+  /// No description provided for @err_order_cancel_own.
+  ///
+  /// In en, this message translates to:
+  /// **'You can only cancel your own orders'**
+  String get err_order_cancel_own;
+
+  /// No description provided for @err_user_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found'**
+  String get err_user_not_found;
+
+  /// No description provided for @err_invalid_token.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired session. Please log in again.'**
+  String get err_invalid_token;
+
+  /// No description provided for @err_already_in_use.
+  ///
+  /// In en, this message translates to:
+  /// **'This is already in use'**
+  String get err_already_in_use;
+
+  /// No description provided for @err_no_valid_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid fields to update'**
+  String get err_no_valid_fields;
+
+  /// No description provided for @err_min_amount_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum order amount is '**
+  String get err_min_amount_prefix;
+
+  /// No description provided for @err_product_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found'**
+  String get err_product_not_found;
+
+  /// No description provided for @err_category_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Category not found'**
+  String get err_category_not_found;
+
+  /// No description provided for @err_brand_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand not found'**
+  String get err_brand_not_found;
 }
 
 class _AppLocalizationsDelegate

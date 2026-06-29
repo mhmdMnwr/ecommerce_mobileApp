@@ -529,4 +529,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get github => 'GitHub';
+
+  @override
+  String get err_username_required => 'Username is required';
+
+  @override
+  String get err_username_length =>
+      'Username must be between 3 and 30 characters';
+
+  @override
+  String get err_username_chars =>
+      'Username can only contain letters, numbers, underscores, and dots';
+
+  @override
+  String get err_password_required => 'Password is required';
+
+  @override
+  String get err_password_length =>
+      'Password must be at least 8 characters long';
+
+  @override
+  String get err_password_max_length =>
+      'Password must not exceed 128 characters';
+
+  @override
+  String get err_password_upper =>
+      'Password must contain at least one uppercase letter';
+
+  @override
+  String get err_password_lower =>
+      'Password must contain at least one lowercase letter';
+
+  @override
+  String get err_password_digit => 'Password must contain at least one digit';
+
+  @override
+  String get err_phone_format =>
+      'Phone number must be 8-15 digits, optionally starting with +';
+
+  @override
+  String get err_address_length => 'Address must not exceed 200 characters';
+
+  @override
+  String get err_username_in_use => 'That username is already in use';
+
+  @override
+  String get err_order_items_required => 'Order items are required';
+
+  @override
+  String get err_order_not_found => 'Order not found';
+
+  @override
+  String get err_order_cannot_cancel => 'Cannot cancel order in current status';
+
+  @override
+  String get err_order_cancel_own => 'You can only cancel your own orders';
+
+  @override
+  String get err_user_not_found => 'User not found';
+
+  @override
+  String get err_invalid_token =>
+      'Invalid or expired session. Please log in again.';
+
+  @override
+  String get err_already_in_use => 'This is already in use';
+
+  @override
+  String get err_no_valid_fields => 'No valid fields to update';
+
+  @override
+  String get err_min_amount_prefix => 'Minimum order amount is ';
+
+  @override
+  String get err_product_not_found => 'Product not found';
+
+  @override
+  String get err_category_not_found => 'Category not found';
+
+  @override
+  String get err_brand_not_found => 'Brand not found';
 }

@@ -539,4 +539,90 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get github => 'GitHub';
+
+  @override
+  String get err_username_required => 'Le nom d\'utilisateur est requis';
+
+  @override
+  String get err_username_length =>
+      'Le nom d\'utilisateur doit comporter entre 3 et 30 caractères';
+
+  @override
+  String get err_username_chars =>
+      'Le nom d\'utilisateur ne peut contenir que des lettres, chiffres, tirets bas et points';
+
+  @override
+  String get err_password_required => 'Le mot de passe est requis';
+
+  @override
+  String get err_password_length =>
+      'Le mot de passe doit comporter au moins 8 caractères';
+
+  @override
+  String get err_password_max_length =>
+      'Le mot de passe ne doit pas dépasser 128 caractères';
+
+  @override
+  String get err_password_upper =>
+      'Le mot de passe doit contenir au moins une lettre majuscule';
+
+  @override
+  String get err_password_lower =>
+      'Le mot de passe doit contenir au moins une lettre minuscule';
+
+  @override
+  String get err_password_digit =>
+      'Le mot de passe doit contenir au moins un chiffre';
+
+  @override
+  String get err_phone_format =>
+      'Le numéro de téléphone doit comporter entre 8 et 15 chiffres, commençant éventuellement par +';
+
+  @override
+  String get err_address_length =>
+      'L\'adresse ne doit pas dépasser 200 caractères';
+
+  @override
+  String get err_username_in_use => 'Ce nom d\'utilisateur est déjà utilisé';
+
+  @override
+  String get err_order_items_required =>
+      'Les articles de la commande sont requis';
+
+  @override
+  String get err_order_not_found => 'Commande introuvable';
+
+  @override
+  String get err_order_cannot_cancel =>
+      'Impossible d\'annuler la commande dans son statut actuel';
+
+  @override
+  String get err_order_cancel_own =>
+      'Vous ne pouvez annuler que vos propres commandes';
+
+  @override
+  String get err_user_not_found => 'Utilisateur introuvable';
+
+  @override
+  String get err_invalid_token =>
+      'Session invalide ou expirée. Veuillez vous reconnecter.';
+
+  @override
+  String get err_already_in_use => 'Ceci est déjà utilisé';
+
+  @override
+  String get err_no_valid_fields => 'Aucun champ valide à mettre à jour';
+
+  @override
+  String get err_min_amount_prefix =>
+      'Le montant minimum de la commande est de ';
+
+  @override
+  String get err_product_not_found => 'Produit introuvable';
+
+  @override
+  String get err_category_not_found => 'Catégorie introuvable';
+
+  @override
+  String get err_brand_not_found => 'Marque introuvable';
 }

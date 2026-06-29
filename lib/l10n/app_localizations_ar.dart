@@ -527,4 +527,84 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get github => 'جيت هاب';
+
+  @override
+  String get err_username_required => 'اسم المستخدم مطلوب';
+
+  @override
+  String get err_username_length =>
+      'يجب أن يتكون اسم المستخدم من 3 إلى 30 حرفاً';
+
+  @override
+  String get err_username_chars =>
+      'يمكن أن يحتوي اسم المستخدم فقط على أحرف، أرقام، شرطات سفلية ونقاط';
+
+  @override
+  String get err_password_required => 'كلمة المرور مطلوبة';
+
+  @override
+  String get err_password_length =>
+      'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل';
+
+  @override
+  String get err_password_max_length => 'يجب ألا تتجاوز كلمة المرور 128 حرفاً';
+
+  @override
+  String get err_password_upper =>
+      'يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل';
+
+  @override
+  String get err_password_lower =>
+      'يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل';
+
+  @override
+  String get err_password_digit =>
+      'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل';
+
+  @override
+  String get err_phone_format =>
+      'يجب أن يتكون رقم الهاتف من 8 إلى 15 رقماً، ويمكن أن يبدأ بـ +';
+
+  @override
+  String get err_address_length => 'يجب ألا يتجاوز العنوان 200 حرف';
+
+  @override
+  String get err_username_in_use => 'اسم المستخدم هذا قيد الاستخدام بالفعل';
+
+  @override
+  String get err_order_items_required => 'عناصر الطلب مطلوبة';
+
+  @override
+  String get err_order_not_found => 'الطلب غير موجود';
+
+  @override
+  String get err_order_cannot_cancel => 'لا يمكن إلغاء الطلب في حالته الحالية';
+
+  @override
+  String get err_order_cancel_own => 'يمكنك فقط إلغاء طلباتك الخاصة';
+
+  @override
+  String get err_user_not_found => 'المستخدم غير موجود';
+
+  @override
+  String get err_invalid_token =>
+      'جلسة غير صالحة أو منتهية الصلاحية. يرجى تسجيل الدخول مرة أخرى.';
+
+  @override
+  String get err_already_in_use => 'هذا مستخدم بالفعل';
+
+  @override
+  String get err_no_valid_fields => 'لا توجد حقول صالحة للتحديث';
+
+  @override
+  String get err_min_amount_prefix => 'الحد الأدنى للطلب هو ';
+
+  @override
+  String get err_product_not_found => 'المنتج غير موجود';
+
+  @override
+  String get err_category_not_found => 'الفئة غير موجودة';
+
+  @override
+  String get err_brand_not_found => 'الماركة غير موجودة';
 }
