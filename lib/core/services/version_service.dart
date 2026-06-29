@@ -31,7 +31,8 @@ class VersionInfo {
 class VersionCheckResult {
   final bool updateRequired;
   final VersionInfo? info;
-  VersionCheckResult({required this.updateRequired, this.info});
+  final bool hasError;
+  VersionCheckResult({required this.updateRequired, this.info, this.hasError = false});
 }
 
 class VersionService {
@@ -43,7 +44,7 @@ class VersionService {
       if (response.statusCode != 200) {
         // Non-200 HTTP status
         print('[VersionService] Non-200 status code: ${response.statusCode}');
-        return VersionCheckResult(updateRequired: false);
+        return VersionCheckResult(updateRequired: false, hasError: true);
       }
 
       try {
@@ -59,12 +60,12 @@ class VersionService {
       } catch (parseErr) {
         // JSON parse or unexpected shape error
         print('[VersionService] JSON parse error: $parseErr');
-        return VersionCheckResult(updateRequired: false);
+        return VersionCheckResult(updateRequired: false, hasError: true);
       }
     } catch (netErr) {
       // Network or timeout error
       print('[VersionService] Network error: $netErr');
-      return VersionCheckResult(updateRequired: false);
+      return VersionCheckResult(updateRequired: false, hasError: true);
     }
   }
 }

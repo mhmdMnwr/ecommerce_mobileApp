@@ -52,16 +52,39 @@ class _SplashPageState extends State<SplashPage>
     await Future.delayed(const Duration(milliseconds: 2200));
     if (mounted) {
       if (Platform.isAndroid) {
-        final updateResult = await VersionService.checkForUpdate();
-        if (!mounted) return;
-        
-        if (updateResult.updateRequired && updateResult.info != null) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => UpdateRequiredScreen(versionInfo: updateResult.info!),
-            ),
-          );
-          return;
+        bool versionCheckSuccess = false;
+        while (!versionCheckSuccess && mounted) {
+          final updateResult = await VersionService.checkForUpdate();
+          if (!mounted) return;
+          
+          if (updateResult.hasError) {
+            final retry = await showDialog<bool>(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => AlertDialog(
+                title: const Text('Connection Error'),
+                content: const Text('Failed to verify app version. Please check your internet connection and try again.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+            if (retry != true) return; // Should not happen due to barrierDismissible: false
+            continue;
+          }
+          
+          versionCheckSuccess = true;
+          if (updateResult.updateRequired && updateResult.info != null) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => UpdateRequiredScreen(versionInfo: updateResult.info!),
+              ),
+            );
+            return;
+          }
         }
       }
 
