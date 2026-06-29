@@ -1,7 +1,7 @@
 name: ecommerce_app
 description: "An e-commerce Flutter application."
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.11.5
@@ -57,6 +57,8 @@ dependencies:
 
   # Local Notifications (shown when polling detects new notifications)
   flutter_local_notifications: ^19.2.1
+  http: ^1.6.0
+  package_info_plus: ^10.2.0
 
 dev_dependencies:
   flutter_test:

@@ -1,0 +1,86 @@
+name: Build and Release APK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.0'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release-key.jks
+
+      - name: Create key.properties
+        run: |
+          cat <<EOF > android/key.properties
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=release-key.jks
+          EOF
+
+      - name: Read version name from pubspec.yaml
+        id: version
+        run: |
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: //' | cut -d '+' -f1 | tr -d ' \r')
+          echo "name=$VERSION_NAME" >> $GITHUB_OUTPUT
+
+      - name: Build release APK
+        run: |
+          flutter build apk --release \
+            --build-name=${{ steps.version.outputs.name }} \
+            --build-number=${{ github.run_number }}
+
+      - name: Upload APK to Cloudinary
+        id: upload
+        env:
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        run: |
+          TIMESTAMP=$(date +%s)
+          PUBLIC_ID="grossist-bouchentouf-v${{ steps.version.outputs.name }}-build${{ github.run_number }}"
+          SIGNATURE=$(echo -n "public_id=${PUBLIC_ID}&timestamp=${TIMESTAMP}${CLOUDINARY_API_SECRET}" | sha1sum | cut -d ' ' -f1)
+
+          RESPONSE=$(curl -s -X POST "https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/raw/upload" \
+            -F "file=@build/app/outputs/flutter-apk/app-release.apk" \
+            -F "public_id=${PUBLIC_ID}" \
+            -F "timestamp=${TIMESTAMP}" \
+            -F "api_key=${CLOUDINARY_API_KEY}" \
+            -F "signature=${SIGNATURE}")
+
+          DOWNLOAD_URL=$(echo "$RESPONSE" | jq -r '.secure_url')
+          echo "url=$DOWNLOAD_URL" >> $GITHUB_OUTPUT
+
+      - name: Notify backend of new version
+        run: |
+          curl -s -X POST "${{ secrets.BACKEND_URL }}/api/app-version" \
+            -H "Content-Type: application/json" \
+            -H "x-ci-secret: ${{ secrets.CI_UPDATE_SECRET }}" \
+            -d "{
+              \"buildNumber\": ${{ github.run_number }},
+              \"versionName\": \"${{ steps.version.outputs.name }}\",
+              \"downloadUrl\": \"${{ steps.upload.outputs.url }}\",
+              \"releaseNotes\": \"Automated release from main branch\"
+            }"

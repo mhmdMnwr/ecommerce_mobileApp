@@ -5,6 +5,9 @@ import '../../../../core/widgets/app_logo.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/routing/app_router.dart';
+import 'dart:io';
+import '../../../../core/services/version_service.dart';
+import 'update_required_screen.dart';
 
 /// Animated splash screen.
 ///
@@ -48,7 +51,23 @@ class _SplashPageState extends State<SplashPage>
     // Hold the logo visible, then navigate.
     await Future.delayed(const Duration(milliseconds: 2200));
     if (mounted) {
-      context.go(AppRoutes.login);
+      if (Platform.isAndroid) {
+        final updateResult = await VersionService.checkForUpdate();
+        if (!mounted) return;
+        
+        if (updateResult.updateRequired && updateResult.info != null) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => UpdateRequiredScreen(versionInfo: updateResult.info!),
+            ),
+          );
+          return;
+        }
+      }
+
+      if (mounted) {
+        context.go(AppRoutes.login);
+      }
     }
   }
 
