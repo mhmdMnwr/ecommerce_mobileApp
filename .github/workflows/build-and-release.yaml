@@ -8,6 +8,10 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    
+    # REQUIRED: This permission allows the workflow to create a Release in your repo
+    permissions:
+      contents: write 
 
     steps:
       - name: Checkout code
@@ -52,44 +56,33 @@ jobs:
             --build-name=${{ steps.version.outputs.name }} \
             --build-number=${{ github.run_number }}
 
-      - name: Upload APK to Cloudinary
-        id: upload
-        env:
-          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+      # 1. Create the GitHub Release and attach the APK
+      - name: Create GitHub Release and Upload APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.name }}-build${{ github.run_number }}
+          name: Release v${{ steps.version.outputs.name }} (Build ${{ github.run_number }})
+          files: build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
+
+      # 2. Generate the direct download URL for the backend
+      - name: Generate Direct Download URL
+        id: download_url
         run: |
-          TIMESTAMP=$(date +%s)
-          PUBLIC_ID="grossist-bouchentouf-v${{ steps.version.outputs.name }}-build${{ github.run_number }}"
+          REPO_OWNER_NAME="${{ github.repository }}"
+          TAG="v${{ steps.version.outputs.name }}-build${{ github.run_number }}"
+          APK_NAME="app-release.apk"
           
-          # Note: resource_type must be in alphabetical order for the signature!
-          # public_id -> resource_type -> timestamp
-          SIGNATURE_STRING="public_id=${PUBLIC_ID}&resource_type=raw&timestamp=${TIMESTAMP}${CLOUDINARY_API_SECRET}"
-          SIGNATURE=$(echo -n "$SIGNATURE_STRING" | sha1sum | cut -d ' ' -f1)
+          # This is the standard predictable URL structure for GitHub Release assets
+          URL="https://github.com/$REPO_OWNER_NAME/releases/download/$TAG/$APK_NAME"
+          
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "Generated URL: $URL"
 
-          echo "Uploading to Cloudinary..."
-          RESPONSE=$(curl -s -X POST "https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload" \
-            -F "file=@build/app/outputs/flutter-apk/app-release.apk" \
-            -F "public_id=${PUBLIC_ID}" \
-            -F "resource_type=raw" \
-            -F "timestamp=${TIMESTAMP}" \
-            -F "api_key=${CLOUDINARY_API_KEY}" \
-            -F "signature=${SIGNATURE}")
-
-          echo "Cloudinary Response: $RESPONSE"
-
-          DOWNLOAD_URL=$(echo "$RESPONSE" | jq -r '.secure_url')
-          if [ "$DOWNLOAD_URL" == "null" ] || [ -z "$DOWNLOAD_URL" ]; then
-            echo "Failed to extract secure_url from Cloudinary response!"
-            exit 1
-          fi
-
-          echo "url=$DOWNLOAD_URL" >> $GITHUB_OUTPUT
-
-
+      # 3. Notify your backend with the newly generated URL
       - name: Notify backend of new version
         run: |
-          echo "Sending to backend: buildNumber=${{ github.run_number }}, versionName=${{ steps.version.outputs.name }}, downloadUrl=${{ steps.upload.outputs.url }}"
+          echo "Sending to backend: buildNumber=${{ github.run_number }}, versionName=${{ steps.version.outputs.name }}, downloadUrl=${{ steps.download_url.outputs.url }}"
           
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.BACKEND_URL }}/api/app-version" \
             -H "Content-Type: application/json" \
@@ -97,8 +90,8 @@ jobs:
             -d "{
               \"buildNumber\": ${{ github.run_number }},
               \"versionName\": \"${{ steps.version.outputs.name }}\",
-              \"downloadUrl\": \"${{ steps.upload.outputs.url }}\",
-              \"releaseNotes\": \"Automated release from main branch\"
+              \"downloadUrl\": \"${{ steps.download_url.outputs.url }}\",
+              \"releaseNotes\": \"Automated release from main branch via GitHub Releases\"
             }")
             
           HTTP_BODY=$(echo "$RESPONSE" | sed '$d')
