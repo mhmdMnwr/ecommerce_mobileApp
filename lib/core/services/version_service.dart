@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -38,7 +38,14 @@ class VersionCheckResult {
 class VersionService {
   static Future<VersionCheckResult> checkForUpdate() async {
     try {
-      final String platform = Platform.isAndroid ? 'android' : 'ios';
+      String platform = 'unknown';
+      if (kIsWeb) {
+        platform = 'web';
+      } else if (defaultTargetPlatform == TargetPlatform.android) {
+        platform = 'android';
+      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+        platform = 'ios';
+      }
       final response = await http.get(Uri.parse('${AppConstants.baseUrl}/api/app-version?platform=$platform'));
       
       if (response.statusCode != 200) {

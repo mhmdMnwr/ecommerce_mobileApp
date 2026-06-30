@@ -5,7 +5,7 @@ import '../../../../core/widgets/app_logo.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/routing/app_router.dart';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import '../../../../core/services/version_service.dart';
 import 'update_required_screen.dart';
 
@@ -51,7 +51,7 @@ class _SplashPageState extends State<SplashPage>
     // Hold the logo visible, then navigate.
     await Future.delayed(const Duration(milliseconds: 2200));
     if (mounted) {
-      if (Platform.isAndroid) {
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
         bool versionCheckSuccess = false;
         while (!versionCheckSuccess && mounted) {
           final updateResult = await VersionService.checkForUpdate();

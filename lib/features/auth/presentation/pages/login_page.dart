@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,7 +18,7 @@ import '../../../profile/presentation/widgets/language_dialog.dart';
 import '../../../../core/locale/locale_cubit.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
-import 'dart:io';
+
 import '../../../../core/services/version_service.dart';
 import '../../../splash/presentation/pages/update_required_screen.dart';
 
@@ -49,6 +50,29 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   }
 
   Future<void> _runSplashSequence() async {
+    if (kIsWeb) {
+      if (mounted) {
+        context.read<AuthCubit>().checkAuthStatus();
+      }
+      _splashCtrl.value = 1.0; // Instantly show form
+
+      // Hold briefly to allow auth status to settle if it was synchronous
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      if (!mounted) return;
+      final authState = context.read<AuthCubit>().state;
+      if (authState is AuthAuthenticated) {
+        sl<NotificationCubit>().startPolling();
+        context.go(AppRoutes.home);
+        return;
+      }
+      if (authState is AuthPendingApproval) {
+        context.go(AppRoutes.pendingApproval);
+        return;
+      }
+      return;
+    }
+
     // Stage 1: Icon is centered. Allow native splash to transition and Flutter engine to settle.
     await Future.delayed(const Duration(milliseconds: 400));
     
@@ -134,7 +158,12 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   }
 
   void _onLogin() {
-    if (!_formKey.currentState!.validate()) return;
+    print("DEBUG: _onLogin button tapped!");
+    if (!_formKey.currentState!.validate()) {
+      print("DEBUG: Form validation failed.");
+      return;
+    }
+    print("DEBUG: Form valid, calling AuthCubit.login...");
     context.read<AuthCubit>().login(
           username: _usernameCtrl.text.trim(),
           password: _passwordCtrl.text,
@@ -205,7 +234,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       backgroundColor: AppColors.background,
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is AuthAuthenticated && _splashCtrl.isCompleted) {
+          if (state is AuthAuthenticated && (kIsWeb || _splashCtrl.isCompleted)) {
             sl<NotificationCubit>().startPolling();
             context.go(AppRoutes.home);
           } else if (state is AuthPendingApproval) {

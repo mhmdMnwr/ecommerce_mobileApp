@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/foundation.dart';
 
 /// Lightweight service for showing local system notifications.
 /// No Firebase needed — triggered by the existing polling mechanism
@@ -18,26 +19,28 @@ class LocalNotificationService {
   Future<void> initialize() async {
     if (_initialized) return;
 
-    // Android notification channel
-    const androidChannel = AndroidNotificationChannel(
-      'high_importance_channel',
-      'High Importance Notifications',
-      description: 'This channel is used for important notifications.',
-      importance: Importance.high,
-      playSound: true,
-    );
+    if (!kIsWeb) {
+      // Android notification channel
+      const androidChannel = AndroidNotificationChannel(
+        'high_importance_channel',
+        'High Importance Notifications',
+        description: 'This channel is used for important notifications.',
+        importance: Importance.high,
+        playSound: true,
+      );
 
-    // Create the channel on Android
-    await _plugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(androidChannel);
+      // Create the channel on Android
+      await _plugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(androidChannel);
 
-    // Request notification permission (Android 13+)
-    await _plugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
+      // Request notification permission (Android 13+)
+      await _plugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestNotificationsPermission();
+    }
 
     // Initialize settings
     const androidSettings =
@@ -62,7 +65,7 @@ class LocalNotificationService {
     required String body,
     int? id,
   }) async {
-    if (!_initialized) return;
+    if (!_initialized || kIsWeb) return;
 
     await _plugin.show(
       id ?? DateTime.now().millisecondsSinceEpoch ~/ 1000,

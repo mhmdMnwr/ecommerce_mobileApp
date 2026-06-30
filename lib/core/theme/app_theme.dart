@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Application-wide light and dark themes.
 ///
@@ -16,55 +17,54 @@ abstract class AppTheme {
           seedColor: _seedColor,
           brightness: Brightness.light,
         ),
-        fontFamily: 'Poppins',
         appBarTheme: const AppBarTheme(
           centerTitle: true,
           elevation: 0,
         ),
-        dialogTheme: const DialogThemeData(
+        dialogTheme: DialogThemeData(
           titleTextStyle: TextStyle(
-            color: Color(0xFF000000),
-            fontSize: 18,
+            color: const Color(0xFF000000),
+            fontSize: 18.sp,
             fontWeight: FontWeight.w600,
           ),
           contentTextStyle: TextStyle(
-            color: Color(0xFF555555),
-            fontSize: 14,
+            color: const Color(0xFF555555),
+            fontSize: 14.sp,
             fontWeight: FontWeight.w400,
           ),
         ),
         snackBarTheme: SnackBarThemeData(
-          contentTextStyle: const TextStyle(
-            color: Color(0xFFFFFFFF),
-            fontSize: 14,
+          contentTextStyle: TextStyle(
+            color: const Color(0xFFFFFFFF),
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
           ),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 14.h,
           ),
         ),
         cardTheme: CardThemeData(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
         ),
       );
@@ -77,32 +77,31 @@ abstract class AppTheme {
           seedColor: _darkSeedColor,
           brightness: Brightness.dark,
         ),
-        fontFamily: 'Poppins',
         appBarTheme: const AppBarTheme(
           centerTitle: true,
           elevation: 0,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 14.h,
           ),
         ),
         cardTheme: CardThemeData(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
         ),
       );
