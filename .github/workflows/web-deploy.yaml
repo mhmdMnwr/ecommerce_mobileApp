@@ -9,7 +9,7 @@ on:
       - 'web/**'
       - 'pubspec.yaml'
       - 'pubspec.lock'
-      - '.github/workflows/web-deploy.yml'
+      - '.github/workflows/web-deploy.yaml'
       # exclude android-only paths implicitly by only listing what matters above
 
 jobs:
