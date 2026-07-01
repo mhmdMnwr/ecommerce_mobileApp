@@ -1,10 +1,14 @@
 name: Build and Release APK
-
 on:
   push:
     branches:
       - main
-
+    paths:
+      - 'lib/**'
+      - 'android/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - '.github/workflows/build-and-release.yaml'
 jobs:
   build-and-release:
     runs-on: ubuntu-latest

@@ -46,7 +46,8 @@ class VersionService {
       } else if (defaultTargetPlatform == TargetPlatform.iOS) {
         platform = 'ios';
       }
-      final response = await http.get(Uri.parse('${AppConstants.baseUrl}/api/app-version?platform=$platform'));
+      final response = await http.get(Uri.parse('${AppConstants.baseUrl}/api/app-version?platform=$platform'))
+          .timeout(const Duration(seconds: 5));
       
       if (response.statusCode != 200) {
         // Non-200 HTTP status

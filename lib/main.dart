@@ -30,14 +30,20 @@ class EcommerceApp extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Evaluate the constrained size
-        final constrainedWidth = constraints.maxWidth > 375 ? 375.0 : constraints.maxWidth;
+        final constrainedWidth = constraints.maxWidth > 375
+            ? 375.0
+            : constraints.maxWidth;
         final constrainedSize = Size(constrainedWidth, constraints.maxHeight);
-        
+
         final view = View.maybeOf(context);
-        final baseData = view != null ? MediaQueryData.fromView(view) : const MediaQueryData();
+        final baseData = view != null
+            ? MediaQueryData.fromView(view)
+            : const MediaQueryData();
         final constrainedData = baseData.copyWith(
           size: constrainedSize,
-          textScaler: const TextScaler.linear(1.0), // Lock text scale for consistent layout
+          textScaler: const TextScaler.linear(
+            1.0,
+          ), // Lock text scale for consistent layout
         );
 
         // Manually configure ScreenUtil bypassing the bugged ScreenUtilInit
@@ -49,7 +55,9 @@ class EcommerceApp extends StatelessWidget {
         );
 
         return Container(
-          color: const Color(0xFFF0F2F5), // Background for empty space on desktop
+          color: const Color(
+            0xFFF0F2F5,
+          ), // Background for empty space on desktop
           alignment: Alignment.center,
           child: ConstrainedBox(
             constraints: const BoxConstraints(
@@ -65,7 +73,8 @@ class EcommerceApp extends StatelessWidget {
                   ]),
                   builder: (context, _) {
                     return MaterialApp.router(
-                      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+                      onGenerateTitle: (context) =>
+                          AppLocalizations.of(context)!.appTitle,
                       debugShowCheckedModeBanner: false,
 
                       // ── Theme ──────────────────────────────
@@ -92,7 +101,15 @@ class EcommerceApp extends StatelessWidget {
                           child: BlocListener<AuthCubit, AuthState>(
                             listener: (context, state) {
                               if (state is AuthUnauthenticated) {
-                                appRouter.go(AppRoutes.login);
+                                final currentPath = appRouter
+                                    .routerDelegate
+                                    .currentConfiguration
+                                    .uri
+                                    .path;
+                                if (currentPath != AppRoutes.login &&
+                                    currentPath != AppRoutes.splash) {
+                                  appRouter.go(AppRoutes.login);
+                                }
                               }
                             },
                             child: InstallPwaOverlay(child: child!),

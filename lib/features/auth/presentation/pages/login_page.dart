@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     super.initState();
     _splashCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2500),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _runSplashSequence();
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     }
 
     // Stage 1: Icon is centered. Allow native splash to transition and Flutter engine to settle.
-    await Future.delayed(const Duration(milliseconds: 400));
+    await Future.delayed(const Duration(milliseconds: 50));
     
     if (mounted) {
       bool versionCheckSuccess = false;
@@ -118,35 +118,49 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       context.read<AuthCubit>().checkAuthStatus();
     }
 
-    // Stage 2: Animate icon to the left & reveal text.
-    await _splashCtrl.animateTo(
-      0.4, 
-      duration: const Duration(milliseconds: 800), 
-      curve: Curves.easeInOutCubic,
-    );
-    
-    // Hold logo briefly
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    // If authenticated during hold, go home.
+    // Wait a tiny bit for the local token check to complete
+    await Future.delayed(const Duration(milliseconds: 50));
     if (!mounted) return;
-    final authState = context.read<AuthCubit>().state;
-    if (authState is AuthAuthenticated) {
-      sl<NotificationCubit>().startPolling();
-      context.go(AppRoutes.home);
-      return;
-    }
-    if (authState is AuthPendingApproval) {
-      context.go(AppRoutes.pendingApproval);
-      return;
-    }
 
-    // Stage 3: Animate form sliding in.
-    await _splashCtrl.animateTo(
-      1.0, 
-      duration: const Duration(milliseconds: 800), 
-      curve: Curves.easeInOutCubic,
-    );
+    final initialState = context.read<AuthCubit>().state;
+
+    if (initialState is AuthUnauthenticated) {
+      // No token found. Animate perfectly smoothly to show the form in one continuous motion.
+      await _splashCtrl.animateTo(
+        1.0, 
+        duration: const Duration(milliseconds: 800), 
+        curve: Curves.easeInOutCubic,
+      );
+    } else {
+      // Token found, verifying with server. Animate logo to center and hold.
+      await _splashCtrl.animateTo(
+        0.4, 
+        duration: const Duration(milliseconds: 400), 
+        curve: Curves.easeInOutCubic,
+      );
+      
+      // Wait until the server responds
+      while (mounted && context.read<AuthCubit>().state is AuthLoading) {
+        await Future.delayed(const Duration(milliseconds: 50));
+      }
+      
+      if (!mounted) return;
+      final finalState = context.read<AuthCubit>().state;
+      
+      if (finalState is AuthAuthenticated) {
+        sl<NotificationCubit>().startPolling();
+        context.go(AppRoutes.home);
+      } else if (finalState is AuthPendingApproval) {
+        context.go(AppRoutes.pendingApproval);
+      } else {
+        // Token was expired or invalid. Show the login form.
+        await _splashCtrl.animateTo(
+          1.0, 
+          duration: const Duration(milliseconds: 450), 
+          curve: Curves.easeInOutCubic,
+        );
+      }
+    }
   }
 
   @override
