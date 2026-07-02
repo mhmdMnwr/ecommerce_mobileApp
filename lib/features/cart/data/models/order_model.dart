@@ -7,9 +7,11 @@ class OrderItemModel {
   final String productId;
   final String? title;
   final String? image;
-  final int quantity;
+  final num quantity;
   final int units;
   final num price;
+  @JsonKey(defaultValue: false)
+  final bool isWeighted;
 
   const OrderItemModel({
     required this.productId,
@@ -18,6 +20,7 @@ class OrderItemModel {
     required this.quantity,
     required this.units,
     required this.price,
+    this.isWeighted = false,
   });
 
   /// Total price for this line item based on unit price × total quantity.
@@ -58,7 +61,7 @@ class OrderModel {
   bool get isPending => status == 'Pending';
 
   /// Total number of individual product units across all line items.
-  int get totalItemCount => items.fold(0, (sum, i) => sum + i.quantity);
+  num get totalItemCount => items.fold(0, (sum, i) => sum + i.quantity);
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);

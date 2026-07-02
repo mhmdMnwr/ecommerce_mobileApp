@@ -238,11 +238,12 @@ class _CartPageState extends State<CartPage> {
                                 child: CartItemTile(
                                   item: items[index],
                                   currency: currency,
-                                  onQuantityChanged: (boxes, units) {
+                                  onQuantityChanged: (boxes, units, weight) {
                                     context.read<CartCubit>().updateQuantity(
                                       items[index].productId,
                                       boxes: boxes,
                                       units: units,
+                                      weight: weight,
                                     );
                                   },
                                   onRemove: () {

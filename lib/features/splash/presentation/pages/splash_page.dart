@@ -111,7 +111,7 @@ class _SplashPageState extends State<SplashPage>
             scale: _scale,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: AppLogo(width: 360.w),
+              child: AppLogo(width: 200.w),
             ),
           ),
         ),

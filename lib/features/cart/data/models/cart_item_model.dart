@@ -9,6 +9,8 @@ class CartItemModel extends Equatable {
   final int unitsPerBox;
   final int boxes;
   final int units;
+  final double weight;
+  final bool isWeighted;
 
   const CartItemModel({
     required this.productId,
@@ -18,21 +20,27 @@ class CartItemModel extends Equatable {
     required this.unitsPerBox,
     required this.boxes,
     required this.units,
+    this.weight = 0.0,
+    this.isWeighted = false,
   });
 
-  /// Total units = (Boxes * units_per_box) + Units
+  /// Total units = (Boxes * units_per_box) + Units (for standard items)
   int get totalUnits => (boxes * unitsPerBox) + units;
 
-  /// Total price for this line item based on units.
-  /// Price is the unit price.
-  double get lineTotal => price.toDouble() * totalUnits;
+  /// Total quantity (weight for weighted, totalUnits for standard)
+  num get totalQuantity => isWeighted ? weight : totalUnits;
 
-  CartItemModel copyWith({int? boxes, int? units}) {
+  /// Total price for this line item based on units or weight.
+  /// Price is the unit price (or per kg for weighted).
+  double get lineTotal => price.toDouble() * totalQuantity;
+
+  CartItemModel copyWith({int? boxes, int? units, double? weight}) {
     // Apply conversion rule
     int newBoxes = boxes ?? this.boxes;
     int newUnits = units ?? this.units;
+    double newWeight = weight ?? this.weight;
     
-    if (newUnits >= unitsPerBox) {
+    if (!isWeighted && newUnits >= unitsPerBox) {
       newBoxes += newUnits ~/ unitsPerBox;
       newUnits = newUnits % unitsPerBox;
     }
@@ -45,15 +53,17 @@ class CartItemModel extends Equatable {
       unitsPerBox: unitsPerBox,
       boxes: newBoxes,
       units: newUnits,
+      weight: newWeight,
+      isWeighted: isWeighted,
     );
   }
 
   /// Convert to the format expected by the backend create-order endpoint.
   Map<String, dynamic> toOrderPayload() => {
         'productId': productId,
-        'quantity': totalUnits, // Assuming backend expects total units or whatever quantity means. Will adjust if needed.
+        'quantity': totalQuantity, 
       };
 
   @override
-  List<Object?> get props => [productId, boxes, units];
+  List<Object?> get props => [productId, boxes, units, weight, isWeighted];
 }

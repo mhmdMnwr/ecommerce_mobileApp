@@ -118,8 +118,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       context.read<AuthCubit>().checkAuthStatus();
     }
 
-    // Wait a tiny bit for the local token check to complete
-    await Future.delayed(const Duration(milliseconds: 50));
+    // Stage 1: Icon is centered. Allow native splash to transition and Flutter engine to settle.
+    // This also gives the local token check time to complete.
+    await Future.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
 
     final initialState = context.read<AuthCubit>().state;

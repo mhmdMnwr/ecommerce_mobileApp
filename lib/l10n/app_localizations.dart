@@ -1275,6 +1275,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update is required to continue using the app.'**
   String get updateRequiredSubtext;
+
+  /// No description provided for @kg.
+  ///
+  /// In en, this message translates to:
+  /// **'kg'**
+  String get kg;
 }
 
 class _AppLocalizationsDelegate

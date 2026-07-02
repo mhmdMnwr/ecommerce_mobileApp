@@ -258,7 +258,9 @@ class OrderDetailPage extends StatelessWidget {
 
               // Build quantity string: "2×24 + 3 = 51"
               String quantityStr;
-              if (unitsPerBox <= 1) {
+              if (item.isWeighted) {
+                quantityStr = '${item.quantity.toDouble().toStringAsFixed(3)} ${l10n.kg}';
+              } else if (unitsPerBox <= 1) {
                 quantityStr = '$totalQty';
               } else if (remainder == 0) {
                 quantityStr = '$boxes×$unitsPerBox = $totalQty';
@@ -308,7 +310,7 @@ class OrderDetailPage extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        item.price.toStringAsFixed(2),
+                        '${item.price.toStringAsFixed(2)}${item.isWeighted ? '/${l10n.kg}' : ''}',
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,

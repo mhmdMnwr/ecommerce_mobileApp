@@ -26,6 +26,7 @@ class CartCubit extends Cubit<CartState> {
       current[idx] = current[idx].copyWith(
         boxes: current[idx].boxes + item.boxes,
         units: current[idx].units + item.units,
+        weight: current[idx].weight + item.weight,
       );
     } else {
       current.add(item);
@@ -34,14 +35,14 @@ class CartCubit extends Cubit<CartState> {
     emit(CartIdle(cartItems: current, activeOrder: state.activeOrder));
   }
 
-  /// Update the quantity (boxes or units) of a specific cart item.
-  void updateQuantity(String productId, {int? boxes, int? units}) {
+  /// Update the quantity (boxes, units, or weight) of a specific cart item.
+  void updateQuantity(String productId, {int? boxes, int? units, double? weight}) {
     final current = List<CartItemModel>.from(state.cartItems);
     final idx = current.indexWhere((e) => e.productId == productId);
     if (idx < 0) return;
 
-    final updated = current[idx].copyWith(boxes: boxes, units: units);
-    if (updated.totalUnits <= 0) {
+    final updated = current[idx].copyWith(boxes: boxes, units: units, weight: weight);
+    if (updated.totalQuantity <= 0) {
       current.removeAt(idx);
     } else {
       current[idx] = updated;
@@ -113,8 +114,10 @@ class CartCubit extends Cubit<CartState> {
               image: orderItem.image ?? '',
               price: orderItem.price,
               unitsPerBox: unitsPerBox,
-              boxes: orderItem.quantity ~/ unitsPerBox,
-              units: orderItem.quantity % unitsPerBox,
+              boxes: orderItem.isWeighted ? 0 : orderItem.quantity ~/ unitsPerBox,
+              units: orderItem.isWeighted ? 0 : (orderItem.quantity % unitsPerBox).toInt(),
+              weight: orderItem.isWeighted ? orderItem.quantity.toDouble() : 0.0,
+              isWeighted: orderItem.isWeighted,
             );
           }).toList();
           

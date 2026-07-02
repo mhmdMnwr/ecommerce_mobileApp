@@ -13,6 +13,8 @@ class ProductModel {
   final int? units;
   final String? state;
   final Map<String, dynamic>? brand;
+  @JsonKey(defaultValue: false)
+  final bool isWeighted;
 
   const ProductModel({
     required this.id,
@@ -22,6 +24,7 @@ class ProductModel {
     this.units,
     this.state,
     this.brand,
+    this.isWeighted = false,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>

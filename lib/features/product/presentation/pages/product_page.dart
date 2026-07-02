@@ -29,6 +29,7 @@ class _ProductPageState extends State<ProductPage>
     with SingleTickerProviderStateMixin {
   int _boxes = 0;
   int _units = 0;
+  double _weight = 0.0;
   late final AnimationController _fadeCtrl;
   late final Animation<double> _fadeAnim;
 
@@ -59,8 +60,10 @@ class _ProductPageState extends State<ProductPage>
         image: product.image,
         price: product.price,
         unitsPerBox: product.units ?? 1,
-        boxes: _boxes,
-        units: _units,
+        boxes: product.isWeighted ? 0 : _boxes,
+        units: product.isWeighted ? 0 : _units,
+        weight: product.isWeighted ? _weight : 0.0,
+        isWeighted: product.isWeighted,
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(
@@ -77,6 +80,7 @@ class _ProductPageState extends State<ProductPage>
     setState(() {
       _boxes = 0;
       _units = 0;
+      _weight = 0.0;
     });
   }
 
@@ -84,11 +88,21 @@ class _ProductPageState extends State<ProductPage>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final currency = l10n.currency;
-    final hasItems = _boxes > 0 || _units > 0;
-    final total = ((_boxes * (product.units ?? 1)) + _units) * product.price.toDouble();
+    final hasItems = product.isWeighted ? _weight > 0 : (_boxes > 0 || _units > 0);
+    final num totalQuantity = product.isWeighted ? _weight : ((_boxes * (product.units ?? 1)) + _units);
+    final total = totalQuantity * product.price.toDouble();
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      bottomNavigationBar: MediaQuery.of(context).viewInsets.bottom > 0
+          ? const SizedBox.shrink()
+          : ProductBottomBar(
+              total: total,
+              hasItems: hasItems,
+              currency: currency,
+              l10n: l10n,
+              onAddToCart: hasItems ? () => _handleAddToCart(l10n) : null,
+            ),
       body: FadeTransition(
         opacity: _fadeAnim,
         child: Stack(
@@ -105,6 +119,7 @@ class _ProductPageState extends State<ProductPage>
                     l10n: l10n,
                     boxes: _boxes,
                     units: _units,
+                    weight: _weight,
                     onBoxChanged: (val) => setState(() => _boxes = val),
                     onUnitChanged: (val) {
                       setState(() {
@@ -119,9 +134,10 @@ class _ProductPageState extends State<ProductPage>
                         _units = newUnits;
                       });
                     },
+                    onWeightChanged: (val) => setState(() => _weight = val),
                   ),
                 ),
-                SliverToBoxAdapter(child: SizedBox(height: 100.h)),
+                SliverToBoxAdapter(child: SizedBox(height: 20.h)),
               ],
             ),
             Positioned(
@@ -141,18 +157,6 @@ class _ProductPageState extends State<ProductPage>
                   Navigator.pop(context);
                   context.go(AppRoutes.cart);
                 },
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: ProductBottomBar(
-                total: total,
-                hasItems: hasItems,
-                currency: currency,
-                l10n: l10n,
-                onAddToCart: hasItems ? () => _handleAddToCart(l10n) : null,
               ),
             ),
           ],

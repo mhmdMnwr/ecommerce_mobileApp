@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
+
 /// Application-wide constants.
 abstract class AppConstants {
   static const String baseUrl = String.fromEnvironment(
     'API_URL',
-    defaultValue: 'https://api-mnwr-ecommerce-backend.onrender.com',
+    defaultValue: 'http://localhost:4000',
   );
 
   /// SharedPreferences keys.

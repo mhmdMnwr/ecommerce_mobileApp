@@ -199,5 +199,6 @@
   "updateRequiredTitle": "Mise à jour requise",
   "updateRequiredDesc": "Nous avons lancé une nouvelle version de l'application pour améliorer votre expérience.",
   "updateNowBtn": "Mettre à jour",
-  "updateRequiredSubtext": "La mise à jour est requise pour continuer à utiliser l'application."
+  "updateRequiredSubtext": "La mise à jour est requise pour continuer à utiliser l'application.",
+  "kg": "kg"
 }

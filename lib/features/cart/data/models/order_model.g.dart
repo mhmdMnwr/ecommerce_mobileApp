@@ -11,9 +11,10 @@ OrderItemModel _$OrderItemModelFromJson(Map<String, dynamic> json) =>
       productId: json['productId'] as String,
       title: json['title'] as String?,
       image: json['image'] as String?,
-      quantity: (json['quantity'] as num).toInt(),
+      quantity: json['quantity'] as num,
       units: (json['units'] as num).toInt(),
       price: json['price'] as num,
+      isWeighted: json['isWeighted'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$OrderItemModelToJson(OrderItemModel instance) =>
@@ -24,6 +25,7 @@ Map<String, dynamic> _$OrderItemModelToJson(OrderItemModel instance) =>
       'quantity': instance.quantity,
       'units': instance.units,
       'price': instance.price,
+      'isWeighted': instance.isWeighted,
     };
 
 OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(

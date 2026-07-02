@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../theme/app_colors.dart';
 
-/// Reusable quantity selector card with title, +/- buttons and value input.
-class QuantitySelector extends StatefulWidget {
+/// Reusable weight selector card with title, +/- buttons and decimal value input.
+class WeightSelector extends StatefulWidget {
   final String title;
-  final int value;
-  final ValueChanged<int> onChanged;
+  final double value;
+  final ValueChanged<double> onChanged;
 
-  const QuantitySelector({
+  const WeightSelector({
     super.key,
     required this.title,
     required this.value,
@@ -18,36 +18,38 @@ class QuantitySelector extends StatefulWidget {
   });
 
   @override
-  State<QuantitySelector> createState() => _QuantitySelectorState();
+  State<WeightSelector> createState() => _WeightSelectorState();
 }
 
-class _QuantitySelectorState extends State<QuantitySelector> {
+class _WeightSelectorState extends State<WeightSelector> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.value.toString());
+    _controller = TextEditingController(text: widget.value > 0 ? widget.value.toStringAsFixed(3) : '');
     _focusNode = FocusNode();
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        // Clear the field when focused so the user can type fresh
-        _controller.clear();
+        if (widget.value == 0) _controller.clear();
       } else {
-        // Sync the controller text to the current widget value when losing focus
-        _controller.text = widget.value.toString();
+        if (widget.value > 0) {
+          _controller.text = widget.value.toStringAsFixed(3);
+        } else {
+          _controller.text = '';
+        }
       }
     });
   }
 
   @override
-  void didUpdateWidget(covariant QuantitySelector oldWidget) {
+  void didUpdateWidget(covariant WeightSelector oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Only sync from parent when not actively editing (avoids cursor jumps)
     if (oldWidget.value != widget.value && !_focusNode.hasFocus) {
-      if (int.tryParse(_controller.text) != widget.value) {
-        _controller.text = widget.value.toString();
+      final textVal = double.tryParse(_controller.text) ?? 0.0;
+      if ((textVal - widget.value).abs() > 0.0001) {
+        _controller.text = widget.value > 0 ? widget.value.toStringAsFixed(3) : '';
       }
     }
   }
@@ -59,14 +61,15 @@ class _QuantitySelectorState extends State<QuantitySelector> {
     super.dispose();
   }
 
-  void _increment() => widget.onChanged(widget.value + 1);
+  void _increment() => widget.onChanged(widget.value + 0.1);
   void _decrement() {
-    if (widget.value > 0) widget.onChanged(widget.value - 1);
+    if (widget.value >= 0.1) widget.onChanged(widget.value - 0.1);
+    else if (widget.value > 0) widget.onChanged(0.0);
   }
 
   void _showInputDialog(BuildContext context) {
     final TextEditingController dialogController = TextEditingController(
-      text: widget.value > 0 ? widget.value.toString() : '',
+      text: widget.value > 0 ? widget.value.toStringAsFixed(3) : '',
     );
     showDialog<String>(
       context: context,
@@ -99,8 +102,10 @@ class _QuantitySelectorState extends State<QuantitySelector> {
                   child: TextField(
                     controller: dialogController,
                     autofocus: true,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    ],
                     style: TextStyle(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.w800,
@@ -109,7 +114,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: '0',
+                      hintText: '0.000',
                       hintStyle: TextStyle(
                         fontSize: 24.sp,
                         color: AppColors.textSecondary.withAlpha(100),
@@ -173,8 +178,11 @@ class _QuantitySelectorState extends State<QuantitySelector> {
       },
     ).then((val) {
       if (val != null) {
-        final intVal = int.tryParse(val) ?? 0;
-        widget.onChanged(intVal);
+        double doubleVal = double.tryParse(val) ?? 0.0;
+        if (doubleVal > 150.0) {
+          doubleVal = 150.0;
+        }
+        widget.onChanged(doubleVal);
       }
     });
   }
@@ -205,74 +213,33 @@ class _QuantitySelectorState extends State<QuantitySelector> {
             ),
           ),
           SizedBox(height: 10.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _roundButton(
-                Icons.remove,
-                _decrement,
-                enabled: widget.value > 0,
+          Container(
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: TextField(
+              controller: _controller,
+              focusNode: _focusNode,
+              readOnly: true,
+              onTap: () => _showInputDialog(context),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w800,
+                color: widget.value > 0 ? AppColors.primary : AppColors.textPrimary,
               ),
-              Container(
-                width: 60.w,
-                alignment: Alignment.center,
-                child: TextField(
-                  controller: _controller,
-                  focusNode: _focusNode,
-                  readOnly: true,
-                  onTap: () => _showInputDialog(context),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w800,
-                    color: widget.value > 0 ? AppColors.primary : AppColors.textPrimary,
-                  ),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+                hintText: '0.000',
+                hintStyle: TextStyle(
+                  fontSize: 20.sp,
+                  color: AppColors.textSecondary.withAlpha(100),
+                )
               ),
-              _roundButton(
-                Icons.add,
-                _increment,
-                isAdd: true,
-              ),
-            ],
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _roundButton(
-    IconData icon,
-    VoidCallback onTap, {
-    bool isAdd = false,
-    bool enabled = true,
-  }) {
-    final color = isAdd
-        ? AppColors.primary
-        : (enabled ? AppColors.textSecondary : AppColors.fieldBorder);
-    final bg = isAdd
-        ? AppColors.primary.withAlpha(15)
-        : (enabled ? AppColors.surface : Colors.transparent);
-
-    return GestureDetector(
-      onTap: enabled ? onTap : null,
-      child: Container(
-        width: 32.r,
-        height: 32.r,
-        decoration: BoxDecoration(
-          color: bg,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: color.withAlpha(isAdd ? 60 : 40),
-            width: 1.5,
-          ),
-        ),
-        child: Icon(icon, size: 16.r, color: color),
       ),
     );
   }

@@ -14,6 +14,7 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
   units: (json['units'] as num?)?.toInt(),
   state: json['state'] as String?,
   brand: json['brand'] as Map<String, dynamic>?,
+  isWeighted: json['isWeighted'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
@@ -25,4 +26,5 @@ Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
       'units': instance.units,
       'state': instance.state,
       'brand': instance.brand,
+      'isWeighted': instance.isWeighted,
     };

@@ -639,4 +639,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get updateRequiredSubtext =>
       'La mise à jour est requise pour continuer à utiliser l\'application.';
+
+  @override
+  String get kg => 'kg';
 }

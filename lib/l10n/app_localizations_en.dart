@@ -623,4 +623,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get updateRequiredSubtext =>
       'Update is required to continue using the app.';
+
+  @override
+  String get kg => 'kg';
 }

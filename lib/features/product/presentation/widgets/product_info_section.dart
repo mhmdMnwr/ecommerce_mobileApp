@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/quantity_selector.dart';
+import '../../../../core/widgets/quantity_selector.dart';
+import '../../../../core/widgets/weight_selector.dart';
 import '../../../home/data/models/product_model.dart';
 import 'package:ecommerce_app/l10n/app_localizations.dart';
 
@@ -13,8 +15,10 @@ class ProductInfoSection extends StatelessWidget {
   final AppLocalizations l10n;
   final int boxes;
   final int units;
+  final double weight;
   final ValueChanged<int> onBoxChanged;
   final ValueChanged<int> onUnitChanged;
+  final ValueChanged<double> onWeightChanged;
 
   const ProductInfoSection({
     super.key,
@@ -23,8 +27,10 @@ class ProductInfoSection extends StatelessWidget {
     required this.l10n,
     required this.boxes,
     required this.units,
+    required this.weight,
     required this.onBoxChanged,
     required this.onUnitChanged,
+    required this.onWeightChanged,
   });
 
   String get _brandName {
@@ -102,14 +108,14 @@ class ProductInfoSection extends StatelessWidget {
         SizedBox(width: 6.w),
         Padding(
           padding: EdgeInsets.only(bottom: 2.h),
-          child: Text(currency, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: AppColors.primary.withAlpha(180))),
+          child: Text(product.isWeighted ? '$currency/${l10n.kg}' : currency, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: AppColors.primary.withAlpha(180))),
         ),
       ],
     );
   }
 
   Widget _buildDetails() {
-    if (product.units == null) return const SizedBox.shrink();
+    if (product.units == null || product.isWeighted) return const SizedBox.shrink();
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.r),
@@ -162,25 +168,32 @@ class ProductInfoSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 14.h),
-        Row(
-          children: [
-            Expanded(
-              child: QuantitySelector(
-                title: l10n.boxes,
-                value: boxes,
-                onChanged: onBoxChanged,
+        if (product.isWeighted)
+          WeightSelector(
+            title: l10n.kg, // Wait, does l10n have 'kg' or something similar? I will add it to localization.
+            value: weight,
+            onChanged: onWeightChanged,
+          )
+        else
+          Row(
+            children: [
+              Expanded(
+                child: QuantitySelector(
+                  title: l10n.boxes,
+                  value: boxes,
+                  onChanged: onBoxChanged,
+                ),
               ),
-            ),
-            SizedBox(width: 14.w),
-            Expanded(
-              child: QuantitySelector(
-                title: l10n.units,
-                value: units,
-                onChanged: onUnitChanged,
+              SizedBox(width: 14.w),
+              Expanded(
+                child: QuantitySelector(
+                  title: l10n.units,
+                  value: units,
+                  onChanged: onUnitChanged,
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
       ],
     );
   }

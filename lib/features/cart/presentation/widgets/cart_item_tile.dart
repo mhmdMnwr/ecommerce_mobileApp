@@ -11,7 +11,7 @@ import 'package:ecommerce_app/l10n/app_localizations.dart';
 class CartItemTile extends StatelessWidget {
   final CartItemModel item;
   final String currency;
-  final void Function(int? boxes, int? units) onQuantityChanged;
+  final void Function(int? boxes, int? units, double? weight) onQuantityChanged;
   final VoidCallback onRemove;
 
   const CartItemTile({
@@ -154,21 +154,26 @@ class CartItemTile extends StatelessWidget {
           ),
         ),
         SizedBox(height: 4.h),
-        Text(
-          '1 Box = ${item.unitsPerBox} unit',
-          style: TextStyle(
-            fontSize: 9.sp,
-            color: AppColors.textHint,
-            fontWeight: FontWeight.w500,
+        if (!item.isWeighted)
+          Text(
+            '1 Box = ${item.unitsPerBox} unit',
+            style: TextStyle(
+              fontSize: 9.sp,
+              color: AppColors.textHint,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
         SizedBox(height: 12.h),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            _CartQtyPill(label: 'Boxes', value: item.boxes, onChanged: (q) => onQuantityChanged(q, null)),
-            SizedBox(width: 8.w),
-            _CartQtyPill(label: 'Units', value: item.units, onChanged: (q) => onQuantityChanged(null, q)),
+            if (item.isWeighted)
+              _CartWeightPill(label: 'kg', value: item.weight, onChanged: (w) => onQuantityChanged(null, null, w))
+            else ...[
+              _CartQtyPill(label: 'Boxes', value: item.boxes, onChanged: (q) => onQuantityChanged(q, null, null)),
+              SizedBox(width: 8.w),
+              _CartQtyPill(label: 'Units', value: item.units, onChanged: (q) => onQuantityChanged(null, q, null)),
+            ],
             SizedBox(width: 4.w),
             Expanded(
               child: Text(
@@ -299,6 +304,137 @@ class _CartQtyPillState extends State<_CartQtyPill> {
                 ),
               ),
               _qtyBtn(Icons.add, () => widget.onChanged(widget.value + 1)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _qtyBtn(IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20.r),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+        child: Icon(icon, size: 12.r, color: AppColors.textSecondary),
+      ),
+    );
+  }
+}
+
+class _CartWeightPill extends StatefulWidget {
+  final String label;
+  final double value;
+  final ValueChanged<double> onChanged;
+
+  const _CartWeightPill({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  State<_CartWeightPill> createState() => _CartWeightPillState();
+}
+
+class _CartWeightPillState extends State<_CartWeightPill> {
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value > 0 ? widget.value.toStringAsFixed(3) : '');
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        if (widget.value == 0) _controller.clear();
+      } else {
+        if (widget.value > 0) {
+          _controller.text = widget.value.toStringAsFixed(3);
+        } else {
+          _controller.text = '';
+        }
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant _CartWeightPill oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value && !_focusNode.hasFocus) {
+      final textVal = double.tryParse(_controller.text) ?? 0.0;
+      if ((textVal - widget.value).abs() > 0.0001) {
+        _controller.text = widget.value > 0 ? widget.value.toStringAsFixed(3) : '';
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.label,
+          style: TextStyle(
+            fontSize: 9.sp,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textHint,
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Container(
+          height: 26.h,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF3F4F6),
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _qtyBtn(Icons.remove, () {
+                if (widget.value >= 0.1) widget.onChanged(widget.value - 0.1);
+                else if (widget.value > 0) widget.onChanged(0.0);
+              }),
+              Container(
+                width: 40.w,
+                alignment: Alignment.center,
+                child: TextField(
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  textInputAction: TextInputAction.done,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  onChanged: (val) {
+                    final doubleVal = double.tryParse(val) ?? 0.0;
+                    widget.onChanged(doubleVal);
+                  },
+                  onSubmitted: (val) {
+                    final doubleVal = double.tryParse(val) ?? 0.0;
+                    widget.onChanged(doubleVal);
+                  },
+                ),
+              ),
+              _qtyBtn(Icons.add, () => widget.onChanged(widget.value + 0.1)),
             ],
           ),
         ),

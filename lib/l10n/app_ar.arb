@@ -219,5 +219,6 @@
   "updateRequiredTitle": "تحديث مطلوب",
   "updateRequiredDesc": "لقد أطلقنا إصدارًا جديدًا من التطبيق لتحسين تجربتك.",
   "updateNowBtn": "تحديث الآن",
-  "updateRequiredSubtext": "التحديث مطلوب لمواصلة استخدام التطبيق."
+  "updateRequiredSubtext": "التحديث مطلوب لمواصلة استخدام التطبيق.",
+  "kg": "كغ"
 }

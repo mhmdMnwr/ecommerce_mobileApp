@@ -620,4 +620,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get updateRequiredSubtext => 'التحديث مطلوب لمواصلة استخدام التطبيق.';
+
+  @override
+  String get kg => 'كغ';
 }
